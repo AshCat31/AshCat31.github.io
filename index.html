@@ -1,13 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<link href="styles/style.css" rel="stylesheet" />
-	<link
-		href="https://fonts.googleapis.com/css?family=Open+Sans"
-		rel="stylesheet" />
+  <link href="styles/style.css" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans"
+    rel="stylesheet" />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Artificial Intelligence Website</title>
+  <script>
+    // Function to set a cookie
+    function setCookie(name, value, days) {
+      var expires = "";
+      if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+      }
+      document.cookie = name + "=" + (value || "") + expires + "; path=/";
+    }
+
+    // Example usage: set a cookie with the name "username" and value "John Doe" for 7 days
+    setCookie("username", "John Doe", 7);
+  </script>
 </head>
 <body>
   <header>
@@ -52,22 +67,4 @@
       <p>Neural Networks are a type of AI that mimics the structure and function of the human brain. They consist of interconnected artificial neurons that process and transmit information. Neural networks are often used in image recognition, natural language processing, and pattern recognition tasks.</p>
     </section>
     
-    <section>
-      <h2>Advancements in AI</h2>
-      <p>The field of AI has witnessed significant advancements in recent years. Some notable achievements include:</p>
-      <ul>
-        <li>The development of self-driving cars</li>
-        <li>Deep learning breakthroughs</li>
-        <li>Improved natural language processing</li>
-        <li>Robotics advancements</li>
-      </ul>
-      <p>These advancements have paved the way for exciting possibilities and continue to shape our future.</p>
-    </section>
-  </main>
-  
-  <footer>
-    <img src="images/11.png" alt="AI" />
-    <p>&copy; 2023 AI Website. All rights reserved.</p>
-  </footer>
-</body>
-</html>
+    <section
