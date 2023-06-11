@@ -285,14 +285,17 @@
         let targetElement = null;
 
         function toggleColorDropdown(event) {
-            const dropdown = event.target.nextElementSibling;
-            dropdown.classList.toggle("show");
-            targetElement = event.target.getAttribute("data-target");
-            const colorLinks = dropdown.querySelectorAll('a');
-            colorLinks.forEach(link => {
-                link.addEventListener('click', changeColor);
-            });
-        }
+    const dropdown = event.target.nextElementSibling;
+    if (dropdown) {
+        dropdown.classList.toggle("show");
+        targetElement = event.target.getAttribute("data-target");
+        const colorLinks = dropdown.querySelectorAll('a');
+        colorLinks.forEach(link => {
+            link.addEventListener('click', changeColor);
+        });
+    }
+}
+
 
         function changeColor(event) {
             const newColor = event.target.getAttribute("data-color");
