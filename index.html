@@ -312,6 +312,10 @@
   const colorLinks = dropdown.querySelectorAll('a');
   colorLinks.forEach(link => {
     link.addEventListener('click', changeBoxColor);
+    link.addEventListener('mousedown', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+    });
   });
 }
 
@@ -321,6 +325,7 @@ function changeBoxColor(event) {
     selectedBox.style.backgroundColor = newColor;
   }
 }
+
 
     </script>
 </body>
