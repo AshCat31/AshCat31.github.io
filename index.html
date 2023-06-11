@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxu</title>
+    <title>Pop-Up Boxh</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -323,16 +323,16 @@
 
 
 
-       function changeColor(event, targetElement) {
-  console.log(targetElement + ' color trgt');
+       function changeColor(event, targetEle) {
+  console.log(targetEle + ' color trgt');
   const newColor = event.target.getAttribute("data-color");
 
-  if (targetElement === "mainDiv") {
+  if (targetEle === "mainDiv") {
     console.log('mainDiv trdt');
     const canvas = document.getElementById("mainDiv");
     canvas.style.backgroundColor = newColor;
   } else {
-    const box = document.getElementById(targetElement);
+    const box = document.getElementById(targetEle);
     if (box) {
       box.style.backgroundColor = newColor;
     }
