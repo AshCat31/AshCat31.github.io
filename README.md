@@ -23,4 +23,4 @@ This web application was created with the assistance of ChatGPT, an AI language 
 
 License
 
-This project is licensed under the MIT License.
+This project is licensed under the CC BY-ND License.
