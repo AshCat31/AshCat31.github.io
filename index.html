@@ -332,9 +332,13 @@
 
 const iconButtons = document.querySelectorAll(".icon-button");
 iconButtons.forEach(button => {
-    const image = button.querySelector("img");
-    image.addEventListener("click", toggleColorDropdown);
+    button.addEventListener("click", (event) => {
+        const dropdownType = button.getAttribute("data-dropdown");
+        const targetElement = button.getAttribute("data-target");
+        toggleColorDropdown(event, dropdownType, targetElement);
+    });
 });
+
 
 
     </script>
