@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxb</title>
+    <title>Pop-Up Boxp</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -132,13 +132,18 @@
     </div>
   </div>
 
-
   <div class="container">
     <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
     <div id="mainDiv" onclick="addBox(event)" style="height: 100vh;"></div>
     <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
   </div>
 
+
+   <div class="container">
+       <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
+       <div id="mainDiv" onclick="addBox(event)" style="height: 100vh;"></div>
+       <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
+   </div>
     <script>
         let count = 0;
         let selectedBox = null;
@@ -147,31 +152,31 @@
         let lines = []; // Array to store line data
 
        function addBox(event) {
-      const target = event.target;
-      if (target.classList.contains("box")) {
+    const target = event.target;
+    if (target.classList.contains("box")) {
         return;
-      }
-      const xPos = event.clientX;
-      const yPos = event.clientY;
-      const boxWidth = 200; // Adjust the width of the box as needed
-      const boxHeight = 50; // Adjust the height of the box as needed
-      const box = document.createElement("input");
-      box.setAttribute("type", "text");
-      box.classList.add("box");
-      box.id = "box" + count;
-      console.log("box" + count);
-      count++;
-      box.placeholder = "Type here";
-      const boxLeft = xPos - boxWidth / 2 + "px";
-      const boxTop = yPos - boxHeight / 2 - 59 + "px";
-      box.style.left = boxLeft;
-      box.style.top = boxTop;
-      box.style.width = boxWidth + "px";
-      box.style.height = boxHeight + "px";
-      box.addEventListener("mousedown", startDrag);
-      box.addEventListener("click", selectBox);
-      document.getElementById("mainDiv").appendChild(box);
     }
+    const xPos = event.clientX;
+    const yPos = event.clientY;
+    const boxWidth = 200; // Adjust the width of the box as needed
+    const boxHeight = 50; // Adjust the height of the box as needed
+    const box = document.createElement("input");
+    box.setAttribute("type", "text");
+    box.classList.add("box");
+    box.id = "box" + count;
+    console.log("box" + count);
+    count++;
+    box.placeholder = "Type here";
+    const boxLeft = xPos - boxWidth / 2 + "px";
+    const boxTop = yPos - boxHeight / 2 - 59 + "px";
+    box.style.left = boxLeft;
+    box.style.top = boxTop;
+    box.style.width = boxWidth + "px";
+    box.style.height = boxHeight + "px";
+    box.addEventListener("mousedown", startDrag);
+    box.addEventListener("click", selectBox);
+    document.getElementById("mainDiv").appendChild(box);
+}
 
 
         function startDrag(event) {
@@ -326,16 +331,18 @@
 
 
 
-    function changeColor(event, targetElement) {
+       function changeColor(event, targetElement) {
   console.log("Color changed");
   const newColor = event.target.getAttribute("data-color");
 
   if (targetElement === "mainDiv") {
-    const mainDiv = document.getElementById("mainDiv");
-    mainDiv.style.backgroundColor = newColor;
-  } else if (targetElement === "selectedBox") {
-    if (selectedBox) {
-      selectedBox.style.backgroundColor = newColor;
+    console.log('mainDiv trdt');
+    const canvas = document.getElementById("mainDiv");
+    canvas.style.backgroundColor = newColor;
+  } else {
+    const box = document.getElementById(targetElement);
+    if (box) {
+      box.style.backgroundColor = newColor;
     }
   }
 
@@ -344,10 +351,6 @@
     const dropdown = dropdowns[i];
     dropdown.classList.remove("show");
   }
-
-  event.stopPropagation();
-}
-
 
   event.stopPropagation();
 }
