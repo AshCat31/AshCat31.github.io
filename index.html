@@ -140,6 +140,7 @@
     <script>
         let count = 0;
         let selectedBox = null;
+        let lineStartBox = null;
         let startPoint = null;
         let lines = []; // Array to store line data
 
@@ -200,33 +201,41 @@
             document.addEventListener("mouseup", stopDrag);
         }
 
-        function selectBox(event) {
-            if (event.altKey) {
-                const box = event.target;
-                const boxId = box.id;
-                deleteBox(boxId);
-                deleteLines(boxId);
-                return;
-            }
-            if (!event.ctrlKey) {
-                return; // Exit the function if 'Ctrl' key is not pressed
-            }
+       function selectBox(event) {
+    const target = event.target;
+    if (!target.classList.contains("icon-button")) {
+        selectedBox = null;
+    }
 
-            const box = event.target;
-            if (!selectedBox) {
-                selectedBox = box;
-                startPoint = getCenter(box);
-            } else {
-                const endPoint = getCenter(box);
-                const startBoxId = selectedBox.id; // Get the ID of the start box
-                const endBoxId = box.id; // Get the ID of the end box
-                const lineId = "line" + lines.length; // Unique ID for the line
-                lines.push(lineId, startBoxId, endBoxId); // Store line data
-                createLine(lineId, startBoxId, endBoxId);
-                selectedBox = null;
-                startPoint = null;
-            }
-        }
+    if (event.altKey) {
+        const box = event.target;
+        const boxId = box.id;
+        deleteBox(boxId);
+        deleteLines(boxId);
+        return;
+    }
+
+    if (!event.ctrlKey) {
+        selectedBox = event.target;
+        return; // Exit the function if 'Ctrl' key is not pressed
+    }
+
+    const box = event.target;
+    if (!lineStartBox) {
+        lineStartBox = box;
+        startPoint = getCenter(box);
+    } else {
+        const endPoint = getCenter(box);
+        const startBoxId = lineStartBox.id; // Get the ID of the start box
+        const endBoxId = box.id; // Get the ID of the end box
+        const lineId = "line" + lines.length; // Unique ID for the line
+        lines.push(lineId, startBoxId, endBoxId); // Store line data
+        createLine(lineId, startBoxId, endBoxId);
+        lineStartBox = null;
+        startPoint = null;
+    }
+}
+
 
         function deleteBox(boxId) {
             const box = document.getElementById(boxId);
@@ -294,7 +303,7 @@
   const button = event.target;
   const dropdown = document.querySelector(`.dropdown[data-dropdown="${dropdownType}"] .dropdown-content`);
   console.log(dropdown);
-       console.log(document.querySelector(`.dropdown[data-dropdown="${dropdownType}"] .dropdown-content`));
+  console.log(document.querySelector(`.dropdown[data-dropdown="${dropdownType}"] .dropdown-content`));
   console.log(dropdownType);
   if (dropdown) {
     console.log('dropdown exists');
