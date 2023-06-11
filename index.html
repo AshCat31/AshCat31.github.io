@@ -23,7 +23,7 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="text-center mb-5">Click Anywhere to Add Boxf</h1>
+        <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
         <div id="mainDiv" onclick="addBox(event)" style="height: 100vh;"></div>
         <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
     </div>
@@ -31,6 +31,7 @@
         let count = 0;
         let selectedBox = null;
         let startPoint = null;
+        let lines = []; // Array to store line data
 
         function addBox(event) {
             const target = event.target;
@@ -53,98 +54,84 @@
         }
 
         function startDrag(event) {
-  if (!event.shiftKey) {
-    return; // Exit the function if 'Shift' key is not pressed
-  }
+            if (!event.shiftKey) {
+                return; // Exit the function if 'Shift' key is not pressed
+            }
 
-  const box = event.target;
-  const initialX = event.clientX - box.getBoundingClientRect().left;
-  const initialY = event.clientY - box.getBoundingClientRect().top;
-  box.style.zIndex = "999"; // Bring the dragged box to the front
+            const box = event.target;
+            const initialX = event.clientX - box.getBoundingClientRect().left;
+            const initialY = event.clientY - box.getBoundingClientRect().top;
+            box.style.zIndex = "999"; // Bring the dragged box to the front
 
-  function moveBox(event) {
-    const newX = event.clientX - initialX;
-    const newY = event.clientY - initialY;
-    box.style.left = newX + "px";
-    box.style.top = newY + "px";
-    updateLines();
-  }
+            function moveBox(event) {
+                const newX = event.clientX - initialX;
+                const newY = event.clientY - initialY;
+                box.style.left = newX + "px";
+                box.style.top = newY + "px";
+                updateLines();
+            }
 
-  function stopDrag() {
-    document.removeEventListener("mousemove", moveBox);
-    document.removeEventListener("mouseup", stopDrag);
-    box.style.zIndex = ""; // Restore the original z-index
-    updateLines(); // Update the lines after dragging stops
-  }
+            function stopDrag() {
+                document.removeEventListener("mousemove", moveBox);
+                document.removeEventListener("mouseup", stopDrag);
+                box.style.zIndex = ""; // Restore the original z-index
+                updateLines(); // Update the lines after dragging stops
+            }
 
-  document.addEventListener("mousemove", moveBox);
-  document.addEventListener("mouseup", stopDrag);
-}
-
+            document.addEventListener("mousemove", moveBox);
+            document.addEventListener("mouseup", stopDrag);
+        }
 
         function selectBox(event) {
-  if (!event.ctrlKey) {
-    return; // Exit the function if 'Ctrl' key is not pressed
-  }
+            if (!event.ctrlKey) {
+                return; // Exit the function if 'Ctrl' key is not pressed
+            }
 
-  const box = event.target;
-  if (!selectedBox) {
-    selectedBox = box;
-    startPoint = getCenter(box);
-  } else {
-    const endPoint = getCenter(box);
-    const startBoxId = selectedBox.id; // Get the ID of the start box
-    const endBoxId = box.id; // Get the ID of the end box
-    createLine(startPoint, endPoint, startBoxId, endBoxId);
-    selectedBox = null;
-    startPoint = null;
-  }
-}
+            const box = event.target;
+            if (!selectedBox) {
+                selectedBox = box;
+                startPoint = getCenter(box);
+            } else {
+                const endPoint = getCenter(box);
+                const startBoxId = selectedBox.id; // Get the ID of the start box
+                const endBoxId = box.id; // Get the ID of the end box
+                const lineId = "line" + lines.length; // Unique ID for the line
+                lines.push(lineId, startBoxId, endBoxId); // Store line data
+                createLine(lineId, startBoxId, endBoxId);
+                selectedBox = null;
+                startPoint = null;
+            }
+        }
 
+        function createLine(lineId, startBoxId, endBoxId) {
+            const svg = document.getElementById("lineContainer");
+            const startBox = document.getElementById(startBoxId);
+            const endBox = document.getElementById(endBoxId);
+            if (startBox && endBox) {
+                const start = getCenter(startBox);
+                const end = getCenter(endBox);
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("id", lineId);
+                line.setAttribute("x1", start.x);
+                line.setAttribute("y1", start.y);
+                line.setAttribute("x2", end.x);
+                line.setAttribute("y2", end.y);
+                line.classList.add("line");
+                svg.appendChild(line);
+            }
+        }
 
-       let lineCount = 0; // Variable to keep track of line count
+        function updateLines() {
+            const svg = document.getElementById("lineContainer");
+            svg.innerHTML = ""; // Clear all existing lines
 
-function createLine(start, end, startBoxId, endBoxId) {
-  const svg = document.getElementById("lineContainer");
-  const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-  const lineId = "line" + lineCount; // Unique ID for the line
-  line.setAttribute("id", lineId);
-  line.setAttribute("x1", start.x);
-  line.setAttribute("y1", start.y);
-  line.setAttribute("x2", end.x);
-  line.setAttribute("y2", end.y);
-  line.setAttribute("data-start-box", startBoxId);
-  line.setAttribute("data-end-box", endBoxId);
-  line.classList.add("line");
-  svg.appendChild(line);
-  lineCount++; // Increment the line count
-}
-
-function updateLines() {
-  const svg = document.getElementById("lineContainer");
-  svg.innerHTML = ""; // Clear all existing lines
-
-  const lines = document.getElementsByClassName("line");
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    const startBoxId = line.getAttribute("data-start-box");
-    const endBoxId = line.getAttribute("data-end-box");
-    const startBox = document.getElementById(startBoxId);
-    const endBox = document.getElementById(endBoxId);
-    if (startBox && endBox) {
-      const start = getCenter(startBox);
-      const end = getCenter(endBox);
-      line.setAttribute("x1", start.x);
-      line.setAttribute("y1", start.y);
-      line.setAttribute("x2", end.x);
-      line.setAttribute("y2", end.y);
-    }
-    svg.appendChild(line);
-  }
-}
-
-
-
+            for (let i = 0; i < lines.length; i += 3) {
+                const lineId = lines[i];
+                const startBoxId = lines[i + 1];
+                const endBoxId = lines[i + 2];
+                createLine(lineId, startBoxId, endBoxId);
+            }
+        }
 
         function getCenter(element) {
             const rect = element.getBoundingClientRect();
