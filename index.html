@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxe</title>
+    <title>Pop-Up Box</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -289,22 +289,23 @@
 
         let targetElement = null;
 
-       function toggleColorDropdown(event, dropdownType, targetElement) {
-    const button = event.target;
-    const dropdown = document.querySelector(`[data-dropdown="${dropdownType}"] .dropdown-content`);
-           console.log(dropdown);
-            if (dropdown) {
-                console.log('dropdown exists');
-                dropdown.classList.toggle("show");
-                console.log('dropdown shown');
-                const colorLinks = dropdown.querySelectorAll('a');
-                colorLinks.forEach(link => {
-                    console.log('color links');
-                    link.addEventListener('click', () => changeColor(event, targetElement));
-                });
-                console.log("Dropdown toggled");
-            }
-        }
+    function toggleColorDropdown(event, dropdownType, targetElement) {
+  const button = event.target;
+  const dropdown = document.querySelector(`[data-dropdown="${dropdownType}"] .dropdown-content`);
+  console.log(dropdown);
+  if (dropdown) {
+    console.log('dropdown exists');
+    dropdown.classList.toggle("show");
+    console.log('dropdown shown');
+    const colorLinks = dropdown.querySelectorAll('a');
+    colorLinks.forEach(link => {
+      link.addEventListener('click', (e) => changeColor(e, targetElement));
+    });
+    console.log('color links');
+    console.log("Dropdown toggled");
+  }
+}
+
 
         function changeColor(event, targetElement) {
             console.log("Color changed");
