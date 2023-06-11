@@ -295,9 +295,12 @@
             const dropdownId = button.parentNode.dataset.dropdown;
             const dropdown = document.querySelector(`[data-dropdown="${dropdownId}"] .dropdown-content`);
             if (dropdown) {
+                console.log('dropdown exists');
                 dropdown.classList.toggle("show");
+                console.log('dropdown shown');
                 const colorLinks = dropdown.querySelectorAll('a');
                 colorLinks.forEach(link => {
+                    console.log('color links');
                     link.addEventListener('click', () => changeColor(event, targetElement));
                 });
                 console.log("Dropdown toggled");
