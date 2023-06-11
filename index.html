@@ -150,7 +150,7 @@
     const xPos = event.clientX;
     const yPos = event.clientY;
     const boxWidth = 200; // Adjust the width of the box as needed
-    const boxHeight = 30; // Adjust the height of the box as needed
+    const boxHeight = 50; // Adjust the height of the box as needed
     const box = document.createElement("input");
     box.setAttribute("type", "text");
     box.classList.add("box");
@@ -158,7 +158,7 @@
     count++;
     box.placeholder = "Type here";
     const boxLeft = xPos - boxWidth / 2 + "px";
-    const boxTop = yPos - boxHeight / 2 + "px";
+    const boxTop = yPos - boxHeight / 2 + 50 + "px";
     box.style.left = boxLeft;
     box.style.top = boxTop;
     box.style.width = boxWidth + "px";
