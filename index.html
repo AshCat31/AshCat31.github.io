@@ -158,7 +158,7 @@
     count++;
     box.placeholder = "Type here";
     const boxLeft = xPos - boxWidth / 2 + "px";
-    const boxTop = yPos - boxHeight / 2 - 62 + "px";
+    const boxTop = yPos - boxHeight / 2 - 65 + "px";
     box.style.left = boxLeft;
     box.style.top = boxTop;
     box.style.width = boxWidth + "px";
@@ -288,17 +288,26 @@
 
         let targetElement = null;
 
-        function toggleColorDropdown(event) {
-    const dropdown = event.target.nextElementSibling;
+      function toggleColorDropdown(event) {
+    const button = event.target;
+    const dropdown = button.nextElementSibling;
     if (dropdown) {
         dropdown.classList.toggle("show");
-        targetElement = event.target.getAttribute("data-target");
+        targetElement = button.getAttribute("data-target");
         const colorLinks = dropdown.querySelectorAll('a');
         colorLinks.forEach(link => {
             link.addEventListener('click', changeColor);
         });
     }
 }
+
+// Add event listeners to the icon image buttons as well
+const iconButtons = document.querySelectorAll(".icon-button");
+iconButtons.forEach(button => {
+    const image = button.querySelector("img");
+    image.addEventListener("click", toggleColorDropdown);
+});
+
 
 
         function changeColor(event) {
