@@ -25,6 +25,11 @@
         let count = 0;
 
         function addBox(event) {
+            const target = event.target;
+             if (target.classList.contains("box")) {
+                  console.log("Box clicked");
+                   return;
+             }
             const xPos = event.clientX;
             const yPos = event.clientY;
             const box = document.createElement("input");
