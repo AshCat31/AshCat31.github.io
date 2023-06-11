@@ -26,10 +26,10 @@
 
         function addBox(event) {
             const target = event.target;
-             if (target.classList.contains("box")) {
-                  console.log("Box clicked");
-                   return;
-             }
+            if (target.classList.contains("box")) {
+                console.log("Box clicked");
+                return;
+            }
             const xPos = event.clientX;
             const yPos = event.clientY;
             const box = document.createElement("input");
@@ -45,6 +45,10 @@
         }
 
         function startDrag(event) {
+            if (!event.shiftKey) {
+                return; // Exit the function if 'Shift' key is not pressed
+            }
+
             const box = event.target;
             const initialX = event.clientX - box.getBoundingClientRect().left;
             const initialY = event.clientY - box.getBoundingClientRect().top;
