@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxho</title>
+    <title>Pop-Up Boxhom</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -313,6 +313,7 @@
     console.log('dropdown exists');
     dropdown.classList.toggle("show");
     console.log('dropdown shown');
+    const colorLinks = dropdown.querySelectorAll('a');
    if (thisButton === 'boxChange') {
   colorLinks.forEach(link => {
     link.addEventListener('click', (e) => {
