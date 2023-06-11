@@ -23,7 +23,7 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
+        <h1 class="text-center mb-5">Click Anywhere to Add Box1</h1>
         <div id="mainDiv" onclick="addBox(event)" style="height: 100vh;"></div>
         <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
     </div>
@@ -83,32 +83,38 @@
 
 
         function selectBox(event) {
-            if (!event.ctrlKey) {
-                return; // Exit the function if 'Ctrl' key is not pressed
-            }
+  if (!event.ctrlKey) {
+    return; // Exit the function if 'Ctrl' key is not pressed
+  }
 
-            const box = event.target;
-            if (!selectedBox) {
-                selectedBox = box;
-                startPoint = getCenter(box);
-            } else {
-                const endPoint = getCenter(box);
-                createLine(startPoint, endPoint);
-                selectedBox = null;
-                startPoint = null;
-            }
-        }
+  const box = event.target;
+  if (!selectedBox) {
+    selectedBox = box;
+    startPoint = getCenter(box);
+  } else {
+    const endPoint = getCenter(box);
+    const startBoxId = selectedBox.id; // Get the ID of the start box
+    const endBoxId = box.id; // Get the ID of the end box
+    createLine(startPoint, endPoint, startBoxId, endBoxId);
+    selectedBox = null;
+    startPoint = null;
+  }
+}
 
-        function createLine(start, end) {
-            const svg = document.getElementById("lineContainer");
-            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            line.setAttribute("x1", start.x);
-            line.setAttribute("y1", start.y);
-            line.setAttribute("x2", end.x);
-            line.setAttribute("y2", end.y);
-            line.classList.add("line");
-            svg.appendChild(line);
-        }
+
+        function createLine(start, end, startBoxId, endBoxId) {
+  const svg = document.getElementById("lineContainer");
+  const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+  line.setAttribute("x1", start.x);
+  line.setAttribute("y1", start.y);
+  line.setAttribute("x2", end.x);
+  line.setAttribute("y2", end.y);
+  line.setAttribute("data-start-box", startBoxId); // Store the ID of the start box
+  line.setAttribute("data-end-box", endBoxId); // Store the ID of the end box
+  line.classList.add("line");
+  svg.appendChild(line);
+}
+
 
        function updateLines() {
   const svg = document.getElementById("lineContainer");
@@ -117,6 +123,7 @@
   const boxes = document.getElementsByClassName("box");
   for (let i = 0; i < boxes.length; i++) {
     const box = boxes[i];
+    const startBoxId = box.id; // Get the ID of the start box
     const start = getCenter(box);
     const connectedBoxes = box.dataset.connectedBoxes || ""; // Use an empty string if the property is undefined
     const connectedBoxIds = connectedBoxes.split(",");
@@ -124,11 +131,12 @@
       const endBox = document.getElementById(connectedBoxIds[j]);
       if (endBox) {
         const end = getCenter(endBox);
-        createLine(start, end);
+        createLine(start, end, startBoxId, connectedBoxIds[j]); // Pass the IDs of the start and end boxes
       }
     }
   }
 }
+
 
 
         function getCenter(element) {
