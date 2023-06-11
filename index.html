@@ -14,16 +14,22 @@
             width: 200px;
             height: 50px;
         }
+
+        .line {
+            stroke: black;
+            stroke-width: 2px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
-        <div id="mainDiv" onclick="addBox(event)" style="height: 100vh;"></div>
+        <svg id="mainDiv" onclick="addBox(event)" style="height: 100vh;"></svg>
     </div>
     <script>
         alert("V3");
         let count = 0;
+        let selectedBox = null;
 
         function addBox(event) {
             const target = event.target;
@@ -33,15 +39,20 @@
             }
             const xPos = event.clientX;
             const yPos = event.clientY;
-            const box = document.createElement("input");
+            const box = document.createElementNS("http://www.w3.org/2000/svg", "rect");
             box.setAttribute("type", "text");
             box.classList.add("box");
             box.id = "box" + count;
             count++;
-            box.placeholder = "Type here";
-            box.style.left = xPos + "px";
-            box.style.top = yPos + "px";
+            box.setAttribute("x", xPos - 100);
+            box.setAttribute("y", yPos - 25);
+            box.setAttribute("width", "200");
+            box.setAttribute("height", "50");
+            box.style.fill = "white";
+            box.style.stroke = "black";
+            box.style.borderRadius = "5px";
             box.addEventListener("mousedown", startDrag);
+            box.addEventListener("click", selectBox);
             document.getElementById("mainDiv").appendChild(box);
         }
 
@@ -58,8 +69,8 @@
             function moveBox(event) {
                 const newX = event.clientX - initialX;
                 const newY = event.clientY - initialY;
-                box.style.left = newX + "px";
-                box.style.top = newY + "px";
+                box.setAttribute("x", newX);
+                box.setAttribute("y", newY);
             }
 
             function stopDrag() {
@@ -70,6 +81,39 @@
 
             document.addEventListener("mousemove", moveBox);
             document.addEventListener("mouseup", stopDrag);
+        }
+
+        function selectBox(event) {
+            if (!event.ctrlKey) {
+                return; // Exit the function if 'Ctrl' key is not pressed
+            }
+
+            const box = event.target;
+            if (!selectedBox) {
+                selectedBox = box;
+            } else {
+                createLine(selectedBox, box);
+                selectedBox = null;
+            }
+        }
+
+        function createLine(boxA, boxB) {
+            const svg = document.getElementById("mainDiv");
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            const centerA = getCenter(boxA);
+            const centerB = getCenter(boxB);
+            line.setAttribute("x1", centerA.x);
+            line.setAttribute("y1", centerA.y);
+            line.setAttribute("x2", centerB.x);
+            line.setAttribute("y2", centerB.y);
+            line.classList.add("line");
+            svg.appendChild(line);
+        }
+
+        function getCenter(element) {
+            const x = parseFloat(element.getAttribute("x")) + parseFloat(element.getAttribute("width")) / 2;
+            const y = parseFloat(element.getAttribute("y")) + parseFloat(element.getAttribute("height")) / 2;
+            return { x, y };
         }
     </script>
 </body>
