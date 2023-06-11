@@ -270,7 +270,12 @@
        function toggleColorDropdown() {
   const dropdown = document.querySelector(".dropdown-content");
   dropdown.classList.toggle("show");
+  const colorLinks = dropdown.querySelectorAll('a');
+  colorLinks.forEach(link => {
+    link.addEventListener('click', changeBackgroundColor);
+  });
 }
+
 
 function changeBackgroundColor(event) {
   const newColor = event.target.getAttribute("data-color");
