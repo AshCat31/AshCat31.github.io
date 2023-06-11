@@ -27,7 +27,7 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="text-center mb-5">Click Anywhere to Add Box1</h1>
+        <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
         <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1;"></svg>
         <div id="mainDiv" onclick="addBox(event)" style="height: 100vh;"></div>
     </div>
@@ -35,6 +35,7 @@
         let count = 0;
         let selectedBox = null;
         let startPoint = null;
+        const boxPositions = {};
 
         function addBox(event) {
             const target = event.target;
@@ -47,7 +48,8 @@
             const box = document.createElement("input");
             box.setAttribute("type", "text");
             box.classList.add("box");
-            box.id = "box" + count;
+            const boxId = "box" + count;
+            box.id = boxId;
             count++;
             box.placeholder = "Type here";
             box.style.left = xPos + "px";
@@ -55,6 +57,7 @@
             box.addEventListener("mousedown", startDrag);
             box.addEventListener("click", selectBox);
             document.getElementById("mainDiv").appendChild(box);
+            boxPositions[boxId] = getCenter(box);
         }
 
         function startDrag(event) {
@@ -72,6 +75,8 @@
                 const newY = event.clientY - initialY;
                 box.style.left = newX + "px";
                 box.style.top = newY + "px";
+                boxPositions[box.id] = getCenter(box);
+                updateLines();
             }
 
             function stopDrag() {
@@ -92,9 +97,9 @@
             const box = event.target;
             if (!selectedBox) {
                 selectedBox = box;
-                startPoint = getCenter(box);
+                startPoint = box.id;
             } else {
-                const endPoint = getCenter(box);
+                const endPoint = box.id;
                 createLine(startPoint, endPoint);
                 selectedBox = null;
                 startPoint = null;
@@ -103,13 +108,29 @@
 
         function createLine(start, end) {
             const svg = document.getElementById("lineContainer");
+            const startBox = document.getElementById(start);
+            const endBox = document.getElementById(end);
+            const startCenter = getCenter(startBox);
+            const endCenter = getCenter(endBox);
+
             const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            line.setAttribute("x1", start.x);
-            line.setAttribute("y1", start.y);
-            line.setAttribute("x2", end.x);
-            line.setAttribute("y2", end.y);
+            line.setAttribute("x1", startCenter.x);
+            line.setAttribute("y1", startCenter.y);
+            line.setAttribute("x2", endCenter.x);
+            line.setAttribute("y2", endCenter.y);
             line.classList.add("line");
             svg.appendChild(line);
+        }
+
+        function updateLines() {
+            const svg = document.getElementById("lineContainer");
+            svg.innerHTML = ""; // Clear all existing lines
+
+            for (const [start, end] of Object.entries(boxPositions)) {
+                if (start !== startPoint && end !== startPoint) {
+                    createLine(start, end);
+                }
+            }
         }
 
         function getCenter(element) {
