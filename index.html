@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxd</title>
+    <title>Pop-Up Boxg</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -132,18 +132,16 @@
     </div>
   </div>
 
-  <div class="container">
+ <div id="mainCanvas" onclick="addBox(event)" style="height: 100vh;">
     <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
-    <div id="mainDiv" onclick="addBox(event)" style="height: 100vh;"></div>
     <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
-  </div>
+</div>
 
+<div class="container">
+    <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
+    <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
+</div>
 
-   <div class="container">
-       <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
-       <div id="mainDiv" onclick="addBox(event)" style="height: 100vh;"></div>
-       <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
-   </div>
     <script>
         let count = 0;
         let selectedBox = null;
@@ -331,13 +329,13 @@
 
 
 
-       function changeColor(event, targetElement) {
+     function changeColor(event, targetElement) {
   console.log("Color changed");
   const newColor = event.target.getAttribute("data-color");
 
-  if (targetElement === "mainDiv") {
-    console.log('mainDiv trdt');
-    const canvas = document.getElementById("mainDiv");
+  if (targetElement === "mainCanvas") {
+    console.log('mainCanvas trdt');
+    const canvas = document.getElementById("mainCanvas");
     canvas.style.backgroundColor = newColor;
   } else {
     const box = document.getElementById(targetElement);
