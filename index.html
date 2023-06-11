@@ -74,16 +74,24 @@
             display: inline-block;
         }
 
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 100px;
-            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-            right: 0; /* Align the dropdown to the right */
-            transform-origin: top right; /* Set the transform origin to top right */
-        }
+       .dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 100px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  right: 0;
+  transform-origin: top right;
+  top: 40px; /* Adjust the top position based on the height of the top bar and button size */
+}
+
+.dropdown.show .dropdown-content {
+  display: block;
+  left: unset;
+  right: 0;
+}
+
 
         .dropdown-content a {
             color: black;
@@ -102,30 +110,27 @@
     </style>
 </head>
 <body>
-    <div class="top-bar">
-        <button class="icon-button" onclick="toggleColorDropdown()" data-target="mainDiv">
-    <img src="path/to/paintbrush-icon.svg" alt="Change Background Color">
-</button>
-        <button class="icon-button" onclick="toggleColorDropdown()" data-target="selectedBox">
-    <img src="path/to/paintbrush-icon.svg" alt="Change Box Color">
-</button>
+   <div class="top-bar">
+        <button class="icon-button" onclick="toggleColorDropdown(event)" data-target="mainDiv">
+            <img src="path/to/paintbrush-icon.svg" alt="Change Background Color">
+        </button>
+        <button class="icon-button" onclick="toggleColorDropdown(event)" data-target="selectedBox">
+            <img src="path/to/paintbrush-icon.svg" alt="Change Box Color">
+        </button>
         <div class="dropdown">
-    <button class="icon-button" onclick="toggleBoxColorDropdown()">
-      <img src="path/to/paintbrush-icon.svg" alt="Change Box Color">
-    </button>
-    <div class="dropdown-content">
-      <a href="#" data-color="red">Red</a>
-      <a href="#" data-color="orange">Orange</a>
-      <a href="#" data-color="yellow">Yellow</a>
-      <a href="#" data-color="green">Green</a>
-      <a href="#" data-color="blue">Blue</a>
-      <a href="#" data-color="purple">Purple</a>
-      <a href="#" data-color="black">Black</a>
-      <a href="#" data-color="white">White</a>
-      <a href="#" data-color="gray">Gray</a>
-      <a href="#" data-color="brown">Brown</a>
-    </div>
-  </div>
+            <div class="dropdown-content">
+                <a href="#" data-color="red">Red</a>
+                <a href="#" data-color="orange">Orange</a>
+                <a href="#" data-color="yellow">Yellow</a>
+                <a href="#" data-color="green">Green</a>
+                <a href="#" data-color="blue">Blue</a>
+                <a href="#" data-color="purple">Purple</a>
+                <a href="#" data-color="black">Black</a>
+                <a href="#" data-color="white">White</a>
+                <a href="#" data-color="gray">Gray</a>
+                <a href="#" data-color="brown">Brown</a>
+            </div>
+        </div>
     </div>
 
     <div class="container">
