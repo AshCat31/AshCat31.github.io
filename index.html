@@ -294,6 +294,7 @@
             const button = event.target;
             const dropdownId = button.parentNode.dataset.dropdown;
             const dropdown = document.querySelector(`[data-dropdown="${dropdownId}"] .dropdown-content`);
+           console.log(dropdown);
             if (dropdown) {
                 console.log('dropdown exists');
                 dropdown.classList.toggle("show");
