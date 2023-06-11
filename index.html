@@ -120,8 +120,7 @@
         }
     </style>
 </head>
-<body>
-    <div class="top-bar">
+<div class="top-bar">
         <button class="icon-button" onclick="toggleColorDropdown('canvas')">
             <img src="path/to/paintbrush-icon.svg" alt="Change Background Color">
         </button>
@@ -136,9 +135,7 @@
     </div>
 
     <div class="container">
-        <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
-        <div id="mainDiv" onclick="addBox(event)" style="height: 100vh;"></div>
-        <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
+        <!-- HTML content here -->
     </div>
 
     <div class="dropdown" id="colorDropdown">
@@ -157,7 +154,7 @@
         let lines = []; // Array to store line data
         
         function toggleColorDropdown(target) {
-            const dropdown = document.querySelector(".dropdown-content");
+            const dropdown = document.querySelector("#colorDropdown .dropdown-content");
             dropdown.classList.toggle("show");
             const colorLinks = dropdown.querySelectorAll('a');
             colorLinks.forEach(link => {
@@ -203,56 +200,54 @@
         }
 
 
-        function addBox(event) {
-            const target = event.target;
-            if (target.classList.contains("box")) {
-                return;
-            }
-            const xPos = event.clientX;
-            const yPos = event.clientY;
-            const box = document.createElement("input");
-            box.setAttribute("type", "text");
-            box.classList.add("box");
-            box.id = "box" + count;
-            count++;
-            box.placeholder = "Type here";
-            box.style.left = xPos + "px";
-            box.style.top = yPos + "px";
-            box.addEventListener("mousedown", startDrag);
-            box.addEventListener("click", selectBox);
-            box.addEventListener("contextmenu", deleteBox); // Added event listener for right-click to delete box
-            box.addEventListener("mouseover", showColorDropdown); // Added event listener for showing color dropdown on mouseover
-            document.getElementById("mainDiv").appendChild(box);
-        }
+      function addBox(event) {
+  const target = event.target;
+  if (target.classList.contains("box")) {
+    return;
+  }
+  const xPos = event.clientX;
+  const yPos = event.clientY;
+  const box = document.createElement("input");
+  box.setAttribute("type", "text");
+  box.classList.add("box");
+  box.id = "box" + count;
+  count++;
+  box.placeholder = "Type here";
+  box.style.left = xPos + "px";
+  box.style.top = yPos + "px";
+  box.addEventListener("mousedown", startDrag);
+  box.addEventListener("click", selectBox);
+  box.addEventListener("contextmenu", deleteBox);
+  document.getElementById("mainDiv").appendChild(box);
 
-        function startDrag(event) {
-            if (!event.shiftKey) {
-                return; // Exit the function if 'Shift' key is not pressed
-            }
+       function startDrag(event) {
+  if (!event.shiftKey) {
+    return; // Exit the function if 'Shift' key is not pressed
+  }
 
-            const box = event.target;
-            const initialX = event.clientX - box.getBoundingClientRect().left;
-            const initialY = event.clientY - box.getBoundingClientRect().top;
-            box.style.zIndex = "999"; // Bring the dragged box to the front
+  const box = event.target;
+  const initialX = event.clientX - box.getBoundingClientRect().left;
+  const initialY = event.clientY - box.getBoundingClientRect().top;
+  box.style.zIndex = "999"; // Bring the dragged box to the front
 
-            function moveBox(event) {
-                const newX = event.clientX - initialX;
-                const newY = event.clientY - initialY;
-                box.style.left = newX + "px";
-                box.style.top = newY + "px";
-                updateLines();
-            }
+  function moveBox(event) {
+    const newX = event.clientX - initialX;
+    const newY = event.clientY - initialY;
+    box.style.left = newX + "px";
+    box.style.top = newY + "px";
+    updateLines();
+  }
 
-            function stopDrag() {
-                document.removeEventListener("mousemove", moveBox);
-                document.removeEventListener("mouseup", stopDrag);
-                box.style.zIndex = ""; // Restore the original z-index
-                updateLines(); // Update the lines after dragging stops
-            }
+  function stopDrag() {
+    document.removeEventListener("mousemove", moveBox);
+    document.removeEventListener("mouseup", stopDrag);
+    box.style.zIndex = ""; // Restore the original z-index
+    updateLines(); // Update the lines after dragging stops
+  }
 
-            document.addEventListener("mousemove", moveBox);
-            document.addEventListener("mouseup", stopDrag);
-        }
+  document.addEventListener("mousemove", moveBox);
+  document.addEventListener("mouseup", stopDrag);
+}
 
         
 
