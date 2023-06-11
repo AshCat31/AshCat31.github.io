@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Box</title>
+    <title>Pop-Up Boxf</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -109,12 +109,13 @@
 </head>
 <body>
   <div class="top-bar">
-    <button class="icon-button" onclick="toggleColorDropdown(event, 'colorDropdown', selectedBox)" title="Change Box Color">
-      <img src="images/box-fill.svg" alt="Change Box Color">
-    </button>
+    <button class="icon-button" onclick="selectedBox && toggleColorDropdown(event, 'colorDropdown', selectedBox.id)" title="Change Box Color">
+  <img src="images/box-fill.svg" alt="Change Box Color">
+</button>
     <button class="icon-button" onclick="toggleColorDropdown(event, 'colorDropdown', 'mainDiv')" title="Change Background Color">
-      <img src="images/background-fill.svg" alt="Change Background Color">
-    </button>
+  <img src="images/background-fill.svg" alt="Change Background Color">
+</button>
+
     <div class="dropdown" data-dropdown="colorDropdown">
       <div class="dropdown-content">
         <a href="#" data-color="red">Red</a>
@@ -330,25 +331,28 @@
 
 
 
-        function changeColor(event, targetElement) {
-            console.log("Color changed");
-            const newColor = event.target.getAttribute("data-color");
-            if (newColor && targetElement) {
-                if (targetElement === "mainDiv") {
-                    const canvas = document.getElementById("mainDiv");
-                    canvas.style.backgroundColor = newColor;
-                } else {
-                    const box = document.getElementById(targetElement);
-                    box.style.backgroundColor = newColor;
-                }
-            }
-            const dropdowns = document.getElementsByClassName("dropdown-content");
-            for (let i = 0; i < dropdowns.length; i++) {
-                const dropdown = dropdowns[i];
-                dropdown.classList.remove("show");
-            }
-            event.stopPropagation();
-        }
+       function changeColor(event, targetElement) {
+  console.log("Color changed");
+  const newColor = event.target.getAttribute("data-color");
+
+  if (targetElement === "mainDiv") {
+    const canvas = document.getElementById("mainDiv");
+    canvas.style.backgroundColor = newColor;
+  } else {
+    const box = document.getElementById(targetElement);
+    if (box) {
+      box.style.backgroundColor = newColor;
+    }
+  }
+
+  const dropdowns = document.getElementsByClassName("dropdown-content");
+  for (let i = 0; i < dropdowns.length; i++) {
+    const dropdown = dropdowns[i];
+    dropdown.classList.remove("show");
+  }
+
+  event.stopPropagation();
+}
 
 
 const iconButtons = document.querySelectorAll(".icon-button");
