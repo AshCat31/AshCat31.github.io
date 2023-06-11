@@ -116,21 +116,19 @@
               }
         }
 
-       function deleteLines(boxId) {
-  const svg = document.getElementById("lineContainer");
-  const lines = svg.getElementsByClassName("line");
-  
-  for (let i = lines.length - 1; i >= 0; i--) {
-    const line = lines[i];
-    const startBox = document.getElementById(line.getAttribute("data-start-box"));
-    const endBox = document.getElementById(line.getAttribute("data-end-box"));
-    
-    if (startBox && endBox && (startBox.id === boxId || endBox.id === boxId)) {
-      line.remove();
-    }
-  }
-}
-
+        function deleteLines(boxId) {
+              const svg = document.getElementById("lineContainer");
+              const lines = svg.getElementsByClassName("line");
+              // Iterate over the lines and remove the ones connected to the box
+             for (let i = lines.length - 1; i >= 0; i--) {
+                  const line = lines[i];
+                  const startBoxId = line.getAttribute("data-start-box");
+                  const endBoxId = line.getAttribute("data-end-box");
+                  if (startBoxId === boxId || endBoxId === boxId) {
+                      line.remove();
+                 }
+              }
+       }
 
         function createLine(lineId, startBoxId, endBoxId) {
             const svg = document.getElementById("lineContainer");
@@ -145,8 +143,8 @@
                 line.setAttribute("y1", start.y);
                 line.setAttribute("x2", end.x);
                 line.setAttribute("y2", end.y);
-                line.setAttribute("data-start-box", startBoxID);
-                line.setAttribute("data-end-box", endBoxID);
+                line.setAttribute("data-start-box", startBoxId);
+                line.setAttribute("data-end-box", endBoxId);
                 line.classList.add("line");
                 svg.appendChild(line);
             }
