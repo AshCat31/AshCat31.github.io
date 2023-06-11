@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxx</title>
+    <title>Pop-Up Box</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -306,6 +306,7 @@
 
    function toggleColorDropdown(event, dropdownType, targetElement) {
   const button = event.target;
+  console.log(button);
   const dropdown = document.querySelector(`.dropdown[data-dropdown="${dropdownType}"] .dropdown-content`);
   console.log(String(targetElement) + ' tgrt');
   if (dropdown) {
