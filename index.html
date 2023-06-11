@@ -295,24 +295,12 @@
             return { x, y };
         }
 
-        function toggleColorDropdown(target) {
+       function toggleColorDropdown(target) {
             const dropdown = document.querySelector(".dropdown-content");
             dropdown.classList.toggle("show");
             const colorLinks = dropdown.querySelectorAll('a');
             colorLinks.forEach(link => {
                 link.addEventListener('click', (event) => changeColor(event, target));
-            });
-        }
-
-        function showColorDropdown(event) {
-            event.stopPropagation();
-            const dropdown = document.querySelector(".dropdown-content");
-            dropdown.style.display = "block";
-            dropdown.style.left = event.target.offsetLeft + "px";
-            dropdown.style.top = event.target.offsetTop + event.target.offsetHeight + "px";
-            const colorLinks = dropdown.querySelectorAll('a');
-            colorLinks.forEach(link => {
-                link.addEventListener('click', (event) => changeColor(event, 'box'));
             });
         }
 
@@ -329,7 +317,6 @@
                 }
             }
         }
-
     </script>
 </body>
 </html>
