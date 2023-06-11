@@ -305,6 +305,7 @@
    function toggleColorDropdown(event, dropdownType, targetElement) {
   const button = event.target;
   const dropdown = document.querySelector(`.dropdown[data-dropdown="${dropdownType}"] .dropdown-content`);
+  console.log(targetElement+'tgrt');
   console.log(dropdown);
   console.log(document.querySelector(`.dropdown[data-dropdown="${dropdownType}"] .dropdown-content`));
   console.log(dropdownType);
