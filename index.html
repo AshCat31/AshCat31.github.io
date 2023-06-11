@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxf</title>
+    <title>Pop-Up Boxd</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -324,7 +324,6 @@
     colorLinks.forEach(link => {
       link.addEventListener('click', (e) => changeColor(e, targetElement));
     });
-    console.log('color links');
     console.log("Dropdown toggled");
   }
 }
@@ -336,6 +335,7 @@
   const newColor = event.target.getAttribute("data-color");
 
   if (targetElement === "mainDiv") {
+    console.log('mainDiv trdt');
     const canvas = document.getElementById("mainDiv");
     canvas.style.backgroundColor = newColor;
   } else {
