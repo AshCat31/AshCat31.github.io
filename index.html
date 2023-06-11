@@ -155,6 +155,53 @@
         let selectedBox = null;
         let startPoint = null;
         let lines = []; // Array to store line data
+        
+        function toggleColorDropdown(target) {
+            const dropdown = document.querySelector(".dropdown-content");
+            dropdown.classList.toggle("show");
+            const colorLinks = dropdown.querySelectorAll('a');
+            colorLinks.forEach(link => {
+                link.addEventListener('click', (event) => changeColor(event, target));
+            });
+        }
+
+        function changeColor(event, target) {
+            const newColor = event.target.getAttribute("data-color");
+            if (newColor) {
+                if (target === 'canvas') {
+                    const canvas = document.getElementById("mainDiv");
+                    canvas.style.backgroundColor = newColor;
+                } else if (target === 'box' && selectedBox) {
+                    selectedBox.style.backgroundColor = newColor;
+                } else if (target === 'text' && selectedBox) {
+                    selectedBox.style.color = newColor;
+                }
+            }
+        }
+
+        document.addEventListener('click', (event) => {
+            const dropdown = document.querySelector(".dropdown-content");
+            if (event.target.closest('.dropdown') === null) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const boxes = document.querySelectorAll('.box');
+            boxes.forEach(box => {
+                box.addEventListener('click', selectBox);
+            });
+        });
+
+        function selectBox(event) {
+            if (selectedBox) {
+                selectedBox.classList.remove('selected');
+            }
+            const box = event.target;
+            box.classList.add('selected');
+            selectedBox = box;
+        }
+
 
         function addBox(event) {
             const target = event.target;
@@ -207,33 +254,7 @@
             document.addEventListener("mouseup", stopDrag);
         }
 
-        function selectBox(event) {
-            if (event.altKey) {
-                const box = event.target;
-                const boxId = box.id;
-                deleteBox(boxId);
-                deleteLines(boxId);
-                return;
-            }
-            if (!event.ctrlKey) {
-                return; // Exit the function if 'Ctrl' key is not pressed
-            }
-
-            const box = event.target;
-            if (!selectedBox) {
-                selectedBox = box;
-                startPoint = getCenter(box);
-            } else {
-                const endPoint = getCenter(box);
-                const startBoxId = selectedBox.id; // Get the ID of the start box
-                const endBoxId = box.id; // Get the ID of the end box
-                const lineId = "line" + lines.length; // Unique ID for the line
-                lines.push(lineId, startBoxId, endBoxId); // Store line data
-                createLine(lineId, startBoxId, endBoxId);
-                selectedBox = null;
-                startPoint = null;
-            }
-        }
+        
 
         function deleteBox(boxId) {
             const box = document.getElementById(boxId);
@@ -295,28 +316,7 @@
             return { x, y };
         }
 
-       function toggleColorDropdown(target) {
-            const dropdown = document.querySelector(".dropdown-content");
-            dropdown.classList.toggle("show");
-            const colorLinks = dropdown.querySelectorAll('a');
-            colorLinks.forEach(link => {
-                link.addEventListener('click', (event) => changeColor(event, target));
-            });
-        }
 
-        function changeColor(event, target) {
-            const newColor = event.target.getAttribute("data-color");
-            if (newColor) {
-                if (target === 'canvas') {
-                    const canvas = document.getElementById("mainDiv");
-                    canvas.style.backgroundColor = newColor;
-                } else if (target === 'box' && selectedBox) {
-                    selectedBox.style.backgroundColor = newColor;
-                } else if (target === 'text' && selectedBox) {
-                    selectedBox.style.color = newColor;
-                }
-            }
-        }
     </script>
 </body>
 </html>
