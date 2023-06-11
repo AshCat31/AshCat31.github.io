@@ -103,42 +103,18 @@
 </head>
 <body>
     <div class="top-bar">
-        <button class="icon-button"><img src="path/to/add-icon.png" alt="Add Icon"></button>
-        <button class="icon-button"><img src="path/to/edit-icon.png" alt="Edit Icon"></button>
-        <div class="dropdown">
-            <button class="icon-button" onclick="toggleColorDropdown()">
-                <img src="path/to/paintbrush-icon.svg" alt="Change Background Color">
-            </button>
-            <div class="dropdown-content">
-                <a href="#" data-color="red">Red</a>
-                <a href="#" data-color="orange">Orange</a>
-                <a href="#" data-color="yellow">Yellow</a>
-                <a href="#" data-color="green">Green</a>
-                <a href="#" data-color="blue">Blue</a>
-                <a href="#" data-color="purple">Purple</a>
-                <a href="#" data-color="black">Black</a>
-                <a href="#" data-color="white">White</a>
-                <a href="#" data-color="gray">Gray</a>
-                <a href="#" data-color="brown">Brown</a>
-            </div>
-        </div>
-        <div class="dropdown">
-    <button class="icon-button" onclick="toggleBoxColorDropdown()">
-      <img src="path/to/paintbrush-icon.svg" alt="Change Box Color">
-    </button>
-    <div class="dropdown-content">
-      <a href="#" data-color="red">Red</a>
-      <a href="#" data-color="orange">Orange</a>
-      <a href="#" data-color="yellow">Yellow</a>
-      <a href="#" data-color="green">Green</a>
-      <a href="#" data-color="blue">Blue</a>
-      <a href="#" data-color="purple">Purple</a>
-      <a href="#" data-color="black">Black</a>
-      <a href="#" data-color="white">White</a>
-      <a href="#" data-color="gray">Gray</a>
-      <a href="#" data-color="brown">Brown</a>
-    </div>
-  </div>
+        <button class="icon-button" onclick="toggleColorDropdown('canvas')">
+  <img src="path/to/paintbrush-icon.svg" alt="Change Background Color">
+</button>
+
+<button class="icon-button" onclick="toggleColorDropdown('box')">
+  <img src="path/to/paintbrush-icon.svg" alt="Change Box Color">
+</button>
+
+<button class="icon-button" onclick="toggleColorDropdown('text')">
+  <img src="path/to/paintbrush-icon.svg" alt="Change Text Color">
+</button>
+
     </div>
 
     <div class="container">
@@ -289,42 +265,30 @@
             return { x, y };
         }
 
-        function toggleColorDropdown() {
-            const dropdown = document.querySelector(".dropdown-content");
-            dropdown.classList.toggle("show");
-            const colorLinks = dropdown.querySelectorAll('a');
-            colorLinks.forEach(link => {
-                link.addEventListener('click', changeBackgroundColor);
-            });
-        }
-
-
-        function changeBackgroundColor(event) {
-            const newColor = event.target.getAttribute("data-color");
-            if (newColor) {
-                const canvas = document.getElementById("mainDiv");
-                canvas.style.backgroundColor = newColor;
-            }
-        }
-        function toggleBoxColorDropdown() {
+        function toggleColorDropdown(target) {
   const dropdown = document.querySelector(".dropdown-content");
   dropdown.classList.toggle("show");
   const colorLinks = dropdown.querySelectorAll('a');
   colorLinks.forEach(link => {
-    link.addEventListener('click', changeBoxColor);
-    link.addEventListener('mousedown', (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-    });
+    link.addEventListener('click', (event) => changeColor(event, target));
   });
 }
 
-function changeBoxColor(event) {
+
+function changeColor(event, target) {
   const newColor = event.target.getAttribute("data-color");
-  if (newColor && selectedBox) {
-    selectedBox.style.backgroundColor = newColor;
+  if (newColor) {
+    if (target === 'canvas') {
+      const canvas = document.getElementById("mainDiv");
+      canvas.style.backgroundColor = newColor;
+    } else if (target === 'box' && selectedBox) {
+      selectedBox.style.backgroundColor = newColor;
+    } else if (target === 'text' && selectedBox) {
+      selectedBox.style.color = newColor;
+    }
   }
 }
+
 
 
     </script>
