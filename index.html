@@ -27,7 +27,7 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
+        <h1 class="text-center mb-5">Click Anywhere to Add Box2</h1>
         <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1;"></svg>
         <div id="mainDiv" onclick="addBox(event)" style="height: 100vh;"></div>
     </div>
@@ -70,24 +70,34 @@
             const initialY = event.clientY - box.getBoundingClientRect().top;
             box.style.zIndex = "999"; // Bring the dragged box to the front
 
-            function moveBox(event) {
-                const newX = event.clientX - initialX;
-                const newY = event.clientY - initialY;
-                box.style.left = newX + "px";
-                box.style.top = newY + "px";
-                boxPositions[box.id] = getCenter(box);
-                updateLines();
-            }
+           function moveBox(event) {
+    const box = event.target;
+    if (!box) {
+        return; // Exit the function if the box element no longer exists
+    }
 
-            function stopDrag() {
-                document.removeEventListener("mousemove", moveBox);
-                document.removeEventListener("mouseup", stopDrag);
-                box.style.zIndex = ""; // Restore the original z-index
-            }
+    const initialX = event.clientX - box.getBoundingClientRect().left;
+    const initialY = event.clientY - box.getBoundingClientRect().top;
+    box.style.zIndex = "999"; // Bring the dragged box to the front
 
-            document.addEventListener("mousemove", moveBox);
-            document.addEventListener("mouseup", stopDrag);
-        }
+    function updateBoxPosition(event) {
+        const newX = event.clientX - initialX;
+        const newY = event.clientY - initialY;
+        box.style.left = newX + "px";
+        box.style.top = newY + "px";
+        boxPositions[box.id] = getCenter(box);
+        updateLines();
+    }
+
+    function stopDrag() {
+        document.removeEventListener("mousemove", updateBoxPosition);
+        document.removeEventListener("mouseup", stopDrag);
+        box.style.zIndex = ""; // Restore the original z-index
+    }
+
+    document.addEventListener("mousemove", updateBoxPosition);
+    document.addEventListener("mouseup", stopDrag);
+}
 
         function selectBox(event) {
             if (!event.ctrlKey) {
