@@ -54,32 +54,34 @@
         }
 
         function startDrag(event) {
-            if (!event.shiftKey) {
-                return; // Exit the function if 'Shift' key is not pressed
-            }
+  if (!event.shiftKey) {
+    return; // Exit the function if 'Shift' key is not pressed
+  }
 
-            const box = event.target;
-            const initialX = event.clientX - box.getBoundingClientRect().left;
-            const initialY = event.clientY - box.getBoundingClientRect().top;
-            box.style.zIndex = "999"; // Bring the dragged box to the front
+  const box = event.target;
+  const initialX = event.clientX - box.getBoundingClientRect().left;
+  const initialY = event.clientY - box.getBoundingClientRect().top;
+  box.style.zIndex = "999"; // Bring the dragged box to the front
 
-            function moveBox(event) {
-                const newX = event.clientX - initialX;
-                const newY = event.clientY - initialY;
-                box.style.left = newX + "px";
-                box.style.top = newY + "px";
-                updateLines();
-            }
+  function moveBox(event) {
+    const newX = event.clientX - initialX;
+    const newY = event.clientY - initialY;
+    box.style.left = newX + "px";
+    box.style.top = newY + "px";
+    updateLines();
+  }
 
-            function stopDrag() {
-                document.removeEventListener("mousemove", moveBox);
-                document.removeEventListener("mouseup", stopDrag);
-                box.style.zIndex = ""; // Restore the original z-index
-            }
+  function stopDrag() {
+    document.removeEventListener("mousemove", moveBox);
+    document.removeEventListener("mouseup", stopDrag);
+    box.style.zIndex = ""; // Restore the original z-index
+    updateLines(); // Update the lines after dragging stops
+  }
 
-            document.addEventListener("mousemove", moveBox);
-            document.addEventListener("mouseup", stopDrag);
-        }
+  document.addEventListener("mousemove", moveBox);
+  document.addEventListener("mouseup", stopDrag);
+}
+
 
         function selectBox(event) {
             if (!event.ctrlKey) {
