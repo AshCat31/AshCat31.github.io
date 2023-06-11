@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Bos</title>
+    <title>Pop-Up Bo</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -40,7 +40,7 @@
             left: 0;
             right: 0;
             z-index: 9999;
-            border-bottom: 1px solid black;
+            border-bottom: 3px solid black;
             display: flex;
             justify-content: flex-end; /* Align buttons to the right */
         }
@@ -109,27 +109,27 @@
 </head>
 <body>
    <div class="top-bar">
-       <button class="icon-button" onclick="toggleColorDropdown(event, 'mainDiv')">
-            <img src="images/background-fill.svg" alt="Change Background Color">
-        </button>
-        <button class="icon-button" onclick="toggleColorDropdown(event, 'selectedBox')">
-            <img src="images/box-fill.svg" alt="Change Box Color">
-        </button>
-        <div class="dropdown">
-            <div class="dropdown-content">
-                <a href="#" data-color="red">Red</a>
-                <a href="#" data-color="orange">Orange</a>
-                <a href="#" data-color="yellow">Yellow</a>
-                <a href="#" data-color="green">Green</a>
-                <a href="#" data-color="blue">Blue</a>
-                <a href="#" data-color="purple">Purple</a>
-                <a href="#" data-color="black">Black</a>
-                <a href="#" data-color="white">White</a>
-                <a href="#" data-color="gray">Gray</a>
-                <a href="#" data-color="brown">Brown</a>
-            </div>
+   <button class="icon-button" onclick="toggleColorDropdown(event, 'mainDiv')">
+        <img src="images/background-fill.svg" alt="Change Background Color">
+    </button>
+    <button class="icon-button" onclick="toggleColorDropdown(event, 'selectedBox')">
+        <img src="images/box-fill.svg" alt="Change Box Color">
+    </button>
+    <div class="dropdown" data-dropdown="colorDropdown">
+        <div class="dropdown-content">
+            <a href="#" data-color="red">Red</a>
+            <a href="#" data-color="orange">Orange</a>
+            <a href="#" data-color="yellow">Yellow</a>
+            <a href="#" data-color="green">Green</a>
+            <a href="#" data-color="blue">Blue</a>
+            <a href="#" data-color="purple">Purple</a>
+            <a href="#" data-color="black">Black</a>
+            <a href="#" data-color="white">White</a>
+            <a href="#" data-color="gray">Gray</a>
+            <a href="#" data-color="brown">Brown</a>
         </div>
     </div>
+</div>
 
     <div class="container">
         <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
@@ -289,16 +289,18 @@
         let targetElement = null;
 
        function toggleColorDropdown(event, targetElement) {
-            const button = event.target;
-            const dropdown = button.nextElementSibling;
-            if (dropdown) {
-                dropdown.classList.toggle("show");
-                const colorLinks = dropdown.querySelectorAll('a');
-                colorLinks.forEach(link => {
-                    link.addEventListener('click', () => changeColor(event, targetElement));
-                });
-            }
-        }
+    const button = event.target;
+    const dropdownId = button.parentNode.dataset.dropdown;
+    const dropdown = document.querySelector(`[data-dropdown="${dropdownId}"] .dropdown-content`);
+    if (dropdown) {
+        dropdown.classList.toggle("show");
+        const colorLinks = dropdown.querySelectorAll('a');
+        colorLinks.forEach(link => {
+            link.addEventListener('click', () => changeColor(event, targetElement));
+        });
+    }
+}
+
 
 // Add event listeners to the icon image buttons as well
 const iconButtons = document.querySelectorAll(".icon-button");
