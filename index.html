@@ -18,12 +18,11 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
+        <h1 class="text-center mb-5">Click Anywhere to Add Box rev</h1>
         <div id="mainDiv" onclick="addBox(event)" style="height: 100vh;"></div>
     </div>
     <script>
         let count = 0;
-
         function addBox(event) {
             const target = event.target;
             if (target.classList.contains("box")) {
