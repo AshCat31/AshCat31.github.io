@@ -20,9 +20,14 @@
             stroke-width: 2px;
         }
         .top-bar {
-            background-color: #333;
-            color: #fff;
+            background-color: lightgray;
+            color: black;
             padding: 10px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
         }
     </style>
 </head>
@@ -31,7 +36,7 @@
         <p>This is the top bar.</p>
     </div>
     <div class="container">
-        <h1 class="text-center mb-5">Click Anywhere to Add Boxt</h1>
+        <h1 class="text-center mb-5">Click Anywhere to Add Boxa</h1>
         <div id="mainDiv" onclick="addBox(event)" style="height: 100vh;"></div>
         <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
     </div>
