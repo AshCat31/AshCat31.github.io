@@ -28,6 +28,25 @@
             height: 50px;
             z-index: 1;
         }
+        .box:hover {
+            cursor: move;
+        }
+
+        .box button {
+            width: 20px;
+            height: 20px;
+            background-color: transparent;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .box button img {
+            width: 16px;
+            height: 16px;
+        }
 
         .line {
             stroke: black;
@@ -104,24 +123,33 @@
 <body>
     <div class="top-bar">
         <button class="icon-button" onclick="toggleColorDropdown('canvas')">
-  <img src="path/to/paintbrush-icon.svg" alt="Change Background Color">
-</button>
+            <img src="path/to/paintbrush-icon.svg" alt="Change Background Color">
+        </button>
 
-<button class="icon-button" onclick="toggleColorDropdown('box')">
-  <img src="path/to/paintbrush-icon.svg" alt="Change Box Color">
-</button>
+        <button class="icon-button" onclick="toggleColorDropdown('box')">
+            <img src="path/to/paintbrush-icon.svg" alt="Change Box Color">
+        </button>
 
-<button class="icon-button" onclick="toggleColorDropdown('text')">
-  <img src="path/to/paintbrush-icon.svg" alt="Change Text Color">
-</button>
-
+        <button class="icon-button" onclick="toggleColorDropdown('text')">
+            <img src="path/to/paintbrush-icon.svg" alt="Change Text Color">
+        </button>
     </div>
 
     <div class="container">
-        <h1 class="text-center mb-5">Click Anywhere to Add Boxa</h1>
+        <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
         <div id="mainDiv" onclick="addBox(event)" style="height: 100vh;"></div>
         <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
     </div>
+
+    <div class="dropdown" id="colorDropdown">
+        <div class="dropdown-content">
+            <a href="#" data-color="red">Red</a>
+            <a href="#" data-color="green">Green</a>
+            <a href="#" data-color="blue">Blue</a>
+            <a href="#" data-color="yellow">Yellow</a>
+        </div>
+    </div>
+
     <script>
         let count = 0;
         let selectedBox = null;
@@ -145,6 +173,8 @@
             box.style.top = yPos + "px";
             box.addEventListener("mousedown", startDrag);
             box.addEventListener("click", selectBox);
+            box.addEventListener("contextmenu", deleteBox); // Added event listener for right-click to delete box
+            box.addEventListener("mouseover", showColorDropdown); // Added event listener for showing color dropdown on mouseover
             document.getElementById("mainDiv").appendChild(box);
         }
 
@@ -266,30 +296,39 @@
         }
 
         function toggleColorDropdown(target) {
-  const dropdown = document.querySelector(".dropdown-content");
-  dropdown.classList.toggle("show");
-  const colorLinks = dropdown.querySelectorAll('a');
-  colorLinks.forEach(link => {
-    link.addEventListener('click', (event) => changeColor(event, target));
-  });
-}
+            const dropdown = document.querySelector(".dropdown-content");
+            dropdown.classList.toggle("show");
+            const colorLinks = dropdown.querySelectorAll('a');
+            colorLinks.forEach(link => {
+                link.addEventListener('click', (event) => changeColor(event, target));
+            });
+        }
 
+        function showColorDropdown(event) {
+            event.stopPropagation();
+            const dropdown = document.querySelector(".dropdown-content");
+            dropdown.style.display = "block";
+            dropdown.style.left = event.target.offsetLeft + "px";
+            dropdown.style.top = event.target.offsetTop + event.target.offsetHeight + "px";
+            const colorLinks = dropdown.querySelectorAll('a');
+            colorLinks.forEach(link => {
+                link.addEventListener('click', (event) => changeColor(event, 'box'));
+            });
+        }
 
-function changeColor(event, target) {
-  const newColor = event.target.getAttribute("data-color");
-  if (newColor) {
-    if (target === 'canvas') {
-      const canvas = document.getElementById("mainDiv");
-      canvas.style.backgroundColor = newColor;
-    } else if (target === 'box' && selectedBox) {
-      selectedBox.style.backgroundColor = newColor;
-    } else if (target === 'text' && selectedBox) {
-      selectedBox.style.color = newColor;
-    }
-  }
-}
-
-
+        function changeColor(event, target) {
+            const newColor = event.target.getAttribute("data-color");
+            if (newColor) {
+                if (target === 'canvas') {
+                    const canvas = document.getElementById("mainDiv");
+                    canvas.style.backgroundColor = newColor;
+                } else if (target === 'box' && selectedBox) {
+                    selectedBox.style.backgroundColor = newColor;
+                } else if (target === 'text' && selectedBox) {
+                    selectedBox.style.color = newColor;
+                }
+            }
+        }
 
     </script>
 </body>
