@@ -122,6 +122,23 @@
                 <a href="#" data-color="brown">Brown</a>
             </div>
         </div>
+        <div class="dropdown">
+    <button class="icon-button" onclick="toggleBoxColorDropdown()">
+      <img src="path/to/paintbrush-icon.svg" alt="Change Box Color">
+    </button>
+    <div class="dropdown-content">
+      <a href="#" data-color="red">Red</a>
+      <a href="#" data-color="orange">Orange</a>
+      <a href="#" data-color="yellow">Yellow</a>
+      <a href="#" data-color="green">Green</a>
+      <a href="#" data-color="blue">Blue</a>
+      <a href="#" data-color="purple">Purple</a>
+      <a href="#" data-color="black">Black</a>
+      <a href="#" data-color="white">White</a>
+      <a href="#" data-color="gray">Gray</a>
+      <a href="#" data-color="brown">Brown</a>
+    </div>
+  </div>
     </div>
 
     <div class="container">
@@ -289,6 +306,22 @@
                 canvas.style.backgroundColor = newColor;
             }
         }
+        function toggleBoxColorDropdown() {
+  const dropdown = document.querySelector(".dropdown-content");
+  dropdown.classList.toggle("show");
+  const colorLinks = dropdown.querySelectorAll('a');
+  colorLinks.forEach(link => {
+    link.addEventListener('click', changeBoxColor);
+  });
+}
+
+function changeBoxColor(event) {
+  const newColor = event.target.getAttribute("data-color");
+  if (newColor && selectedBox) {
+    selectedBox.style.backgroundColor = newColor;
+  }
+}
+
     </script>
 </body>
 </html>
