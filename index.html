@@ -26,17 +26,20 @@
             background-color: lightgray;
             color: black;
             padding: 10px;
-            border-bottom: 1px solid black;
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 9999;
+            border-bottom: 1px solid black;
+            display: flex;
+            justify-content: flex-end; /* Align buttons to the right */
         }
+
         .top-bar button {
             width: 40px;
             height: 40px;
-            border: none;
+            border: 2px solid black;
             background-color: transparent;
             margin-left: 5px;
             display: flex;
@@ -51,7 +54,7 @@
     </style>
 </head>
 <body>
-     <div class="top-bar">
+    <div class="top-bar">
         <button><i class="material-icons">add</i></button>
         <button><i class="material-icons">edit</i></button>
         <button><i class="material-icons">delete</i></button>
