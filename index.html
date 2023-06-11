@@ -74,3 +74,74 @@
     </script>
 </body>
 </html>
+<html>
+<head>
+    <title>Pop-Up Box</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .box {
+            background-color: white;
+            border: 2px solid black;
+            border-radius: 5px;
+            padding: 5px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            position: absolute;
+            width: 200px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
+        <div id="mainDiv" onclick="addBox(event)" style="height: 100vh;"></div>
+    </div>
+    <script>
+        let count = 0;
+
+        function addBox(event) {
+            const target = event.target;
+             if (target.classList.contains("box")) {
+                  console.log("Box clicked");
+                   return;
+             }
+            const xPos = event.clientX;
+            const yPos = event.clientY;
+            const box = document.createElement("input");
+            box.setAttribute("type", "text");
+            box.classList.add("box");
+            box.id = "box" + count;
+            count++;
+            box.placeholder = "Type here";
+            box.style.left = xPos + "px";
+            box.style.top = yPos + "px";
+            box.addEventListener("mousedown", startDrag);
+            document.getElementById("mainDiv").appendChild(box);
+        }
+
+        function startDrag(event) {
+            const box = event.target;
+            const initialX = event.clientX - box.getBoundingClientRect().left;
+            const initialY = event.clientY - box.getBoundingClientRect().top;
+            box.style.zIndex = "999"; // Bring the dragged box to the front
+
+            function moveBox(event) {
+                const newX = event.clientX - initialX;
+                const newY = event.clientY - initialY;
+                box.style.left = newX + "px";
+                box.style.top = newY + "px";
+            }
+
+            function stopDrag() {
+                document.removeEventListener("mousemove", moveBox);
+                document.removeEventListener("mouseup", stopDrag);
+                box.style.zIndex = ""; // Restore the original z-index
+            }
+
+            document.addEventListener("mousemove", moveBox);
+            document.addEventListener("mouseup", stopDrag);
+        }
+    </script>
+</body>
+</html>
