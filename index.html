@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Bok</title>
+    <title>Pop-Up Boks</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -69,29 +69,30 @@
             height: 24px;
         }
 
-        .dropdown {
+       .dropdown {
             position: relative;
             display: inline-block;
         }
 
-       .dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 55px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-  right: 0;
-  transform-origin: top right;
-  top: 40px; /* Adjust the top position based on the height of the top bar and button size */
-}
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 55px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            right: 0;
+            transform-origin: top right;
+            top: 40px; /* Adjust the top position based on the height of the top bar and button size */
+        }
 
-.dropdown.show .dropdown-content {
-  display: block;
-  left: unset;
-  right: 0;
-}
-
+        .dropdown.show .dropdown-content {
+            display: block;
+            left: unset;
+            right: 0;
+            top: 100%; /* Change top position to appear below the button */
+            transform-origin: bottom right;
+        }
 
         .dropdown-content a {
             color: black;
@@ -134,7 +135,7 @@
     </div>
 
     <div class="container">
-        <h1 class="text-center mb-5">Click Anywhere to Add Boxa</h1>
+        <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
         <div id="mainDiv" onclick="addBox(event)" style="height: 100vh;"></div>
         <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
     </div>
@@ -283,28 +284,34 @@
 
         let targetElement = null;
 
-function toggleColorDropdown(event) {
-    const dropdown = document.querySelector(".dropdown-content");
-    dropdown.classList.toggle("show");
-    targetElement = event.target.getAttribute("data-target");
-    const colorLinks = dropdown.querySelectorAll('a');
-    colorLinks.forEach(link => {
-        link.addEventListener('click', changeColor);
-    });
-}
-
-function changeColor(event) {
-    const newColor = event.target.getAttribute("data-color");
-    if (newColor && targetElement) {
-        if (targetElement === "mainDiv") {
-            const canvas = document.getElementById("mainDiv");
-            canvas.style.backgroundColor = newColor;
-        } else if (targetElement === "selectedBox" && selectedBox) {
-            selectedBox.style.backgroundColor = newColor;
+        function toggleColorDropdown(event) {
+            const dropdown = event.target.nextElementSibling;
+            dropdown.classList.toggle("show");
+            targetElement = event.target.getAttribute("data-target");
+            const colorLinks = dropdown.querySelectorAll('a');
+            colorLinks.forEach(link => {
+                link.addEventListener('click', changeColor);
+            });
         }
-    }
-}
 
+        function changeColor(event) {
+            const newColor = event.target.getAttribute("data-color");
+            if (newColor && targetElement) {
+                if (targetElement === "mainDiv") {
+                    const canvas = document.getElementById("mainDiv");
+                    canvas.style.backgroundColor = newColor;
+                } else {
+                    const box = document.getElementById(targetElement);
+                    box.style.backgroundColor = newColor;
+                }
+            }
+            const dropdowns = document.getElementsByClassName("dropdown-content");
+            for (let i = 0; i < dropdowns.length; i++) {
+                const dropdown = dropdowns[i];
+                dropdown.classList.remove("show");
+            }
+            event.stopPropagation();
+        }
     </script>
 </body>
 </html>
