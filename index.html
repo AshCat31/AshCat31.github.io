@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        .container {
-            position: relative;
-        }
-
         .box {
             background-color: white;
             border: 2px solid black;
@@ -18,7 +14,6 @@
             width: 200px;
             height: 50px;
         }
-
         .line {
             stroke: black;
             stroke-width: 2px;
@@ -27,15 +22,14 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="text-center mb-5">Click Anywhere to Add Box2</h1>
-        <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1;"></svg>
+        <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
         <div id="mainDiv" onclick="addBox(event)" style="height: 100vh;"></div>
+        <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
     </div>
     <script>
         let count = 0;
         let selectedBox = null;
         let startPoint = null;
-        const boxPositions = {};
 
         function addBox(event) {
             const target = event.target;
@@ -48,8 +42,7 @@
             const box = document.createElement("input");
             box.setAttribute("type", "text");
             box.classList.add("box");
-            const boxId = "box" + count;
-            box.id = boxId;
+            box.id = "box" + count;
             count++;
             box.placeholder = "Type here";
             box.style.left = xPos + "px";
@@ -57,7 +50,6 @@
             box.addEventListener("mousedown", startDrag);
             box.addEventListener("click", selectBox);
             document.getElementById("mainDiv").appendChild(box);
-            boxPositions[boxId] = getCenter(box);
         }
 
         function startDrag(event) {
@@ -70,34 +62,23 @@
             const initialY = event.clientY - box.getBoundingClientRect().top;
             box.style.zIndex = "999"; // Bring the dragged box to the front
 
-           function moveBox(event) {
-    const box = event.target;
-    if (!box) {
-        return; // Exit the function if the box element no longer exists
-    }
+            function moveBox(event) {
+                const newX = event.clientX - initialX;
+                const newY = event.clientY - initialY;
+                box.style.left = newX + "px";
+                box.style.top = newY + "px";
+                updateLines();
+            }
 
-    const initialX = event.clientX - box.getBoundingClientRect().left;
-    const initialY = event.clientY - box.getBoundingClientRect().top;
-    box.style.zIndex = "999"; // Bring the dragged box to the front
+            function stopDrag() {
+                document.removeEventListener("mousemove", moveBox);
+                document.removeEventListener("mouseup", stopDrag);
+                box.style.zIndex = ""; // Restore the original z-index
+            }
 
-    function updateBoxPosition(event) {
-        const newX = event.clientX - initialX;
-        const newY = event.clientY - initialY;
-        box.style.left = newX + "px";
-        box.style.top = newY + "px";
-        boxPositions[box.id] = getCenter(box);
-        updateLines();
-    }
-
-    function stopDrag() {
-        document.removeEventListener("mousemove", updateBoxPosition);
-        document.removeEventListener("mouseup", stopDrag);
-        box.style.zIndex = ""; // Restore the original z-index
-    }
-
-    document.addEventListener("mousemove", updateBoxPosition);
-    document.addEventListener("mouseup", stopDrag);
-}
+            document.addEventListener("mousemove", moveBox);
+            document.addEventListener("mouseup", stopDrag);
+        }
 
         function selectBox(event) {
             if (!event.ctrlKey) {
@@ -107,9 +88,9 @@
             const box = event.target;
             if (!selectedBox) {
                 selectedBox = box;
-                startPoint = box.id;
+                startPoint = getCenter(box);
             } else {
-                const endPoint = box.id;
+                const endPoint = getCenter(box);
                 createLine(startPoint, endPoint);
                 selectedBox = null;
                 startPoint = null;
@@ -118,16 +99,11 @@
 
         function createLine(start, end) {
             const svg = document.getElementById("lineContainer");
-            const startBox = document.getElementById(start);
-            const endBox = document.getElementById(end);
-            const startCenter = getCenter(startBox);
-            const endCenter = getCenter(endBox);
-
             const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            line.setAttribute("x1", startCenter.x);
-            line.setAttribute("y1", startCenter.y);
-            line.setAttribute("x2", endCenter.x);
-            line.setAttribute("y2", endCenter.y);
+            line.setAttribute("x1", start.x);
+            line.setAttribute("y1", start.y);
+            line.setAttribute("x2", end.x);
+            line.setAttribute("y2", end.y);
             line.classList.add("line");
             svg.appendChild(line);
         }
@@ -136,9 +112,17 @@
             const svg = document.getElementById("lineContainer");
             svg.innerHTML = ""; // Clear all existing lines
 
-            for (const [start, end] of Object.entries(boxPositions)) {
-                if (start !== startPoint && end !== startPoint) {
-                    createLine(start, end);
+            const boxes = document.getElementsByClassName("box");
+            for (let i = 0; i < boxes.length; i++) {
+                const box = boxes[i];
+                const start = getCenter(box);
+                const connectedBoxes = box.dataset.connectedBoxes.split(",");
+                for (let j = 0; j < connectedBoxes.length; j++) {
+                    const endBox = document.getElementById(connectedBoxes[j]);
+                    if (endBox) {
+                        const end = getCenter(endBox);
+                        createLine(start, end);
+                    }
                 }
             }
         }
