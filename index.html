@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        .container {
+            position: relative;
+        }
+
         .box {
             background-color: white;
             border: 2px solid black;
@@ -14,19 +18,18 @@
             width: 200px;
             height: 50px;
         }
+
         .line {
             stroke: black;
             stroke-width: 2px;
-            /* Set a lower z-index value for lines */
-            z-index: -1;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1 class="text-center mb-5">Click Anywhere to Add Box2</h1>
+        <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1;"></svg>
         <div id="mainDiv" onclick="addBox(event)" style="height: 100vh;"></div>
-        <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
     </div>
     <script>
         let count = 0;
