@@ -14,15 +14,24 @@
             width: 200px;
             height: 50px;
         }
+        .line {
+            stroke: black;
+            stroke-width: 2px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="text-center mb-5">Click Anywhere to Add Box rev</h1>
+        <h1 class="text-center mb-5">Click Anywhere to Add Box2</h1>
         <div id="mainDiv" onclick="addBox(event)" style="height: 100vh;"></div>
+        <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
     </div>
     <script>
+        alert("V3");
         let count = 0;
+        let selectedBox = null;
+        let startPoint = null;
+
         function addBox(event) {
             const target = event.target;
             if (target.classList.contains("box")) {
@@ -40,6 +49,7 @@
             box.style.left = xPos + "px";
             box.style.top = yPos + "px";
             box.addEventListener("mousedown", startDrag);
+            box.addEventListener("click", selectBox);
             document.getElementById("mainDiv").appendChild(box);
         }
 
@@ -68,6 +78,41 @@
 
             document.addEventListener("mousemove", moveBox);
             document.addEventListener("mouseup", stopDrag);
+        }
+
+        function selectBox(event) {
+            if (!event.ctrlKey) {
+                return; // Exit the function if 'Ctrl' key is not pressed
+            }
+
+            const box = event.target;
+            if (!selectedBox) {
+                selectedBox = box;
+                startPoint = getCenter(box);
+            } else {
+                const endPoint = getCenter(box);
+                createLine(startPoint, endPoint);
+                selectedBox = null;
+                startPoint = null;
+            }
+        }
+
+        function createLine(start, end) {
+            const svg = document.getElementById("lineContainer");
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("x1", start.x);
+            line.setAttribute("y1", start.y);
+            line.setAttribute("x2", end.x);
+            line.setAttribute("y2", end.y);
+            line.classList.add("line");
+            svg.appendChild(line);
+        }
+
+        function getCenter(element) {
+            const rect = element.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            return { x, y };
         }
     </script>
 </body>
