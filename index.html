@@ -290,29 +290,21 @@
         let targetElement = null;
 
        function toggleColorDropdown(event, targetElement) {
-    const button = event.target;
-    const dropdownId = button.parentNode.dataset.dropdown;
-    const dropdown = document.querySelector(`[data-dropdown="${dropdownId}"] .dropdown-content`);
-    if (dropdown) {
-        dropdown.classList.toggle("show");
-        const colorLinks = dropdown.querySelectorAll('a');
-        colorLinks.forEach(link => {
-            link.addEventListener('click', () => changeColor(event, targetElement));
-        });
-    }
-}
+            const button = event.target;
+            const dropdownId = button.parentNode.dataset.dropdown;
+            const dropdown = document.querySelector(`[data-dropdown="${dropdownId}"] .dropdown-content`);
+            if (dropdown) {
+                dropdown.classList.toggle("show");
+                const colorLinks = dropdown.querySelectorAll('a');
+                colorLinks.forEach(link => {
+                    link.addEventListener('click', () => changeColor(event, targetElement));
+                });
+                console.log("Dropdown toggled");
+            }
+        }
 
-
-// Add event listeners to the icon image buttons as well
-const iconButtons = document.querySelectorAll(".icon-button");
-iconButtons.forEach(button => {
-    const image = button.querySelector("img");
-    image.addEventListener("click", toggleColorDropdown);
-});
-
-
-
-        function changeColor(event) {
+        function changeColor(event, targetElement) {
+            console.log("Color changed");
             const newColor = event.target.getAttribute("data-color");
             if (newColor && targetElement) {
                 if (targetElement === "mainDiv") {
@@ -330,6 +322,16 @@ iconButtons.forEach(button => {
             }
             event.stopPropagation();
         }
+
+
+// Add event listeners to the icon image buttons as well
+const iconButtons = document.querySelectorAll(".icon-button");
+iconButtons.forEach(button => {
+    const image = button.querySelector("img");
+    image.addEventListener("click", toggleColorDropdown);
+});
+
+
     </script>
 </body>
 </html>
