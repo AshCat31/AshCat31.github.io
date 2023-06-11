@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxm</title>
+    <title>Pop-Up Boxb</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -326,18 +326,16 @@
 
 
 
-     function changeColor(event, targetElement) {
+    function changeColor(event, targetElement) {
   console.log("Color changed");
   const newColor = event.target.getAttribute("data-color");
 
-  if (targetElement === "mainCanvas") {
-    console.log('mainCanvas trdt');
-    const canvas = document.getElementById("mainCanvas");
-    canvas.style.backgroundColor = newColor;
-  } else {
-    const box = document.getElementById(targetElement);
-    if (box) {
-      box.style.backgroundColor = newColor;
+  if (targetElement === "mainDiv") {
+    const mainDiv = document.getElementById("mainDiv");
+    mainDiv.style.backgroundColor = newColor;
+  } else if (targetElement === "selectedBox") {
+    if (selectedBox) {
+      selectedBox.style.backgroundColor = newColor;
     }
   }
 
@@ -346,6 +344,10 @@
     const dropdown = dropdowns[i];
     dropdown.classList.remove("show");
   }
+
+  event.stopPropagation();
+}
+
 
   event.stopPropagation();
 }
