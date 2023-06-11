@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boks</title>
+    <title>Pop-Up Bos</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -109,10 +109,10 @@
 </head>
 <body>
    <div class="top-bar">
-        <button class="icon-button" onclick="toggleColorDropdown(event)" data-target="mainDiv">
+       <button class="icon-button" onclick="toggleColorDropdown(event, 'mainDiv')">
             <img src="path/to/paintbrush-icon.svg" alt="Change Background Color">
         </button>
-        <button class="icon-button" onclick="toggleColorDropdown(event)" data-target="selectedBox">
+        <button class="icon-button" onclick="toggleColorDropdown(event, 'selectedBox')">
             <img src="path/to/paintbrush-icon.svg" alt="Change Box Color">
         </button>
         <div class="dropdown">
@@ -288,18 +288,17 @@
 
         let targetElement = null;
 
-      function toggleColorDropdown(event) {
-    const button = event.target;
-    const dropdown = button.nextElementSibling;
-    if (dropdown) {
-        dropdown.classList.toggle("show");
-        targetElement = button.getAttribute("data-target");
-        const colorLinks = dropdown.querySelectorAll('a');
-        colorLinks.forEach(link => {
-            link.addEventListener('click', changeColor);
-        });
-    }
-}
+       function toggleColorDropdown(event, targetElement) {
+            const button = event.target;
+            const dropdown = button.nextElementSibling;
+            if (dropdown) {
+                dropdown.classList.toggle("show");
+                const colorLinks = dropdown.querySelectorAll('a');
+                colorLinks.forEach(link => {
+                    link.addEventListener('click', () => changeColor(event, targetElement));
+                });
+            }
+        }
 
 // Add event listeners to the icon image buttons as well
 const iconButtons = document.querySelectorAll(".icon-button");
