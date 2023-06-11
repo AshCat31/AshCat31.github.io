@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxi</title>
+    <title>Pop-Up Box</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -294,6 +294,8 @@
   const button = event.target;
   const dropdown = document.querySelector(`.dropdown[data-dropdown="${dropdownType}"] .dropdown-content`);
   console.log(dropdown);
+       console.log(document.querySelector(`.dropdown[data-dropdown="${dropdownType}"] .dropdown-content`);
+  console.log(dropdownType);
   if (dropdown) {
     console.log('dropdown exists');
     dropdown.classList.toggle("show");
