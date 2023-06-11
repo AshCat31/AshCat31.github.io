@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>Diagrammeri</title>
@@ -120,7 +121,8 @@
         }
     </style>
 </head>
-<div class="top-bar">
+<body>
+    <div class="top-bar">
         <button class="icon-button" onclick="toggleColorDropdown('canvas')">
             <img src="path/to/paintbrush-icon.svg" alt="Change Background Color">
         </button>
@@ -199,63 +201,64 @@
             selectedBox = box;
         }
 
+        function addBox(event) {
+            const target = event.target;
+            if (target.classList.contains("box")) {
+                return;
+            }
+            const xPos = event.clientX;
+            const yPos = event.clientY;
+            const box = document.createElement("input");
+            box.setAttribute("type", "text");
+            box.classList.add("box");
+            box.id = "box" + count;
+            count++;
+            box.placeholder = "Type here";
+            box.style.left = xPos + "px";
+            box.style.top = yPos + "px";
+            box.addEventListener("mousedown", startDrag);
+            box.addEventListener("click", selectBox);
+            box.addEventListener("contextmenu", deleteBox);
+            document.getElementById("mainDiv").appendChild(box);
+        }
 
-      function addBox(event) {
-  const target = event.target;
-  if (target.classList.contains("box")) {
-    return;
-  }
-  const xPos = event.clientX;
-  const yPos = event.clientY;
-  const box = document.createElement("input");
-  box.setAttribute("type", "text");
-  box.classList.add("box");
-  box.id = "box" + count;
-  count++;
-  box.placeholder = "Type here";
-  box.style.left = xPos + "px";
-  box.style.top = yPos + "px";
-  box.addEventListener("mousedown", startDrag);
-  box.addEventListener("click", selectBox);
-  box.addEventListener("contextmenu", deleteBox);
-  document.getElementById("mainDiv").appendChild(box);
+        function startDrag(event) {
+            if (!event.shiftKey) {
+                return; // Exit the function if 'Shift' key is not pressed
+            }
 
-       function startDrag(event) {
-  if (!event.shiftKey) {
-    return; // Exit the function if 'Shift' key is not pressed
-  }
+            const box = event.target;
+            const initialX = event.clientX - box.getBoundingClientRect().left;
+            const initialY = event.clientY - box.getBoundingClientRect().top;
+            box.style.zIndex = "999"; // Bring the dragged box to the front
 
-  const box = event.target;
-  const initialX = event.clientX - box.getBoundingClientRect().left;
-  const initialY = event.clientY - box.getBoundingClientRect().top;
-  box.style.zIndex = "999"; // Bring the dragged box to the front
+            function moveBox(event) {
+                const newX = event.clientX - initialX;
+                const newY = event.clientY - initialY;
+                box.style.left = newX + "px";
+                box.style.top = newY + "px";
+                updateLines();
+            }
 
-  function moveBox(event) {
-    const newX = event.clientX - initialX;
-    const newY = event.clientY - initialY;
-    box.style.left = newX + "px";
-    box.style.top = newY + "px";
-    updateLines();
-  }
+            function stopDrag() {
+                document.removeEventListener("mousemove", moveBox);
+                document.removeEventListener("mouseup", stopDrag);
+                box.style.zIndex = ""; // Restore the original z-index
+                updateLines(); // Update the lines after dragging stops
+            }
 
-  function stopDrag() {
-    document.removeEventListener("mousemove", moveBox);
-    document.removeEventListener("mouseup", stopDrag);
-    box.style.zIndex = ""; // Restore the original z-index
-    updateLines(); // Update the lines after dragging stops
-  }
+            document.addEventListener("mousemove", moveBox);
+            document.addEventListener("mouseup", stopDrag);
+        }
 
-  document.addEventListener("mousemove", moveBox);
-  document.addEventListener("mouseup", stopDrag);
-}
-
-        
-
-        function deleteBox(boxId) {
-            const box = document.getElementById(boxId);
+        function deleteBox(event) {
+            const box = event.target;
             if (box) {
+                const boxId = box.id;
+                deleteLines(boxId);
                 box.remove();
             }
+            event.preventDefault();
         }
 
         function deleteLines(boxId) {
@@ -310,8 +313,6 @@
             const y = rect.top + rect.height / 2;
             return { x, y };
         }
-
-
     </script>
 </body>
 </html>
