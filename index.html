@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Bo</title>
+    <title>Pop-Up Boa</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -180,12 +180,13 @@
             box.style.zIndex = "999"; // Bring the dragged box to the front
 
             function moveBox(event) {
-                const newX = event.clientX - initialX;
-                const newY = event.clientY - initialY;
-                box.style.left = newX + "px";
-                box.style.top = newY + "px";
-                updateLines();
-            }
+    const newX = event.clientX - initialX + box.getBoundingClientRect().left;
+    const newY = event.clientY - initialY + box.getBoundingClientRect().top;
+    box.style.left = newX + "px";
+    box.style.top = newY + "px";
+    updateLines();
+}
+
 
             function stopDrag() {
                 document.removeEventListener("mousemove", moveBox);
