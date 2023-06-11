@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boa</title>
+    <title>Pop-Up Bo</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -163,40 +163,29 @@
     box.style.top = boxTop;
     box.style.width = boxWidth + "px";
     box.style.height = boxHeight + "px";
+    box.addEventListener("mousedown", startDrag);
+    box.addEventListener("click", selectBox);
     document.getElementById("mainDiv").appendChild(box);
-    
-    box.addEventListener("mousedown", function(event) {
-        if (event.target === box) {
-            startDrag(event);
-        }
-    });
-    
-    document.addEventListener("mouseup", function(event) {
-        if (box.classList.contains("dragging")) {
-            stopDrag(event);
-        }
-    });
 }
-
 
 
         function startDrag(event) {
             if (!event.shiftKey) {
                 return; // Exit the function if 'Shift' key is not pressed
             }
+
             const box = event.target;
             const initialX = event.clientX - box.getBoundingClientRect().left;
             const initialY = event.clientY - box.getBoundingClientRect().top;
             box.style.zIndex = "999"; // Bring the dragged box to the front
-            box.classList.add("dragging"); // Add a class to indicate dragging state
-            function moveBox(event) {
-    const newX = event.clientX - initialX + box.getBoundingClientRect().left;
-    const newY = event.clientY - initialY + box.getBoundingClientRect().top;
-    box.style.left = newX + "px";
-    box.style.top = newY + "px";
-    updateLines();
-}
 
+            function moveBox(event) {
+                const newX = event.clientX - initialX;
+                const newY = event.clientY - initialY;
+                box.style.left = newX + "px";
+                box.style.top = newY + "px";
+                updateLines();
+            }
 
             function stopDrag() {
                 document.removeEventListener("mousemove", moveBox);
@@ -204,7 +193,7 @@
                 box.style.zIndex = ""; // Restore the original z-index
                 updateLines(); // Update the lines after dragging stops
             }
-            box.classList.remove("dragging"); // Remove the dragging class
+
             document.addEventListener("mousemove", moveBox);
             document.addEventListener("mouseup", stopDrag);
         }
