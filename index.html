@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxh</title>
+    <title>Pop-Up Boxho/title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -109,10 +109,10 @@
 </head>
 <body>
   <div class="top-bar">
-    <button class="icon-button" onclick="selectedBox && toggleColorDropdown(event, 'colorDropdown', selectedBox.id)" title="Change Box Color">
+    <button class="icon-button" onclick="selectedBox && toggleColorDropdown(event, 'colorDropdown', selectedBox.id, 'boxChange')" title="Change Box Color">
   <img src="images/box-fill.svg" alt="Change Box Color">
 </button>
-    <button class="icon-button" onclick="toggleColorDropdown(event, 'colorDropdown', 'mainDiv')" title="Change Background Color">
+    <button class="icon-button" onclick="toggleColorDropdown(event, 'colorDropdown', 'mainDiv', 'canvChange')" title="Change Background Color">
   <img src="images/background-fill.svg" alt="Change Background Color">
 </button>
 
@@ -304,7 +304,7 @@
 
         let targetElement = null;
 
-   function toggleColorDropdown(event, dropdownType, targetElement) {
+   function toggleColorDropdown(event, dropdownType, targetElement, thisButton) {
   const button = event.target;
   console.log(button + ' button');
   const dropdown = document.querySelector(`.dropdown[data-dropdown="${dropdownType}"] .dropdown-content`);
@@ -313,10 +313,19 @@
     console.log('dropdown exists');
     dropdown.classList.toggle("show");
     console.log('dropdown shown');
-    const colorLinks = dropdown.querySelectorAll('a');
-    colorLinks.forEach(link => {
-      link.addEventListener('click', (e) => changeColor(e, targetElement));
+   if (thisButton === 'boxChange') {
+  colorLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      changeColor(e, 'mainDiv');
     });
+  });
+} else if (thisButton === 'canvChange') {
+  colorLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      changeColor(e, selectedBox.id);
+    });
+  });
+}
     console.log("Dropdown toggled");
   }
 }
