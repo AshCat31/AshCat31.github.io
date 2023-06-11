@@ -122,15 +122,14 @@
   
   for (let i = lines.length - 1; i >= 0; i--) {
     const line = lines[i];
-    const startBox = document.getElementById(line.dataset.startBox);
-    const endBox = document.getElementById(line.dataset.endBox);
+    const startBox = document.getElementById(line.getAttribute("data-start-box"));
+    const endBox = document.getElementById(line.getAttribute("data-end-box"));
     
-    if (startBox === null || endBox === null || startBox.id === boxId || endBox.id === boxId) {
+    if (startBox && endBox && (startBox.id === boxId || endBox.id === boxId)) {
       line.remove();
     }
   }
 }
-
 
 
         function createLine(lineId, startBoxId, endBoxId) {
@@ -146,6 +145,8 @@
                 line.setAttribute("y1", start.y);
                 line.setAttribute("x2", end.x);
                 line.setAttribute("y2", end.y);
+                line.setAttribute("data-start-box", startBoxID);
+                line.setAttribute("data-end-box", endBoxID);
                 line.classList.add("line");
                 svg.appendChild(line);
             }
