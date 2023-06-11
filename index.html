@@ -201,10 +201,11 @@
             document.addEventListener("mouseup", stopDrag);
         }
 
-       function selectBox(event) {
+      function selectBox(event) {
     const target = event.target;
     if (!target.classList.contains("icon-button")) {
         selectedBox = null;
+        console.log("Box deselected");
     }
 
     if (event.altKey) {
@@ -217,6 +218,7 @@
 
     if (!event.ctrlKey) {
         selectedBox = event.target;
+        console.log("Box selected:", selectedBox.id);
         return; // Exit the function if 'Ctrl' key is not pressed
     }
 
@@ -235,6 +237,7 @@
         startPoint = null;
     }
 }
+
 
 
         function deleteBox(boxId) {
