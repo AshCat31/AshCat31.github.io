@@ -317,13 +317,13 @@
    if (thisButton === 'boxChange') {
   colorLinks.forEach(link => {
     link.addEventListener('click', (e) => {
-      changeColor(e, 'mainDiv');
+      changeColor(e, selectedBox.id);
     });
   });
 } else if (thisButton === 'canvChange') {
   colorLinks.forEach(link => {
     link.addEventListener('click', (e) => {
-      changeColor(e, selectedBox.id);
+      changeColor(e, 'mainDiv');
     });
   });
 }
