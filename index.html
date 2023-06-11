@@ -13,6 +13,7 @@
             position: absolute;
             width: 200px;
             height: 50px;
+            z-index: 1;
         }
         .line {
             stroke: black;
@@ -22,7 +23,7 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
+        <h1 class="text-center mb-5">Click Anywhere to Add Boxs</h1>
         <div id="mainDiv" onclick="addBox(event)" style="height: 100vh;"></div>
         <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
     </div>
@@ -108,24 +109,26 @@
             svg.appendChild(line);
         }
 
-        function updateLines() {
-            const svg = document.getElementById("lineContainer");
-            svg.innerHTML = ""; // Clear all existing lines
+       function updateLines() {
+  const svg = document.getElementById("lineContainer");
+  svg.innerHTML = ""; // Clear all existing lines
 
-            const boxes = document.getElementsByClassName("box");
-            for (let i = 0; i < boxes.length; i++) {
-                const box = boxes[i];
-                const start = getCenter(box);
-                const connectedBoxes = box.dataset.connectedBoxes.split(",");
-                for (let j = 0; j < connectedBoxes.length; j++) {
-                    const endBox = document.getElementById(connectedBoxes[j]);
-                    if (endBox) {
-                        const end = getCenter(endBox);
-                        createLine(start, end);
-                    }
-                }
-            }
-        }
+  const boxes = document.getElementsByClassName("box");
+  for (let i = 0; i < boxes.length; i++) {
+    const box = boxes[i];
+    const start = getCenter(box);
+    const connectedBoxes = box.dataset.connectedBoxes || ""; // Use an empty string if the property is undefined
+    const connectedBoxIds = connectedBoxes.split(",");
+    for (let j = 0; j < connectedBoxIds.length; j++) {
+      const endBox = document.getElementById(connectedBoxIds[j]);
+      if (endBox) {
+        const end = getCenter(endBox);
+        createLine(start, end);
+      }
+    }
+  }
+}
+
 
         function getCenter(element) {
             const rect = element.getBoundingClientRect();
