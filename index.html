@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Box</title>
+    <title>Pop-Up Boxi</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -289,9 +289,9 @@
 
         let targetElement = null;
 
-    function toggleColorDropdown(event, dropdownType, targetElement) {
+   function toggleColorDropdown(event, dropdownType, targetElement) {
   const button = event.target;
-  const dropdown = document.querySelector(`[data-dropdown="${dropdownType}"] .dropdown-content`);
+  const dropdown = document.querySelector(`.dropdown[data-dropdown="${dropdownType}"] .dropdown-content`);
   console.log(dropdown);
   if (dropdown) {
     console.log('dropdown exists');
@@ -305,6 +305,7 @@
     console.log("Dropdown toggled");
   }
 }
+
 
 
         function changeColor(event, targetElement) {
@@ -328,7 +329,6 @@
         }
 
 
-// Add event listeners to the icon image buttons as well
 const iconButtons = document.querySelectorAll(".icon-button");
 iconButtons.forEach(button => {
     const image = button.querySelector("img");
