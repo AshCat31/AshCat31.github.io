@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Box</title>
+    <title>Pop-Up Boxd</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -323,7 +323,7 @@
 
 
 
-       function changeColor(event, targetEle) {
+      function changeColor(event, targetEle) {
   console.log(targetEle + ' color trgt');
   const newColor = event.target.getAttribute("data-color");
 
@@ -331,6 +331,7 @@
     console.log('mainDiv trdt');
     const canvas = document.getElementById("mainDiv");
     canvas.style.backgroundColor = newColor;
+    event.stopPropagation(); // Stop event propagation to prevent triggering box event listeners
   } else {
     const box = document.getElementById(targetEle);
     if (box) {
@@ -346,6 +347,7 @@
   targetElement = null;
   event.stopPropagation();
 }
+
 
 
 const iconButtons = document.querySelectorAll(".icon-button");
