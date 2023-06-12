@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxe</title>
+    <title>Pop-Up Boxp</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -109,10 +109,10 @@
 </head>
 <body>
   <div class="top-bar">
-    <button class="icon-button" onclick="selectedBox && toggleColorDropdown(event, 'colorDropdown', selectedBox.id)" title="Change Box Color">
+    <button class="icon-button" onclick="selectedBox && toggleColorDropdown(event, 'colorDropdown', selectedBox)" title="Change Box Color">
   <img src="images/box-fill.svg" alt="Change Box Color">
 </button>
-    <button class="icon-button" onclick="toggleColorDropdown(event, 'colorDropdown', 'mainDiv')" title="Change Background Color">
+<button class="icon-button" onclick="toggleColorDropdown(event, 'colorDropdown', 'mainDiv')" title="Change Background Color">
   <img src="images/background-fill.svg" alt="Change Background Color">
 </button>
 
@@ -304,14 +304,14 @@
 
         let targetElement = null;
 
-  function toggleColorDropdown(event, dropdownType, targetElement) {
+ function toggleColorDropdown(event, dropdownType, targetElement) {
   const button = event.target;
   const dropdown = document.querySelector(`.dropdown[data-dropdown="${dropdownType}"] .dropdown-content`);
   if (dropdown) {
     dropdown.classList.toggle("show");
     const colorLinks = dropdown.querySelectorAll('a');
     colorLinks.forEach(link => {
-      link.addEventListener('click', (e) => changeColor(e, targetElement.id)); // Pass the ID of the target element
+      link.addEventListener('click', (e) => changeColor(e, targetElement));
     });
   }
 }
@@ -324,7 +324,7 @@ function changeColor(event, targetEle) {
     canvas.style.backgroundColor = newColor;
     event.stopPropagation();
   } else {
-    const box = document.getElementById(targetEle);
+    const box = document.getElementById(targetEle.id);
     if (box) {
       box.style.backgroundColor = newColor;
       selectedBox = null;
@@ -338,7 +338,6 @@ function changeColor(event, targetEle) {
   }
   event.stopPropagation();
 }
-
 
 
 
