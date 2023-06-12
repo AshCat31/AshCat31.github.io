@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxl</title>
+    <title>Pop-Up Boxm</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -333,8 +333,10 @@
     canvas.style.backgroundColor = newColor;
     event.stopPropagation(); // Stop event propagation to prevent triggering box event listeners
   } else {
-    console.log('else');
-    }
+const box = document.getElementById(targetEle);
+    if (box) {
+      box.style.backgroundColor = newColor;
+      selectedBox = null;    
   }
 
   const dropdowns = document.getElementsByClassName("dropdown-content");
