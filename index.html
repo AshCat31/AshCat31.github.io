@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxhom</title>
+    <title>Pop-Up Boxj</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -109,10 +109,10 @@
 </head>
 <body>
   <div class="top-bar">
-    <button class="icon-button" onclick="selectedBox && toggleColorDropdown(event, 'colorDropdown', selectedBox.id, 'boxChange')" title="Change Box Color">
+    <button class="icon-button" onclick="selectedBox && toggleColorDropdown(event, 'colorDropdown', selectedBox.id)" title="Change Box Color">
   <img src="images/box-fill.svg" alt="Change Box Color">
 </button>
-    <button class="icon-button" onclick="toggleColorDropdown(event, 'colorDropdown', 'mainDiv', 'canvChange')" title="Change Background Color">
+    <button class="icon-button" onclick="toggleColorDropdown(event, 'colorDropdown', 'mainDiv')" title="Change Background Color">
   <img src="images/background-fill.svg" alt="Change Background Color">
 </button>
 
@@ -162,7 +162,7 @@
     count++;
     box.placeholder = "Type here";
     const boxLeft = xPos - boxWidth / 2 + "px";
-    const boxTop = yPos - boxHeight / 2 - 59 + "px";
+    const boxTop = yPos - boxHeight / 2 - 55 + "px";
     box.style.left = boxLeft;
     box.style.top = boxTop;
     box.style.width = boxWidth + "px";
@@ -304,7 +304,7 @@
 
         let targetElement = null;
 
-   function toggleColorDropdown(event, dropdownType, targetElement, thisButton) {
+   function toggleColorDropdown(event, dropdownType, targetElement) {
   const button = event.target;
   console.log(button + ' button');
   const dropdown = document.querySelector(`.dropdown[data-dropdown="${dropdownType}"] .dropdown-content`);
@@ -314,19 +314,9 @@
     dropdown.classList.toggle("show");
     console.log('dropdown shown');
     const colorLinks = dropdown.querySelectorAll('a');
-   if (thisButton === 'boxChange') {
-  colorLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-      changeColor(e, selectedBox.id);
+    colorLinks.forEach(link => {
+      link.addEventListener('click', (e) => changeColor(e, targetElement));
     });
-  });
-} else if (thisButton === 'canvChange') {
-  colorLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-      changeColor(e, 'mainDiv');
-    });
-  });
-}
     console.log("Dropdown toggled");
   }
 }
