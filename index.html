@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxg</title>
+    <title>Pop-Up Boxe</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -304,40 +304,30 @@
 
         let targetElement = null;
 
-   function toggleColorDropdown(event, dropdownType, targetElement) {
+  function toggleColorDropdown(event, dropdownType, targetElement) {
   const button = event.target;
-  console.log(button + ' button');
   const dropdown = document.querySelector(`.dropdown[data-dropdown="${dropdownType}"] .dropdown-content`);
-  console.log(String(targetElement) + ' tgrt');
   if (dropdown) {
-    console.log('dropdown exists');
     dropdown.classList.toggle("show");
-    console.log('dropdown shown');
     const colorLinks = dropdown.querySelectorAll('a');
     colorLinks.forEach(link => {
-      link.addEventListener('click', (e) => changeColor(e, targetElement));
+      link.addEventListener('click', (e) => changeColor(e, targetElement.id)); // Pass the ID of the target element
     });
-    console.log("Dropdown toggled");
   }
 }
 
-
-
-      function changeColor(event, targetEle) {
-  console.log(targetEle + ' color trgt');
+function changeColor(event, targetEle) {
   const newColor = event.target.getAttribute("data-color");
 
   if (targetEle === "mainDiv") {
-    console.log('mainDiv trdt');
     const canvas = document.getElementById("mainDiv");
     canvas.style.backgroundColor = newColor;
-    event.stopPropagation(); // Stop event propagation to prevent triggering box event listeners
+    event.stopPropagation();
   } else {
     const box = document.getElementById(targetEle);
     if (box) {
       box.style.backgroundColor = newColor;
       selectedBox = null;
-    console.log('else');
     }
   }
 
@@ -348,6 +338,7 @@
   }
   event.stopPropagation();
 }
+
 
 
 
