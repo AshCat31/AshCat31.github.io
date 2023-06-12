@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxp</title>
+    <title>Pop-Up Boxw</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -316,6 +316,18 @@
   }
 }
 
+function toggleColorDropdown(event, dropdownType, targetElement) {
+  const button = event.target;
+  const dropdown = document.querySelector(`.dropdown[data-dropdown="${dropdownType}"] .dropdown-content`);
+  if (dropdown) {
+    dropdown.classList.toggle("show");
+    const colorLinks = dropdown.querySelectorAll('a');
+    colorLinks.forEach(link => {
+      link.addEventListener('click', (e) => changeColor(e, targetElement));
+    });
+  }
+}
+
 function changeColor(event, targetEle) {
   const newColor = event.target.getAttribute("data-color");
 
@@ -324,7 +336,7 @@ function changeColor(event, targetEle) {
     canvas.style.backgroundColor = newColor;
     event.stopPropagation();
   } else {
-    const box = document.getElementById(targetEle.id);
+    const box = document.getElementById(targetEle);
     if (box) {
       box.style.backgroundColor = newColor;
       selectedBox = null;
@@ -339,15 +351,13 @@ function changeColor(event, targetEle) {
   event.stopPropagation();
 }
 
-
-
 const iconButtons = document.querySelectorAll(".icon-button");
 iconButtons.forEach(button => {
-    button.addEventListener("click", (event) => {
-        const dropdownType = button.getAttribute("data-dropdown");
-        const targetElement = button.getAttribute("data-target");
-        toggleColorDropdown(event, dropdownType, targetElement);
-    });
+  button.addEventListener("click", (event) => {
+    const dropdownType = button.getAttribute("data-dropdown");
+    const targetElement = button.getAttribute("data-target");
+    toggleColorDropdown(event, dropdownType, targetElement);
+  });
 });
 
 
