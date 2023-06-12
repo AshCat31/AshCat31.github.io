@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxw</title>
+    <title>Pop-Up Boxd</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -328,28 +328,26 @@ function toggleColorDropdown(event, dropdownType, targetElement) {
   }
 }
 
-function changeColor(event, targetEle) {
-  const newColor = event.target.getAttribute("data-color");
+ function changeColor(event, targetEle) {
+    const newColor = event.target.getAttribute("data-color");
 
-  if (targetEle === "mainDiv") {
-    const canvas = document.getElementById("mainDiv");
-    canvas.style.backgroundColor = newColor;
-    event.stopPropagation();
-  } else {
-    const box = document.getElementById(targetEle);
-    if (box) {
-      box.style.backgroundColor = newColor;
-      selectedBox = null;
+    if (targetEle === "box") {
+      if (selectedBox) {
+        selectedBox.style.backgroundColor = newColor;
+        selectedBox = null;
+      }
+    } else if (targetEle === "mainDiv") {
+      const canvas = document.getElementById("mainDiv");
+      canvas.style.backgroundColor = newColor;
     }
-  }
 
-  const dropdowns = document.getElementsByClassName("dropdown-content");
-  for (let i = 0; i < dropdowns.length; i++) {
-    const dropdown = dropdowns[i];
-    dropdown.classList.remove("show");
+    const dropdowns = document.getElementsByClassName("dropdown-content");
+    for (let i = 0; i < dropdowns.length; i++) {
+      const dropdown = dropdowns[i];
+      dropdown.classList.remove("show");
+    }
+    event.stopPropagation();
   }
-  event.stopPropagation();
-}
 
 const iconButtons = document.querySelectorAll(".icon-button");
 iconButtons.forEach(button => {
