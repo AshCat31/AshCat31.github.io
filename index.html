@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxi</title>
+    <title>Pop-Up Boxd</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -334,6 +334,7 @@
     event.stopPropagation(); // Stop event propagation to prevent triggering box event listeners
   } else {
     const box = document.getElementById(targetEle);
+    console.log('box is ' + box)
     if (box) {
       box.style.backgroundColor = newColor;
       selectedBox = null;
