@@ -333,10 +333,7 @@
     canvas.style.backgroundColor = newColor;
     event.stopPropagation(); // Stop event propagation to prevent triggering box event listeners
   } else {
-    const box = document.getElementById(targetEle);
-    if (box) {
-      box.style.backgroundColor = newColor;
-      selectedBox = null;
+    console.log('else');
     }
   }
 
