@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxq</title>
+    <title>Pop-Up Boxt</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -148,7 +148,7 @@
 
        function addBox(event) {
     const target = event.target;
-    if (target.classList.contains("box")) {
+    if (target.classList.contains("box") || target.classList.contains("line")) {
         return;
     }
     const xPos = event.clientX;
