@@ -1,11 +1,11 @@
 <html>
 <head>
-    <title>Pop-Up Boxr</title>
+    <title>Pop-Up Boxe</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         
-        #mainDiv {
+        #canvas {
             position: absolute;
             top: 50px; /* Adjust the top position based on the height of the top bar */
             left: 0;
@@ -112,7 +112,7 @@
     <button class="icon-button" onclick="selectedBox && toggleColorDropdown(event, 'colorDropdown', selectedBox)" title="Change Box Color">
   <img src="images/box-fill.svg" alt="Change Box Color">
 </button>
-<button class="icon-button" onclick="toggleColorDropdown(event, 'colorDropdown', 'mainDiv')" title="Change Background Color">
+<button class="icon-button" onclick="toggleColorDropdown(event, 'colorDropdown', 'canvas')" title="Change Background Color">
   <img src="images/background-fill.svg" alt="Change Background Color">
 </button>
 
@@ -134,7 +134,7 @@
 
   <div class="container">
     <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
-    <div id="mainDiv" onclick="addBox(event)" style="height: 100vh;"></div>
+    <div id="canvas" onclick="addBox(event)" style="height: 100vh;"></div>
     <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
   </div>
 
@@ -169,7 +169,7 @@
     box.style.height = boxHeight + "px";
     box.addEventListener("mousedown", startDrag);
     box.addEventListener("click", selectBox);
-    document.getElementById("mainDiv").appendChild(box);
+    document.getElementById("canvas").appendChild(box);
 }
 
 
@@ -325,8 +325,8 @@ function toggleColorDropdown(event, dropdownType, targetElement) {
         selectedBox.style.backgroundColor = newColor;
         selectedBox = null;
       }
-    } else if (targetEle === "mainDiv") {
-      const canvas = document.getElementById("mainDiv");
+    } else if (targetEle === "canvas") {
+      const canvas = document.getElementById("canvas");
       canvas.style.backgroundColor = newColor;
     }
 
