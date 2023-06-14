@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxe</title>
+    <title>Pop-Up Boxq</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -141,6 +141,7 @@
     <script>
         let count = 0;
         let selectedBox = null;
+        let selectedLine = null;
         let lineStartBox = null;
         let startPoint = null;
         let lines = []; // Array to store line data
@@ -203,11 +204,12 @@
             document.addEventListener("mouseup", stopDrag);
         }
 
-      function selectBox(event) {
+    function selectBox(event) {
     const target = event.target;
     if (!target.classList.contains("icon-button")) {
         selectedBox = null;
-        console.log("Box deselected");
+        selectedLine = null; // Reset selected line when a box or line is deselected
+        console.log("Box/Line deselected");
     }
 
     if (event.altKey) {
@@ -218,10 +220,17 @@
         return;
     }
 
+    if (target.classList.contains("line")) {
+        selectedLine = target.id; // Assign the ID of the selected line to the variable
+        console.log("Line selected:", selectedLine);
+        return;
+    }
+
     if (!event.ctrlKey) {
         selectedBox = event.target;
+        selectedLine = null; // Reset selected line when a box is selected
         console.log("Box selected:", selectedBox.id);
-        return; // Exit the function if 'Ctrl' key is not pressed
+        return;
     }
 
     const box = event.target;
@@ -238,7 +247,10 @@
         lineStartBox = null;
         startPoint = null;
     }
+
+    console.log("Selected Line:", selectedLine);
 }
+
 
 
 
@@ -252,8 +264,7 @@
         function deleteLines(boxId) {
             const svg = document.getElementById("lineContainer");
             const lines = svg.getElementsByClassName("line");
-            // Iterate over the lines and remove the ones connected to the box
-            for (let i = lines.length - 1; i >= 0; i--) {
+            for (let i = lines.length - 1; i >= 0; i--) { // Iterate over the lines and remove the ones connected to the box
                 const line = lines[i];
                 const startBoxId = line.getAttribute("data-start-box");
                 const endBoxId = line.getAttribute("data-end-box");
@@ -263,25 +274,27 @@
             }
         }
 
-        function createLine(lineId, startBoxId, endBoxId) {
-            const svg = document.getElementById("lineContainer");
-            const startBox = document.getElementById(startBoxId);
-            const endBox = document.getElementById(endBoxId);
-            if (startBox && endBox) {
-                const start = getCenter(startBox);
-                const end = getCenter(endBox);
-                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                line.setAttribute("id", lineId);
-                line.setAttribute("x1", start.x);
-                line.setAttribute("y1", start.y);
-                line.setAttribute("x2", end.x);
-                line.setAttribute("y2", end.y);
-                line.setAttribute("data-start-box", startBoxId);
-                line.setAttribute("data-end-box", endBoxId);
-                line.classList.add("line");
-                svg.appendChild(line);
-            }
-        }
+       function createLine(lineId, startBoxId, endBoxId) {
+  const svg = document.getElementById("lineContainer");
+  const startBox = document.getElementById(startBoxId);
+  const endBox = document.getElementById(endBoxId);
+  if (startBox && endBox) {
+    const start = getCenter(startBox);
+    const end = getCenter(endBox);
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("id", lineId);
+    line.setAttribute("x1", start.x);
+    line.setAttribute("y1", start.y);
+    line.setAttribute("x2", end.x);
+    line.setAttribute("y2", end.y);
+    line.setAttribute("data-start-box", startBoxId);
+    line.setAttribute("data-end-box", endBoxId);
+    line.classList.add("line");
+    line.addEventListener("click", selectBox);     // Add click event listener to the line
+    svg.appendChild(line);
+  }
+}
+
 
         function updateLines() {
             const svg = document.getElementById("lineContainer");
