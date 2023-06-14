@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxt</title>
+    <title>Pop-Up Boxv</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -146,11 +146,16 @@
         let startPoint = null;
         let lines = []; // Array to store line data
 
-       function addBox(event) {
-    const target = event.target;
-    if (target.classList.contains("box") || target.classList.contains("line")) {
-        return;
-    }
+    function addBox(event) {
+  const target = event.target;
+  if (target.classList.contains("box") || target.classList.contains("line")) {
+    return;
+  }
+  if (target.tagName.toLowerCase() === "line") {
+    selectedLine = target.id;
+    console.log("Line selected:", selectedLine);
+    return;
+  }
     const xPos = event.clientX;
     const yPos = event.clientY;
     const boxWidth = 200; // Adjust the width of the box as needed
