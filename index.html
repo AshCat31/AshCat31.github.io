@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxf</title>
+    <title>Pop-Up Boxa</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -142,11 +142,11 @@
         let count = 0;
         let selectedBoxes = [];
         let selectedLines = [];
+        let lineStartBox = null;
         let startPoint = null;
         let lines = []; // Array to store line data
         let isDragging = false;
         let selectionBox = null;
-        let startPoint = null;
 
 
        function addBox(event) {
@@ -226,17 +226,6 @@
         return;
     }
 
-    if (target.classList.contains("line")) {
-        const lineId = target.id;
-        const isSelected = selectedLines.includes(lineId);
-        if (isSelected) {
-            selectedLines = selectedLines.filter(id => id !== lineId); // Deselect line
-        } else {
-            selectedLines.push(lineId); // Select line
-        }
-        console.log("Selected Lines:", selectedLines);
-        return;
-    }
 
     if (!event.ctrlKey) {
         selectedBoxes = [event.target];
@@ -302,7 +291,6 @@
     line.setAttribute("data-end-box", endBoxId);
     line.classList.add("line");
     svg.appendChild(line);
-    line.addEventListener("click", selectLine); // Add click event listener to the line
         }
        }
 
