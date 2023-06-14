@@ -109,7 +109,7 @@
 </head>
 <body>
   <div class="top-bar">
-    <button class="icon-button" onclick="selectedBox && toggleColorDropdown(event, 'colorDropdown', selectedBox)" title="Change Box Color">
+    <button class="icon-button" onclick="selectedBoxes && toggleColorDropdown(event, 'colorDropdown', selectedBoxes)" title="Change Box Color">
   <img src="images/box-fill.svg" alt="Change Box Color">
 </button>
 <button class="icon-button" onclick="toggleColorDropdown(event, 'colorDropdown', 'canvas')" title="Change Background Color">
@@ -140,38 +140,43 @@
 
     <script>
         let count = 0;
-        let selectedBox = null;
-        let selectedLine = null;
-        let lineStartBox = null;
+        let selectedBoxes = [];
+        let selectedLines = [];
         let startPoint = null;
         let lines = []; // Array to store line data
+        let isDragging = false;
+        let selectionBox = null;
+        let startPoint = null;
+
 
        function addBox(event) {
-    const target = event.target;
-    if (target.classList.contains("box")) {
-        return;
-    }
-    const xPos = event.clientX;
-    const yPos = event.clientY;
-    const boxWidth = 200; // Adjust the width of the box as needed
-    const boxHeight = 50; // Adjust the height of the box as needed
-    const box = document.createElement("input");
-    box.setAttribute("type", "text");
-    box.classList.add("box");
-    box.id = "box" + count;
-    console.log("box" + count);
-    count++;
-    box.placeholder = "Type here";
-    const boxLeft = xPos - boxWidth / 2 + "px";
-    const boxTop = yPos - boxHeight / 2 - 55 + "px";
-    box.style.left = boxLeft;
-    box.style.top = boxTop;
-    box.style.width = boxWidth + "px";
-    box.style.height = boxHeight + "px";
-    box.addEventListener("mousedown", startDrag);
-    box.addEventListener("click", selectBox);
-    document.getElementById("canvas").appendChild(box);
-}
+          
+
+         const target = event.target;
+          if (target.classList.contains("box")) {
+             return;
+          }
+         const xPos = event.clientX;
+          const yPos = event.clientY;
+         const boxWidth = 200; // Adjust the width of the box as needed
+          const boxHeight = 50; // Adjust the height of the box as needed
+          const box = document.createElement("input");
+          box.setAttribute("type", "text");
+         box.classList.add("box");
+         box.id = "box" + count;
+         console.log("box" + count);
+         count++;
+          box.placeholder = "Type here";
+         const boxLeft = xPos - boxWidth / 2 + "px";
+          const boxTop = yPos - boxHeight / 2 - 55 + "px";
+          box.style.left = boxLeft;
+          box.style.top = boxTop;
+         box.style.width = boxWidth + "px";
+         box.style.height = boxHeight + "px";
+          box.addEventListener("mousedown", startDrag);
+          box.addEventListener("click", selectBox);
+          document.getElementById("canvas").appendChild(box);
+        }
 
 
         function startDrag(event) {
@@ -204,11 +209,12 @@
             document.addEventListener("mouseup", stopDrag);
         }
 
-    function selectBox(event) {
+   function selectBox(event) {
     const target = event.target;
+
     if (!target.classList.contains("icon-button")) {
-        selectedBox = null;
-        selectedLine = null; // Reset selected line when a box or line is deselected
+        selectedBoxes = []; // Reset selected boxes when a box or line is deselected
+        selectedLines = []; // Reset selected lines when a box or line is deselected
         console.log("Box/Line deselected");
     }
 
@@ -221,15 +227,21 @@
     }
 
     if (target.classList.contains("line")) {
-        selectedLine = target.id; // Assign the ID of the selected line to the variable
-        console.log("Line selected:", selectedLine);
+        const lineId = target.id;
+        const isSelected = selectedLines.includes(lineId);
+        if (isSelected) {
+            selectedLines = selectedLines.filter(id => id !== lineId); // Deselect line
+        } else {
+            selectedLines.push(lineId); // Select line
+        }
+        console.log("Selected Lines:", selectedLines);
         return;
     }
 
     if (!event.ctrlKey) {
-        selectedBox = event.target;
-        selectedLine = null; // Reset selected line when a box is selected
-        console.log("Box selected:", selectedBox.id);
+        selectedBoxes = [event.target];
+        selectedLines = []; // Reset selected lines when a box is selected
+        console.log("Box selected:", selectedBoxes.map(box => box.id));
         return;
     }
 
@@ -248,9 +260,8 @@
         startPoint = null;
     }
 
-    console.log("Selected Line:", selectedLine);
+    console.log("Selected Lines:", selectedLines);
 }
-
 
 
 
@@ -290,11 +301,10 @@
     line.setAttribute("data-start-box", startBoxId);
     line.setAttribute("data-end-box", endBoxId);
     line.classList.add("line");
-    line.addEventListener("click", selectBox);     // Add click event listener to the line
     svg.appendChild(line);
-  }
-}
-
+    line.addEventListener("click", selectLine); // Add click event listener to the line
+        }
+       }
 
         function updateLines() {
             const svg = document.getElementById("lineContainer");
@@ -314,6 +324,79 @@
             const y = rect.top + rect.height / 2;
             return { x, y };
         }
+        
+        function startSelection(event) {
+  isDragging = true;
+  startPoint = { x: event.clientX, y: event.clientY };
+
+  // Create a selection box element
+  selectionBox = document.createElement("div");
+  selectionBox.classList.add("selection-box");
+  selectionBox.style.left = startPoint.x + "px";
+  selectionBox.style.top = startPoint.y + "px";
+  document.body.appendChild(selectionBox);
+
+  // Register event listeners for mousemove and mouseup events
+  document.addEventListener("mousemove", updateSelection);
+  document.addEventListener("mouseup", endSelection);
+}
+        
+        function updateSelection(event) {
+  if (!isDragging) return;
+
+  const currentPoint = { x: event.clientX, y: event.clientY };
+  const width = currentPoint.x - startPoint.x;
+  const height = currentPoint.y - startPoint.y;
+
+  // Update the position and dimensions of the selection box
+  selectionBox.style.width = Math.abs(width) + "px";
+  selectionBox.style.height = Math.abs(height) + "px";
+  selectionBox.style.left = (width > 0 ? startPoint.x : currentPoint.x) + "px";
+  selectionBox.style.top = (height > 0 ? startPoint.y : currentPoint.y) + "px";
+}
+
+
+function isRectIntersecting(rect1, rect2) {
+  return (
+    rect1.left < rect2.right &&
+    rect1.right > rect2.left &&
+    rect1.top < rect2.bottom &&
+    rect1.bottom > rect2.top
+  );
+}
+
+        
+      function endSelection() {
+  isDragging = false;
+  startPoint = null;
+  
+  if (selectionBox) {
+    selectionBox.remove();
+    selectionBox = null;
+  }
+  
+  selectedBoxes = [];
+  selectedLines = [];
+  
+  for (const box of boxes) {
+    const boxBounds = box.getBoundingClientRect();
+    if (isRectIntersecting(selectionBoxBounds, boxBounds)) {
+      selectedBoxes.push(box.id);
+    }
+  }
+  
+  for (const line of lines) {
+    const startBounds = line.start.getBoundingClientRect();
+    const endBounds = line.end.getBoundingClientRect();
+    if (isRectIntersecting(selectionBoxBounds, startBounds) ||
+        isRectIntersecting(selectionBoxBounds, endBounds)) {
+      selectedLines.push(line.id);
+    }
+  }
+}
+
+
+
 
         let targetElement = null;
 
@@ -359,7 +442,7 @@ iconButtons.forEach(button => {
     toggleColorDropdown(event, dropdownType, targetElement);
   });
 });
-
+        document.getElementById("canvas").addEventListener("mousedown", startSelection);
 
 
     </script>
