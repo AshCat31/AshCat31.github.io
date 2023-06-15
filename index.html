@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxj</title>
+    <title>Pop-Up Boxa</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -159,6 +159,9 @@
           }
          const xPos = event.clientX;
           const yPos = event.clientY;
+           if (selectionBox && isRectIntersecting(selectionBoxBounds, { left: xPos, top: yPos })) {
+    return;
+  }
          const boxWidth = 200; // Adjust the width of the box as needed
           const boxHeight = 50; // Adjust the height of the box as needed
           const box = document.createElement("input");
