@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxq</title>
+    <title>Pop-Up Boxh</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -162,7 +162,7 @@
     count++;
     box.placeholder = "Type here";
     const boxLeft = xPos - boxWidth / 2 + "px";
-    const boxTop = yPos - boxHeight / 2 - 55 + "px";
+    const boxTop = yPos - boxHeight / 2 + "px";
     box.style.left = boxLeft;
     box.style.top = boxTop;
     box.style.width = boxWidth + "px";
@@ -185,7 +185,7 @@
 
             function moveBox(event) {
     const newX = event.clientX - initialX;
-    const newY = event.clientY - initialY - 50; // Adjust the y-coordinate by subtracting 50
+    const newY = event.clientY - initialY; // Adjust the y-coordinate by subtracting 50
     box.style.left = newX + "px";
     box.style.top = newY + "px";
     updateLines();
