@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxz</title>
+    <title>Pop-Up Boxj</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -150,8 +150,9 @@
 
 
        function addBox(event) {
-          
-
+          if (isDragging) {
+               return;
+            }
          const target = event.target;
           if (target.classList.contains("box")) {
              return;
