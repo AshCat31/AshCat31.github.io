@@ -7,7 +7,6 @@
         
         #canvas {
             position: absolute;
-            top: 50px; /* Adjust the top position based on the height of the top bar */
             left: 0;
             right: 0;
             bottom: 0;
@@ -109,7 +108,7 @@
 </head>
 <body>
   <div class="top-bar">
-    <button class="icon-button" onclick="selectedBox && toggleColorDropdown(event, 'colorDropdown', selectedBox)" title="Change Box Color">
+    <button class="icon-button" onclick="selectedBoxes && toggleColorDropdown(event, 'colorDropdown', selectedBoxes)" title="Change Box Color">
   <img src="images/box-fill.svg" alt="Change Box Color">
 </button>
 <button class="icon-button" onclick="toggleColorDropdown(event, 'colorDropdown', 'canvas')" title="Change Background Color">
@@ -140,8 +139,8 @@
 
     <script>
         let count = 0;
-        let selectedBox = null;
-        let selectedLine = null;
+        let selectedBoxes = [];
+        let selectedLines= [];
         let lineStartBox = null;
         let startPoint = null;
         let lines = []; // Array to store line data
@@ -207,8 +206,8 @@
     function selectBox(event) {
     const target = event.target;
     if (!target.classList.contains("icon-button")) {
-        selectedBox = null;
-        selectedLine = null; // Reset selected line when a box or line is deselected
+        selectedBoxes = [];
+        selectedLines = []; // Reset selected line when a box or line is deselected
         console.log("Box/Line deselected");
     }
 
@@ -220,16 +219,10 @@
         return;
     }
 
-    if (target.classList.contains("line")) {
-        selectedLine = target.id; // Assign the ID of the selected line to the variable
-        console.log("Line selected:", selectedLine);
-        return;
-    }
-
     if (!event.ctrlKey) {
-        selectedBox = event.target;
-        selectedLine = null; // Reset selected line when a box is selected
-        console.log("Box selected:", selectedBox.id);
+        selectedBoxes = event.target;
+        selectedLine = []; // Reset selected line when a box is selected
+        console.log("Box selected:", selectedBoxes);
         return;
     }
 
@@ -248,7 +241,7 @@
         startPoint = null;
     }
 
-    console.log("Selected Line:", selectedLine);
+    console.log("Selected Line:", selectedLines);
 }
 
 
@@ -314,51 +307,6 @@
             const y = rect.top + rect.height / 2;
             return { x, y };
         }
-
-        let targetElement = null;
-
-
-function toggleColorDropdown(event, dropdownType, targetElement) {
-  const button = event.target; //unecessary? No, to decide where dropdown shows
-  const dropdown = document.querySelector(`.dropdown[data-dropdown="${dropdownType}"] .dropdown-content`);
-  if (dropdown) {
-    dropdown.classList.toggle("show");
-    const colorLinks = dropdown.querySelectorAll('a');
-    colorLinks.forEach(link => {
-      link.addEventListener('click', (e) => changeColor(e, targetElement));
-    });
-  }
-}
-
- function changeColor(event, targetEle) {
-    const newColor = event.target.getAttribute("data-color");
-
-    if (targetEle === "box") {
-      if (selectedBox) {
-        selectedBox.style.backgroundColor = newColor;
-        selectedBox = null;
-      }
-    } else if (targetEle === "canvas") {
-      const canvas = document.getElementById("canvas");
-      canvas.style.backgroundColor = newColor;
-    }
-
-    const dropdowns = document.getElementsByClassName("dropdown-content");
-    for (let i = 0; i < dropdowns.length; i++) {
-      const dropdown = dropdowns[i];
-      dropdown.classList.remove("show");
-    }
-    event.stopPropagation();
-  }
-
-const iconButtons = document.querySelectorAll(".icon-button");
-iconButtons.forEach(button => {
-  button.addEventListener("click", (event) => {
-    const dropdownType = button.getAttribute("data-dropdown");
-    const targetElement = button.getAttribute("data-target");
-    toggleColorDropdown(event, dropdownType, targetElement);
-  });
-});
 
 
 
