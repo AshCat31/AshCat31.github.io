@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxo</title>
+    <title>Pop-Up Boxp</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -412,7 +412,7 @@ function styleText(style) {
 
 function toggleDropdown(event, attribute, target) {
 const button= event.target; 
-const dropdown= document.querySelector('.dropdown[data-dropdown="${attribute}Dropdown"] .dropdown-content');
+const dropdown= document.querySelector(`.dropdown[data-dropdown="${attribute}Dropdown"] .dropdown-content`);
 dropdown.classList.toggle('show');
 
   const buttonRect = button.getBoundingClientRect();
