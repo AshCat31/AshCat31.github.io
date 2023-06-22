@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Box</title>
+    <title>Pop-Up Boxe</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -104,15 +104,67 @@
         .show {
             display: block;
         }
+         .bold {
+      font-weight: bold;
+    }
+
+    .italic {
+      font-style: italic;
+    }
+
+    .strikethrough {
+      text-decoration: line-through;
+    }
     </style>
 </head>
 <body>
   <div class="top-bar">
-    <button class="icon-button" onclick="selectedBoxes && toggleColorDropdown(event, 'colorDropdown', selectedBoxes)" title="Change Box Color">
+    <button class="icon-button" onclick="toggleDropdown(event, 'colorDropdown', 'canvas')" title="Change Background Color">
+  <img src="images/background-fill.svg" alt="Change Background Color">
+</button>
+
+<button class="icon-button" onclick="toggleDropdown(event, 'colorDropdown', 'box')" title="Change Box Color">
   <img src="images/box-fill.svg" alt="Change Box Color">
 </button>
-<button class="icon-button" onclick="toggleColorDropdown(event, 'colorDropdown', 'canvas')" title="Change Background Color">
-  <img src="images/background-fill.svg" alt="Change Background Color">
+
+<button class="icon-button" onclick="toggleDropdown(event, 'colorDropdown', 'boxBorder')" title="Change Border Color">
+  <img src="images/border-color.svg" alt="Change Border Color">
+</button>
+
+<button class="icon-button" onclick="toggleDropdown(event, 'widthDropdown', 'boxBorder')" title="Change Border Width">
+  <img src="images/box-outline.svg" alt="Change Border Width">
+</button>
+
+<button class="icon-button" onclick="toggleDropdown(event, 'styleDropdown', 'boxBorder')" title="Change Border Style">
+  <img src="images/border-type.svg" alt="Change Border Style">
+</button>
+
+<button class="icon-button" onclick="toggleDropdown(event, 'colorDropdown', 'line')" title="Change Line Color">
+  <img src="images/line-color.svg" alt="Change Line Color">
+</button>
+
+<button class="icon-button" onclick="toggleDropdown(event, 'widthDropdown', 'line')" title="Change Line Width">
+  <img src="images/line-thickness.svg" alt="Change Line Width">
+</button>
+
+<button class="icon-button" onclick="toggleDropdown(event, 'styleDropdown', 'line')" title="Change Line Style">
+  <img src="images/line-type.svg" alt="Change Line Style">
+</button>
+
+<button class="icon-button" onclick="toggleDropdown(event, 'colorDropdown', 'boxText')" title="Change Text Color">
+  <img src="images/text-color.svg" alt="Change Text Color">
+</button>
+
+<button class="icon-button" onclick="styleText('bold')" title="Bold">
+  <img src="images/bold.svg" alt="Bold">
+</button>
+
+<button class="icon-button" onclick="styleText('italic')" title="Italic">
+  <img src="images/italic.svg" alt="Italic">
+</button>
+
+<button class="icon-button" onclick="styleText('strikethrough')" title="Strikethrough">
+  <img src="images/strikethrough.svg" alt="Strikethrough">
 </button>
 
     <div class="dropdown" data-dropdown="colorDropdown">
