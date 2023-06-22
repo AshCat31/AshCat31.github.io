@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxw</title>
+    <title>Pop-Up Boxa</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -67,46 +67,42 @@
             width: 24px;
             height: 24px;
         }
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
 
-       .dropdown {
-            position: relative;
-            display: inline-block;
-        }
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 55px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  right: 0;
+  transform-origin: top right;
+  top: 40px; /* Adjust the top position based on the height of the top bar and button size */
+}
 
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 55px;
-            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-            right: 0;
-            transform-origin: top right;
-            top: 40px; /* Adjust the top position based on the height of the top bar and button size */
-        }
+.dropdown.show .dropdown-content {
+  display: block;
+  left: unset;
+  right: 0;
+  top: 100%; /* Change top position to appear below the button */
+  transform-origin: bottom right;
+}
 
-        .dropdown.show .dropdown-content {
-            display: block;
-            left: unset;
-            right: 0;
-            top: 100%; /* Change top position to appear below the button */
-            transform-origin: bottom right;
-        }
-
-        .dropdown-content a {
-            color: black;
-            padding: 8px 6px;
-            text-decoration: none;
-            display: block;
-        }
+.dropdown-content a {
+  color: black;
+  padding: 8px 6px;
+  text-decoration: none;
+  display: block;
+}
 
         .dropdown-content a:hover {
             background-color: #E0E0E0;
         }
 
-    .dropdown-content {
-      display: block;
-    }
     .bold {
       font-weight: bold;
     }
@@ -413,7 +409,13 @@ function styleText(style) {
 function toggleDropdown(event, attribute, target) {
 const button= event.target; 
 const dropdown= document.querySelector(`.dropdown[data-dropdown="${attribute}Dropdown"] .dropdown-content`);
-dropdown.classList.toggle('show');
+  const allDropdowns = document.querySelectorAll(".dropdown-content");
+  allDropdowns.forEach((d) => {
+    if (d !== dropdown) {
+      d.classList.remove("show");
+    }
+  });
+  dropdown.classList.toggle("show");  
   const buttonRect = button.getBoundingClientRect();
   const dropdownRect = dropdown.getBoundingClientRect();
   const dropdownTop = buttonRect.top + buttonRect.height;
@@ -421,55 +423,32 @@ dropdown.classList.toggle('show');
   dropdown.style.top = `${dropdownTop}px`;
   dropdown.style.left = `${dropdownLeft}px`;
   const links = dropdown.querySelectorAll('a');
-if (target=== 'canvas') { 
-    links.forEach(link => {
-      link.addEventListener('click', (e) => changeColor(e, [canvas], 'canvas'));
-    });
-  }
-if (target=== 'box') { 
-    links.forEach(link => {
-      link.addEventListener('click', (e) => changeColor(e, selectedBoxes, 'box'));
-    });
-  }
-  if (target=== 'boxBorder') { 
-  if (attribute==='color') {
-    links.forEach(link => {      link.addEventListener('click', (e) => changeColor(e, selectedBoxes, 'boxBorder'));
-    });
-  }
-   else if (attribute==='width') {
-    links.forEach(link => {
-      link.addEventListener('click', (e) => changeWidth(e, selectedBoxes, 'boxBorder'));
-    });
-  }
-   else if (attribute==='style') {
-    links.forEach(link => {
-      link.addEventListener('click', (e) => changeStyle(e, selectedBoxes, 'boxBorder'));
-    });
-  }
-  }
-    if (target=== 'line') { 
-  if (attribute==='color') {
-    links.forEach(link => {
-      link.addEventListener('click', (e) => changeColor(e, selectedBoxes, 'line'));
-    });
-  }
-   else if (attribute==='width') {
-    links.forEach(link => {
-      link.addEventListener('click', (e) => changeWidth(e, selectedBoxes, 'line'));
-    });
-  }
-   else if (attribute==='style') {
-    links.forEach(link => {
-      link.addEventListener('click', (e) => changeStyle(e, selectedBoxes, 'line'));
-    });
-  }
-  }
-  else if (target=== 'boxText') { 
-    links.forEach(link => {
-      link.addEventListener('click', (e) => changeColor(e, selectedBoxes, 'boxText'));
-    });
-  }
-  }
+links.forEach((link) => {
+    if (target === "canvas") {
+      link.addEventListener("click", (e) => changeColor(e, [canvas], "canvas"));
+    } else if (target === "box") {
+      link.addEventListener("click", (e) => changeColor(e, selectedBoxes, "box"));
+    } else if (target === "boxBorder") {
+      if (attribute === "color") {
+        link.addEventListener("click", (e) => changeColor(e, selectedBoxes, "boxBorder"));
+      } else if (attribute === "width") {
+        link.addEventListener("click", (e) => changeWidth(e, selectedBoxes, "boxBorder"));
+      } else if (attribute === "style") {
+        link.addEventListener("click", (e) => changeStyle(e, selectedBoxes, "boxBorder"));
+      }
+    } else if (target === "line") {
+      if (attribute === "color") {
+        link.addEventListener("click", (e) => changeColor(e, selectedLines, "line"));
+      } else if (attribute === "width") {
+        link.addEventListener("click", (e) => changeWidth(e, selectedLines, "line"));
+      } else if (attribute === "style") {
+        link.addEventListener("click", (e) => changeStyle(e, selectedLines, "line"));
+      }
+    } else if (target === "boxText") {
+      link.addEventListener("click", (e) => changeColor(e, selectedBoxes, "boxText"));
+    }
+  });
+}
         
     </script>
 </body>
