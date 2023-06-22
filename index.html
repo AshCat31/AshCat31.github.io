@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxt</title>
+    <title>Pop-Up Boxy</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -23,6 +23,9 @@
             width: 200px;
             height: 50px;
             z-index: 1;
+            font-weight: normal;
+            font-style: normal;
+            text-decoration: none;
         }
 
         .line {
@@ -385,30 +388,27 @@
         }
 
 function styleText(style) {
-      target=selectedBoxes;
-      if (target.length > 1 || !isStyleApplied(target[0], style)) {
-        for (let i = 0; i < target.length; i++) {
-          applyTextStyle(target[i], style);
+            const target = selectedBoxes;
+            if (target.length > 0) {
+                for (let i = 0; i < target.length; i++) {
+                    applyTextStyle(target[i].id, style);
+                }
+            }
         }
-      } else {
-        removeTextStyle(target[0], style);
-      }
-    }
 
-    function isStyleApplied(elementId, style) {
-      const element = document.getElementById(elementId);
-      return element.classList.contains(style);
-    }
+        function isStyleApplied(elementId, style) {
+            const element = document.getElementById(elementId);
+            return element.classList.contains(style);
+        }
 
-    function applyTextStyle(elementId, style) {
-      const element = document.getElementById(elementId);
-      element.classList.add(style);
-    }
-
-    function removeTextStyle(elementId, style) {
-      const element = document.getElementById(elementId);
-      element.classList.remove(style);
-    }
+        function applyTextStyle(elementId, style) {
+            const element = document.getElementById(elementId);
+            if (!isStyleApplied(elementId, style)) {
+                element.classList.add(style);
+            } else {
+                element.classList.remove(style);
+            }
+        }
 
     </script>
 </body>
