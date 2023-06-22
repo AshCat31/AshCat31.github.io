@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxa</title>
+    <title>Pop-Up Boxs</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -80,8 +80,9 @@
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
   right: 0;
+  left:unset;
   transform-origin: top right;
-  top: 40px; /* Adjust the top position based on the height of the top bar and button size */
+  top: 100%; /* Adjust the top position based on the height of the top bar and button size */
 }
 
 .dropdown.show .dropdown-content {
@@ -102,7 +103,9 @@
         .dropdown-content a:hover {
             background-color: #E0E0E0;
         }
-
+        
+.show {display:block;}
+        
     .bold {
       font-weight: bold;
     }
