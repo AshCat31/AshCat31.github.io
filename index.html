@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxs</title>
+    <title>Pop-Up Boxd</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -419,6 +419,7 @@ const dropdown= document.querySelector(`.dropdown[data-dropdown="${attribute}Dro
     }
   });
   dropdown.classList.toggle("show");  
+        console.log("show" + dropdown);
   const buttonRect = button.getBoundingClientRect();
   const dropdownRect = dropdown.getBoundingClientRect();
   const dropdownTop = buttonRect.top + buttonRect.height;
