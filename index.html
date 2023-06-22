@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxe</title>
+    <title>Pop-Up Boxd</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -23,6 +23,9 @@
             width: 200px;
             height: 50px;
             z-index: 1;
+            font-weight: normal;
+            font-style: normal;
+            text-decoration: none;
         }
 
         .line {
@@ -64,55 +67,106 @@
             width: 24px;
             height: 24px;
         }
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
 
-       .dropdown {
-            position: relative;
-            display: inline-block;
-        }
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 55px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  right: 0;
+  left:unset;
+  transform-origin: top right;
+  top: 100%; /* Adjust the top position based on the height of the top bar and button size */
+}
 
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 55px;
-            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-            right: 0;
-            transform-origin: top right;
-            top: 40px; /* Adjust the top position based on the height of the top bar and button size */
-        }
+.dropdown.show .dropdown-content {
+  display: block;
+  left: unset;
+  right: 0;
+  top: 100%; /* Change top position to appear below the button */
+  transform-origin: bottom right;
+}
 
-        .dropdown.show .dropdown-content {
-            display: block;
-            left: unset;
-            right: 0;
-            top: 100%; /* Change top position to appear below the button */
-            transform-origin: bottom right;
-        }
-
-        .dropdown-content a {
-            color: black;
-            padding: 8px 6px;
-            text-decoration: none;
-            display: block;
-        }
+.dropdown-content a {
+  color: black;
+  padding: 8px 6px;
+  text-decoration: none;
+  display: block;
+}
 
         .dropdown-content a:hover {
             background-color: #E0E0E0;
         }
+        
+.show {display:block;}
+        
+    .bold {
+      font-weight: bold;
+    }
 
-        .show {
-            display: block;
-        }
+    .italic {
+      font-style: italic;
+    }
+
+    .strikethrough {
+      text-decoration: line-through;
+    }
     </style>
 </head>
 <body>
   <div class="top-bar">
-    <button class="icon-button" onclick="selectedBoxes && toggleColorDropdown(event, 'colorDropdown', selectedBoxes)" title="Change Box Color">
+    <button class="icon-button" onclick="toggleDropdown(event, 'color', 'canvas')" title="Change Background Color">
+  <img src="images/background-fill.svg" alt="Change Background Color">
+</button>
+
+<button class="icon-button" onclick="toggleDropdown(event, 'color', 'box')" title="Change Box Color">
   <img src="images/box-fill.svg" alt="Change Box Color">
 </button>
-<button class="icon-button" onclick="toggleColorDropdown(event, 'colorDropdown', 'canvas')" title="Change Background Color">
-  <img src="images/background-fill.svg" alt="Change Background Color">
+
+<button class="icon-button" onclick="toggleDropdown(event, 'color', 'boxBorder')" title="Change Border Color">
+  <img src="images/border-color.svg" alt="Change Border Color">
+</button>
+
+<button class="icon-button" onclick="toggleDropdown(event, 'width', 'boxBorder')" title="Change Border Width">
+  <img src="images/box-outline.svg" alt="Change Border Width">
+</button>
+
+<button class="icon-button" onclick="toggleDropdown(event, 'style', 'boxBorder')" title="Change Border Style">
+  <img src="images/border-type.svg" alt="Change Border Style">
+</button>
+
+<button class="icon-button" onclick="toggleDropdown(event, 'color', 'line')" title="Change Line Color">
+  <img src="images/line-color.svg" alt="Change Line Color">
+</button>
+
+<button class="icon-button" onclick="toggleDropdown(event, 'width', 'line')" title="Change Line Width">
+  <img src="images/line-thickness.svg" alt="Change Line Width">
+</button>
+
+<button class="icon-button" onclick="toggleDropdown(event, 'style', 'line')" title="Change Line Style">
+  <img src="images/line-type.svg" alt="Change Line Style">
+</button>
+
+<button class="icon-button" onclick="toggleDropdown(event, 'color', 'boxText')" title="Change Text Color">
+  <img src="images/text-color.svg" alt="Change Text Color">
+</button>
+
+<button class="icon-button" onclick="styleText('bold')" title="Bold">
+  <img src="images/bold.svg" alt="Bold">
+</button>
+
+<button class="icon-button" onclick="styleText('italic')" title="Italic">
+  <img src="images/italic.svg" alt="Italic">
+</button>
+
+<button class="icon-button" onclick="styleText('strikethrough')" title="Strikethrough">
+  <img src="images/strikethrough.svg" alt="Strikethrough">
 </button>
 
     <div class="dropdown" data-dropdown="colorDropdown">
@@ -244,7 +298,7 @@
     }
 
     if (!event.ctrlKey) {
-        selectedBoxes = event.target;
+        selectedBoxes.push(event.target);
         selectedLine = []; // Reset selected line when a box is selected
         console.log("Box selected:", selectedBoxes);
         return;
@@ -332,8 +386,74 @@
             return { x, y };
         }
 
+function styleText(style) {
+            const target = selectedBoxes;
+            if (target.length > 0) {
+                for (let i = 0; i < target.length; i++) {
+                    applyTextStyle(target[i].id, style);
+                }
+            }
+        }
 
+        function isStyleApplied(elementId, style) {
+            const element = document.getElementById(elementId);
+            return element.classList.contains(style);
+        }
 
+        function applyTextStyle(elementId, style) {
+            const element = document.getElementById(elementId);
+            if (!isStyleApplied(elementId, style)) {
+                element.classList.add(style);
+            } else {
+                element.classList.remove(style);
+            }
+        }
+
+function toggleDropdown(event, attribute, target) {
+const button= event.target; 
+const dropdown= document.querySelector(`.dropdown[data-dropdown="${attribute}Dropdown"] .dropdown-content`);
+  const allDropdowns = document.querySelectorAll(".dropdown-content");
+  allDropdowns.forEach((d) => {
+    if (d !== dropdown) {
+      d.classList.remove("show");
+    }
+  });
+  dropdown.classList.toggle("show");  
+        console.log("show" + dropdown);
+  const buttonRect = button.getBoundingClientRect();
+  const dropdownRect = dropdown.getBoundingClientRect();
+  const dropdownTop = buttonRect.top + buttonRect.height;
+  const dropdownLeft = buttonRect.left + buttonRect.width - dropdownRect.width;
+  dropdown.style.top = `${dropdownTop}px`;
+  dropdown.style.left = `${dropdownLeft}px`;
+  const links = dropdown.querySelectorAll('a');
+links.forEach((link) => {
+    if (target === "canvas") {
+      link.addEventListener("click", (e) => changeColor(e, [canvas], "canvas"));
+    } else if (target === "box") {
+      link.addEventListener("click", (e) => changeColor(e, selectedBoxes, "box"));
+    } else if (target === "boxBorder") {
+      if (attribute === "color") {
+        link.addEventListener("click", (e) => changeColor(e, selectedBoxes, "boxBorder"));
+      } else if (attribute === "width") {
+        link.addEventListener("click", (e) => changeWidth(e, selectedBoxes, "boxBorder"));
+      } else if (attribute === "style") {
+        link.addEventListener("click", (e) => changeStyle(e, selectedBoxes, "boxBorder"));
+      }
+    } else if (target === "line") {
+      if (attribute === "color") {
+        link.addEventListener("click", (e) => changeColor(e, selectedLines, "line"));
+      } else if (attribute === "width") {
+        link.addEventListener("click", (e) => changeWidth(e, selectedLines, "line"));
+      } else if (attribute === "style") {
+        link.addEventListener("click", (e) => changeStyle(e, selectedLines, "line"));
+      }
+    } else if (target === "boxText") {
+      link.addEventListener("click", (e) => changeColor(e, selectedBoxes, "boxText"));
+    }
+  });
+}
+        
     </script>
 </body>
 </html>
