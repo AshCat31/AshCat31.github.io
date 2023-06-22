@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxr</title>
+    <title>Pop-Up Boxt</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -296,7 +296,7 @@
     }
 
     if (!event.ctrlKey) {
-        selectedBoxes = event.target;
+        selectedBoxes.push(event.target);
         selectedLine = []; // Reset selected line when a box is selected
         console.log("Box selected:", selectedBoxes);
         return;
