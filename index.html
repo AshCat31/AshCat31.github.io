@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxe</title>
+    <title>Pop-Up Boxr</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -384,7 +384,31 @@
             return { x, y };
         }
 
+function styleText(style) {
+      target=selectedBoxes;
+      if (target.length > 1 || !isStyleApplied(target[0], style)) {
+        for (let i = 0; i < target.length; i++) {
+          applyTextStyle(target[i], style);
+        }
+      } else {
+        removeTextStyle(target[0], style);
+      }
+    }
 
+    function isStyleApplied(elementId, style) {
+      const element = document.getElementById(elementId);
+      return element.classList.contains(style);
+    }
+
+    function applyTextStyle(elementId, style) {
+      const element = document.getElementById(elementId);
+      element.classList.add(style);
+    }
+
+    function removeTextStyle(elementId, style) {
+      const element = document.getElementById(elementId);
+      element.classList.remove(style);
+    }
 
     </script>
 </body>
