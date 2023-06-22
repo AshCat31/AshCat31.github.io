@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Boxp</title>
+    <title>Pop-Up Boxq</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -122,39 +122,39 @@
 </head>
 <body>
   <div class="top-bar">
-    <button class="icon-button" onclick="toggleDropdown(event, 'colorDropdown', 'canvas')" title="Change Background Color">
+    <button class="icon-button" onclick="toggleDropdown(event, 'color', 'canvas')" title="Change Background Color">
   <img src="images/background-fill.svg" alt="Change Background Color">
 </button>
 
-<button class="icon-button" onclick="toggleDropdown(event, 'colorDropdown', 'box')" title="Change Box Color">
+<button class="icon-button" onclick="toggleDropdown(event, 'color', 'box')" title="Change Box Color">
   <img src="images/box-fill.svg" alt="Change Box Color">
 </button>
 
-<button class="icon-button" onclick="toggleDropdown(event, 'colorDropdown', 'boxBorder')" title="Change Border Color">
+<button class="icon-button" onclick="toggleDropdown(event, 'color', 'boxBorder')" title="Change Border Color">
   <img src="images/border-color.svg" alt="Change Border Color">
 </button>
 
-<button class="icon-button" onclick="toggleDropdown(event, 'widthDropdown', 'boxBorder')" title="Change Border Width">
+<button class="icon-button" onclick="toggleDropdown(event, 'width', 'boxBorder')" title="Change Border Width">
   <img src="images/box-outline.svg" alt="Change Border Width">
 </button>
 
-<button class="icon-button" onclick="toggleDropdown(event, 'styleDropdown', 'boxBorder')" title="Change Border Style">
+<button class="icon-button" onclick="toggleDropdown(event, 'style', 'boxBorder')" title="Change Border Style">
   <img src="images/border-type.svg" alt="Change Border Style">
 </button>
 
-<button class="icon-button" onclick="toggleDropdown(event, 'colorDropdown', 'line')" title="Change Line Color">
+<button class="icon-button" onclick="toggleDropdown(event, 'color', 'line')" title="Change Line Color">
   <img src="images/line-color.svg" alt="Change Line Color">
 </button>
 
-<button class="icon-button" onclick="toggleDropdown(event, 'widthDropdown', 'line')" title="Change Line Width">
+<button class="icon-button" onclick="toggleDropdown(event, 'width', 'line')" title="Change Line Width">
   <img src="images/line-thickness.svg" alt="Change Line Width">
 </button>
 
-<button class="icon-button" onclick="toggleDropdown(event, 'styleDropdown', 'line')" title="Change Line Style">
+<button class="icon-button" onclick="toggleDropdown(event, 'style', 'line')" title="Change Line Style">
   <img src="images/line-type.svg" alt="Change Line Style">
 </button>
 
-<button class="icon-button" onclick="toggleDropdown(event, 'colorDropdown', 'boxText')" title="Change Text Color">
+<button class="icon-button" onclick="toggleDropdown(event, 'color', 'boxText')" title="Change Text Color">
   <img src="images/text-color.svg" alt="Change Text Color">
 </button>
 
@@ -414,13 +414,10 @@ function toggleDropdown(event, attribute, target) {
 const button= event.target; 
 const dropdown= document.querySelector(`.dropdown[data-dropdown="${attribute}Dropdown"] .dropdown-content`);
 dropdown.classList.toggle('show');
-
   const buttonRect = button.getBoundingClientRect();
   const dropdownRect = dropdown.getBoundingClientRect();
-
   const dropdownTop = buttonRect.top + buttonRect.height;
   const dropdownLeft = buttonRect.left + buttonRect.width - dropdownRect.width;
-
   dropdown.style.top = `${dropdownTop}px`;
   dropdown.style.left = `${dropdownLeft}px`;
   const links = dropdown.querySelectorAll('a');
