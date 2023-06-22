@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Box</title>
+    <title>Pop-Up Boxi</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -410,6 +410,70 @@ function styleText(style) {
             }
         }
 
+function toggleDropdown(event, attribute, target) {
+const button= event.target; 
+const dropdown= document.querySelector('.dropdown[data-dropdown="${attribute}Dropdown"] .dropdown-content');
+dropdown.classList.toggle('show');
+
+  const buttonRect = button.getBoundingClientRect();
+  const dropdownRect = dropdown.getBoundingClientRect();
+
+  const dropdownTop = buttonRect.top + buttonRect.height;
+  const dropdownLeft = buttonRect.left + buttonRect.width - dropdownRect.width;
+
+  dropdown.style.top = `${dropdownTop}px`;
+  dropdown.style.left = `${dropdownLeft}px`;
+  const links = dropdown.querySelectorAll('a');
+if (target=== 'canvas') { 
+    links.forEach(link => {
+      link.addEventListener('click', (e) => changeColor(e, [canvas], 'canvas'));
+    });
+  }
+if (target=== 'box') { 
+    links.forEach(link => {
+      link.addEventListener('click', (e) => changeColor(e, selectedBoxes, 'box'));
+    });
+  }
+  if (target=== 'boxBorder') { 
+  if (attribute==='color') {
+    links.forEach(link => {      link.addEventListener('click', (e) => changeColor(e, selectedBoxes, 'boxBorder'));
+    });
+  }
+   else if (attribute==='width') {
+    links.forEach(link => {
+      link.addEventListener('click', (e) => changeWidth(e, selectedBoxes, 'boxBorder'));
+    });
+  }
+   else if (attribute==='style') {
+    links.forEach(link => {
+      link.addEventListener('click', (e) => changeStyle(e, selectedBoxes, 'boxBorder'));
+    });
+  }
+  }
+    if (target=== 'line') { 
+  if (attribute==='color') {
+    links.forEach(link => {
+      link.addEventListener('click', (e) => changeColor(e, selectedBoxes, 'line'));
+    });
+  }
+   else if (attribute==='width') {
+    links.forEach(link => {
+      link.addEventListener('click', (e) => changeWidth(e, selectedBoxes, 'line'));
+    });
+  }
+   else if (attribute==='style') {
+    links.forEach(link => {
+      link.addEventListener('click', (e) => changeStyle(e, selectedBoxes, 'line'));
+    });
+  }
+  }
+  else if (target=== 'boxText') { 
+    links.forEach(link => {
+      link.addEventListener('click', (e) => changeColor(e, selectedBoxes, 'boxText'));
+    });
+  }
+  }
+        
     </script>
 </body>
 </html>
