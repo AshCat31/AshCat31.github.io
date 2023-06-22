@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Pop-Up Bo</title>
+    <title>Pop-Up Box</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -104,67 +104,15 @@
         .show {
             display: block;
         }
-         .bold {
-      font-weight: bold;
-    }
-
-    .italic {
-      font-style: italic;
-    }
-
-    .strikethrough {
-      text-decoration: line-through;
-    }
     </style>
 </head>
 <body>
   <div class="top-bar">
-    <button class="icon-button" onclick="toggleDropdown(event, 'colorDropdown', 'canvas')" title="Change Background Color">
-  <img src="images/background-fill.svg" alt="Change Background Color">
-</button>
-
-<button class="icon-button" onclick="toggleDropdown(event, 'colorDropdown', 'box')" title="Change Box Color">
+    <button class="icon-button" onclick="selectedBoxes && toggleColorDropdown(event, 'colorDropdown', selectedBoxes)" title="Change Box Color">
   <img src="images/box-fill.svg" alt="Change Box Color">
 </button>
-
-<button class="icon-button" onclick="toggleDropdown(event, 'colorDropdown', 'boxBorder')" title="Change Border Color">
-  <img src="images/border-color.svg" alt="Change Border Color">
-</button>
-
-<button class="icon-button" onclick="toggleDropdown(event, 'widthDropdown', 'boxBorder')" title="Change Border Width">
-  <img src="images/box-outline.svg" alt="Change Border Width">
-</button>
-
-<button class="icon-button" onclick="toggleDropdown(event, 'styleDropdown', 'boxBorder')" title="Change Border Style">
-  <img src="images/border-type.svg" alt="Change Border Style">
-</button>
-
-<button class="icon-button" onclick="toggleDropdown(event, 'colorDropdown', 'line')" title="Change Line Color">
-  <img src="images/line-color.svg" alt="Change Line Color">
-</button>
-
-<button class="icon-button" onclick="toggleDropdown(event, 'widthDropdown', 'line')" title="Change Line Width">
-  <img src="images/line-thickness.svg" alt="Change Line Width">
-</button>
-
-<button class="icon-button" onclick="toggleDropdown(event, 'styleDropdown', 'line')" title="Change Line Style">
-  <img src="images/line-type.svg" alt="Change Line Style">
-</button>
-
-<button class="icon-button" onclick="toggleDropdown(event, 'colorDropdown', 'boxText')" title="Change Text Color">
-  <img src="images/text-color.svg" alt="Change Text Color">
-</button>
-
-<button class="icon-button" onclick="styleText('bold')" title="Bold">
-  <img src="images/bold.svg" alt="Bold">
-</button>
-
-<button class="icon-button" onclick="styleText('italic')" title="Italic">
-  <img src="images/italic.svg" alt="Italic">
-</button>
-
-<button class="icon-button" onclick="styleText('strikethrough')" title="Strikethrough">
-  <img src="images/strikethrough.svg" alt="Strikethrough">
+<button class="icon-button" onclick="toggleColorDropdown(event, 'colorDropdown', 'canvas')" title="Change Background Color">
+  <img src="images/background-fill.svg" alt="Change Background Color">
 </button>
 
     <div class="dropdown" data-dropdown="colorDropdown">
@@ -384,163 +332,7 @@
             return { x, y };
         }
 
-function toggleDropdown(event, attribute, target) {
-const button= event.target; 
-const dropdown= document.querySelector('.dropdown[data-dropdown="${dropdownType}"] .dropdown-content');
-if (target=== 'canvas') { 
-dropdown.classList.toggle("show");
-//(code to display dropdown under button)
-    const colorLinks = dropdown.querySelectorAll('a');
-    colorLinks.forEach(link => {
-      link.addEventListener('click', (e) => changeColor(e, [canvas], 'canvas'));
-    });
-  }
-if (target=== 'box') { 
-dropdown.classList.toggle("show");
-//(code to display dropdown under button)
-    const colorLinks = dropdown.querySelectorAll('a');
-    colorLinks.forEach(link => {
-      link.addEventListener('click', (e) => changeColor(e, selectedBoxes, 'box'));
-    });
-  }
-  if (target=== 'boxBorder') { 
-  if (attribute==='color') {
-dropdown.classList.toggle("show");
-//(code to display dropdown under button)
-    const colorLinks = dropdown.querySelectorAll('a');
-    colorLinks.forEach(link => {
-      link.addEventListener('click', (e) => changeColor(e, selectedBoxes, 'boxBorder'));
-    });
-  }
-   elif (attribute==='width') {
-dropdown.classList.toggle("show");
-//(code to display dropdown under button)
-    const widthLinks = dropdown.querySelectorAll('a');
-    widthLinks.forEach(link => {
-      link.addEventListener('click', (e) => changeWidth(e, selectedBoxes, 'boxBorder'));
-    });
-  }
-   elif (attribute==='style') {
-dropdown.classList.toggle("show");
-//(code to display dropdown under button)
-    const styleLinks = dropdown.querySelectorAll('a');
-    styleLinks.forEach(link => {
-      link.addEventListener('click', (e) => changeStyle(e, selectedBoxes, 'boxBorder'));
-    });
-  }
-  }
-    if (target=== 'line') { 
-  if (attribute==='color') {
-dropdown.classList.toggle("show");
-//(code to display dropdown under button)
-    const colorLinks = dropdown.querySelectorAll('a');
-    colorLinks.forEach(link => {
-      link.addEventListener('click', (e) => changeColor(e, selectedBoxes, 'line'));
-    });
-  }
-   elif (attribute==='width') {
-dropdown.classList.toggle("show");
-//(code to display dropdown under button)
-    const widthLinks = dropdown.querySelectorAll('a');
-    widthLinks.forEach(link => {
-      link.addEventListener('click', (e) => changeWidth(e, selectedBoxes, 'line'));
-    });
-  }
-   elif (attribute==='style') {
-dropdown.classList.toggle("show");
-//(code to display dropdown under button)
-    const styleLinks = dropdown.querySelectorAll('a');
-    styleLinks.forEach(link => {
-      link.addEventListener('click', (e) => changeStyle(e, selectedBoxes, 'line'));
-    });
-  }
-  }
-  elif (target=== 'boxText') { 
-dropdown.classList.toggle("show");
-//(code to display dropdown under button)
-    const colorLinks = dropdown.querySelectorAll('a');
-    colorLinks.forEach(link => {
-      link.addEventListener('click', (e) => changeColor(e, selectedBoxes, 'boxText'));
-    });
-  }
-  }
 
-        function changeColor(e, targetID, element) {
-  const newColor= event.target.getAttribute("data-color");
-  for (let i = 0; i < numbers.length; i++) {
-  const target=document.getElementById(i);
-  if (element==='text') {
-  target.style.color=newColor;
-  }
-  else if (element==='border') {
-  target.style.border-color=newColor;
-  }
-  else if (element==='line') {
-  target.style.stroke=newColor;
-  }
-    else if (element==='canvas') || (element==='box') {
-  target.style.background-color=newColor;
-  }
-  }
-  }
-  
-   function changeWidth(e, targetID, element) {
-  const newWidth= event.target.getAttribute("data-width");
-  for (let i = 0; i < numbers.length; i++) {
-  const target=document.getElementById(i);
-  if (element==='border') {
-  target.style.border-width=newWidth;
-  }
-  else if (element==='line') {
-  target.style.stroke-width=newWidth;
-  }
-  }
-  }
- 
-  function changeStyle(e, targetID, element) {
-  const newStyle= event.target.getAttribute("data-style");
-  for (let i = 0; i < numbers.length; i++) {
-  const target=document.getElementById(i);
-  if (element==='border') {
-  target.style.border-style=newStyle;
-  }
-  else if (element==='line') {
-    if (newStyle === "dashed") {
-  target.setAttribute("stroke-dasharray", "5,5"); // Set line style to dashed
-} else if (newStyle === "dotted") {
-  target.setAttribute("stroke-dasharray", "1,5"); // Set line style to dotted
-} else if (newStyle === "solid") {
-  target.removeAttribute("stroke-dasharray"); // Remove the attribute to set line style to solid
-}
-  }
-  }
-  }
-
-         function styleText(style) {
-      target=selectedBoxes;
-      if (target.length > 1 || !isStyleApplied(target[0], style)) {
-        for (let i = 0; i < target.length; i++) {
-          applyTextStyle(target[i], style);
-        }
-      } else {
-        removeTextStyle(target[0], style);
-      }
-    }
-
-    function isStyleApplied(elementId, style) {
-      const element = document.getElementById(elementId);
-      return element.classList.contains(style);
-    }
-
-    function applyTextStyle(elementId, style) {
-      const element = document.getElementById(elementId);
-      element.classList.add(style);
-    }
-
-    function removeTextStyle(elementId, style) {
-      const element = document.getElementById(elementId);
-      element.classList.remove(style);
-    }
 
     </script>
 </body>
