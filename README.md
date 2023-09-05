@@ -7,7 +7,7 @@ Functionality
 
 Click anywhere on the screen to add a box at that location.
 Drag boxes with the shift key.
-Connect Boxes with the ctrl key.
+Connect boxes with the ctrl key.
 Delete boxes with the alt key.
 
 Usage
