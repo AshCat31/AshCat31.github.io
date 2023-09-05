@@ -27,7 +27,36 @@
             font-style: normal;
             text-decoration: none;
             resize:both;
-        }
+         /* make resizable */
+    overflow: hidden;
+    display: inline-block;
+
+    /* no extra spaces */
+    margin: 0;
+    white-space: nowrap;
+  
+    /* default widths */
+    min-width: 2em;
+    max-width: 30em;
+}
+
+/* let <input> assume the size of the wrapper */
+.box > input {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+/* add a visible handle */
+.box > span {
+    display: inline-block;
+    vertical-align: bottom;
+    margin-left: -16px;
+    width: 16px;
+    height: 16px;
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAJUlEQVR4AcXJRwEAIBAAIPuXxgiOW3xZYzi1Q3Nqh+bUDk1yD9sQaUG/4ehuEAAAAABJRU5ErkJggg==");
+    cursor: ew-resize;
+}
 
         .line {
             stroke: black;
