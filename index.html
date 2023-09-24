@@ -469,6 +469,7 @@
       links.forEach((link) => {
         if (target === "canvas") {
           link.addEventListener("click", (e) => changeColor(e, [canvas], "canvas"));
+          console.log(e + link)
         } else if (target === "box") {
           link.addEventListener("click", (e) => changeColor(e, selectedBoxes, "box"));
         } else if (target === "boxBorder") {
@@ -493,6 +494,7 @@
       });
     }
     function changeColor(e, targetIDs, targetAttr) {
+      console.log(e)
       const color = e.target.getAttribute("data-color");
       console.log("color " + color)
       if (targetAttr === "canvas") {
@@ -520,11 +522,7 @@
           }
         }
       }
-      // Remove all links in the colorDropdown
-      const colorDropdown = document.querySelector('.dropdown[data-dropdown="colorDropdown"] .dropdown-content');
-      colorDropdown.innerHTML = ''; // Clear the content
     }
-
 
 
 
