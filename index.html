@@ -5,7 +5,7 @@
 <!--Todo: Make boxes resizable. Make canvas bigger and scrollable. Print. Save.-->
 
 <head>
-  <title>Pop-Up Box</title>
+  <title>Pop-Up Box!</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -453,6 +453,12 @@
       }
     }
 
+    function createClickHandlerColor(target, attribute) {
+      return function (event) {
+        changeColor(event, target, attribute);
+      }
+    }
+
     function toggleDropdown(event, attribute, target) {
       const button = event.target;
       const dropdown = document.querySelector(`.dropdown[data-dropdown="${attribute}Dropdown"] .dropdown-content`);
@@ -471,7 +477,7 @@
           link.addEventListener("click", changeColor(link, [canvas], "canvas"));
           console.log(link)
         } else if (target === "box") {
-          link.addEventListener("click", (e) => changeColor(e, selectedBoxes, "box"));
+          link.addEventListener("click", createClickHandlerColor(target, attribute));
         } else if (target === "boxBorder") {
           if (attribute === "color") {
             link.addEventListener("click", (e) => changeColor(e, selectedBoxes, "boxBorder"));
@@ -495,7 +501,7 @@
     }
     function changeColor(e, targetIDs, targetAttr) {
       console.log(e)
-      const color = e.getAttribute("data-color");
+      const color = e.target.getAttribute("data-color");
       console.log("color " + color)
       if (targetAttr === "canvas") {
         console.log("canvas")
