@@ -5,7 +5,7 @@
 <!--Todo: Make boxes resizable. Make canvas bigger and scrollable. Print. Save.-->
 
 <head>
-  <title>Pop-Up Box!</title>
+  <title>Pop-Up Box</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -453,7 +453,7 @@
       }
     }
 
-    function createClickHandlerColor(target, attribute) {
+    function createClickHandler(target, attribute) {
       return function (event) {
         changeColor(event, target, attribute);
       }
@@ -464,8 +464,19 @@
       const dropdown = document.querySelector(`.dropdown[data-dropdown="${attribute}Dropdown"] .dropdown-content`);
       const allDropdowns = document.querySelectorAll(".dropdown-content");
       console.log("event " + event + "attribute " + attribute + " target " + target + " dropdown " + dropdown + " allDropdowns " + allDropdowns + " button " + button);
+      function colorClickListener(e) {
+        changeColor(e, target, target);
+      }
+
+      function widthClickListener(e) {
+        changeWidth(e, target, target);
+      }
+
+      function styleClickListener(e) {
+        changeStyle(e, target, target);
+      }
       allDropdowns.forEach((d) => {
-        if (d !== dropdown) {
+        if (d !== dropdown) {   // Close all other dropdowns
           d.classList.remove("show");
         }
       });
@@ -473,35 +484,20 @@
       console.log("show" + attribute + dropdown);
       const links = dropdown.querySelectorAll('a');
       links.forEach((link) => {
-        if (target === "canvas") {
-          link.addEventListener("click", changeColor(link, [canvas], "canvas"));
-          console.log(link)
-        } else if (target === "box") {
-          link.addEventListener("click", createClickHandlerColor(target, attribute));
-        } else if (target === "boxBorder") {
-          if (attribute === "color") {
-            link.addEventListener("click", (e) => changeColor(e, selectedBoxes, "boxBorder"));
-          } else if (attribute === "width") {
-            link.addEventListener("click", (e) => changeWidth(e, selectedBoxes, "boxBorder"));
-          } else if (attribute === "style") {
-            link.addEventListener("click", (e) => changeStyle(e, selectedBoxes, "boxBorder"));
-          }
-        } else if (target === "line") {
-          if (attribute === "color") {
-            link.addEventListener("click", (e) => changeColor(e, selectedLines, "line"));
-          } else if (attribute === "width") {
-            link.addEventListener("click", (e) => changeWidth(e, selectedLines, "line"));
-          } else if (attribute === "style") {
-            link.addEventListener("click", (e) => changeStyle(e, selectedLines, "line"));
-          }
-        } else if (target === "boxText") {
-          link.addEventListener("click", (e) => changeColor(e, selectedBoxes, "boxText"));
+        if (attribute === "color") {
+          link.addEventListener("click", colorClickListener);
+        } else if (attribute === "width") {
+          link.addEventListener("click", widthClickListener);
+        } else if (attribute === "style") {
+          link.addEventListener("click", styleClickListener);
         }
       });
     }
     function changeColor(e, targetIDs, targetAttr) {
       console.log(e)
       const color = e.target.getAttribute("data-color");
+      const dropdown = document.querySelector(`.dropdown[data-dropdown="colorDropdown"] .dropdown-content`);
+      const links = dropdown.querySelectorAll('a');
       console.log("color " + color)
       if (targetAttr === "canvas") {
         console.log("canvas")
