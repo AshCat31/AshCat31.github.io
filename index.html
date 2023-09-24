@@ -5,7 +5,7 @@
 <!--Todo: Make boxes resizable. Make canvas bigger and scrollable. Print. Save.-->
 
 <head>
-  <title>Pop-Up Box</title>
+  <title>Pop-Up Box!</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -500,10 +500,8 @@
     function changeColor(e, targetIDs, targetAttr) {
       console.log("e: " + e)
       const color = e.target.getAttribute("data-color");
-      const dropdown = document.querySelector(`.dropdown[data-dropdown="colorDropdown"] .dropdown-content`);
-      const links = dropdown.querySelectorAll('a');
-      console.log("color " + color + ", attribute " + targetAttr + "target: " + targetIDs);
-      if (targetAttr === "canvas") {
+      console.log("color: " + color + ", attribute: " + targetAttr + ", target: " + targetIDs);
+      if (targetIDs === "canvas") {
         console.log("canvas")
         // Change the background color of the canvas
         const canvas = document.getElementById("canvas");
