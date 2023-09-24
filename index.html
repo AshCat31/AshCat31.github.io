@@ -452,6 +452,7 @@
     }
 
     function toggleDropdown(event, attribute, target) {
+      console.log(event + attribute + target)
       const button = event.target;
       const dropdown = document.querySelector(`.dropdown[data-dropdown="${attribute}Dropdown"] .dropdown-content`);
       const allDropdowns = document.querySelectorAll(".dropdown-content");
