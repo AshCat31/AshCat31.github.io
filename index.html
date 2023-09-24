@@ -4,7 +4,7 @@
   <!--Not working: Dropdowns don't show. Resizing boxes doesn't work. Single box in top left appears that is resizable.-->
   <!--Todo: Make boxes resizable. Make canvas bigger and scrollable. Print. Save.-->
 <head>
-  <title>Pop-Up Box!</title>
+  <title>Pop-Up Box</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
@@ -462,7 +462,7 @@
         }
       });
       dropdown.classList.toggle("show");
-      console.log("show" + dropdown);
+      console.log("show" + attribute + dropdown);
       const buttonRect = button.getBoundingClientRect();
       const dropdownRect = dropdown.getBoundingClientRect();
       const dropdownTop = buttonRect.top + buttonRect.height;
