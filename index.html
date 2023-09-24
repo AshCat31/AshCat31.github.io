@@ -162,7 +162,7 @@
 </head>
 
 <body>
-  <span id= "box-container" class="box"><input type="text" /><span></span></span>
+  <span id="box-container" class="box"><input type="text" /><span></span></span>
   <div class="top-bar">
     <button class="icon-button" onclick="toggleDropdown(event, 'color', 'canvas')" title="Change Background Color">
       <img src="images/background-fill.svg" alt="Change Background Color">
@@ -496,9 +496,7 @@
       if (targetAttr === "canvas") {
         // Change the background color of the canvas
         const canvas = document.getElementById(targetIDs[0]);
-        if (canvas) {
-          canvas.style.backgroundColor = color;
-        }
+        canvas.style.backgroundColor = color;
       } else if (targetAttr === "box" || targetAttr === "boxText" || targetAttr === "boxBorder" || targetAttr === "line") {
         for (let i = 0; i < targetIDs.length; i++) {
           const targetElement = document.getElementById(targetIDs[i]);
