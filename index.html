@@ -526,12 +526,22 @@
       //close the dropdowns
       closeDropdowns();
       //remove event listeners from links
-      links.forEach((link) => {
-        link.removeEventListener("click", colorClickListener);
-      })
+      removeEventListeners();
 
     }
-
+    function removeEventListeners(attribute) {
+      const dropdown = document.querySelector(`.dropdown[data-dropdown="${attribute}Dropdown"] .dropdown-content`);
+      const links = dropdown.querySelectorAll('a');
+      links.forEach((link) => {
+        if (attribute === "color") {
+          link.removeEventListener("click", colorClickListener);
+        } else if (attribute === "width") {
+          link.removeEventListener("click", widthClickListener);
+        } else if (attribute === "style") {
+          link.removeEventListener("click", styleClickListener);
+        }
+      });
+    }
 
 
   </script>
