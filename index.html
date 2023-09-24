@@ -5,147 +5,110 @@
   <!--Todo: Make boxes resizable. Make canvas bigger and scrollable. Print. Save.-->
 <head>
   <title>Pop-Up Box!</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    #canvas {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: white;
-      /* Default background color */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        
+        #canvas {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: white; /* Default background color */
+        }
 
-    .box {
-      background-color: white;
-      border: 2px solid black;
-      border-radius: 5px;
-      padding: 5px;
-      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-      position: absolute;
-      width: 200px;
-      height: 50px;
-      z-index: 1;
-      font-weight: normal;
-      font-style: normal;
-      text-decoration: none;
-      resize: both;
-      /* make resizable */
-      overflow: hidden;
-      display: inline-block;
+        .box {
+            background-color: white;
+            border: 2px solid black;
+            border-radius: 5px;
+            padding: 5px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            position: absolute;
+            width: 200px;
+            height: 50px;
+            z-index: 1;
+        }
 
-      /* no extra spaces */
-      margin: 0;
-      white-space: nowrap;
+        .line {
+            stroke: black;
+            stroke-width: 2px;
+        }
 
-      /* default widths */
-      min-width: 2em;
-    }
+        .top-bar {
+            background-color: lightgray;
+            color: black;
+            padding: 10px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            border-bottom: 3px solid black;
+            display: flex;
+            justify-content: flex-end; /* Align buttons to the right */
+        }
 
-    /* let <input> assume the size of the wrapper */
-    .box>input {
-      width: 100%;
-      box-sizing: border-box;
-      margin: 0;
-    }
+        .top-bar button {
+            width: 40px;
+            height: 40px;
+            border: 2px solid black;
+            background-color: transparent;
+            margin-left: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
 
-    /* add a visible handle */
-    .box>span {
-      display: inline-block;
-      vertical-align: bottom;
-      margin-left: -16px;
-      width: 16px;
-      height: 16px;
-      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAJUlEQVR4AcXJRwEAIBAAIPuXxgiOW3xZYzi1Q3Nqh+bUDk1yD9sQaUG/4ehuEAAAAABJRU5ErkJggg==");
-      cursor: ew-resize;
-    }
+        .top-bar button:hover {
+            background-color: #ccc;
+        }
 
-    .line {
-      stroke: black;
-      stroke-width: 2px;
-    }
+        .top-bar .icon-button img {
+            width: 24px;
+            height: 24px;
+        }
 
-    .top-bar {
-      background-color: lightgray;
-      color: black;
-      padding: 10px;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 9999;
-      border-bottom: 3px solid black;
-      display: flex;
-      justify-content: flex-end;
-      /* Align buttons to the right */
-    }
+       .dropdown {
+            position: relative;
+            display: inline-block;
+        }
 
-    .top-bar button {
-      width: 40px;
-      height: 40px;
-      border: 2px solid black;
-      background-color: transparent;
-      margin-left: 5px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 55px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            right: 0;
+            transform-origin: top right;
+            top: 40px; /* Adjust the top position based on the height of the top bar and button size */
+        }
 
-    .top-bar button:hover {
-      background-color: #ccc;
-    }
+        .dropdown.show .dropdown-content {
+            display: block;
+            left: unset;
+            right: 0;
+            top: 100%; /* Change top position to appear below the button */
+            transform-origin: bottom right;
+        }
 
-    .top-bar .icon-button img {
-      width: 24px;
-      height: 24px;
-    }
+        .dropdown-content a {
+            color: black;
+            padding: 8px 6px;
+            text-decoration: none;
+            display: block;
+        }
 
-    .dropdown {
-      position: relative;
-      display: inline-block;
-    }
+        .dropdown-content a:hover {
+            background-color: #E0E0E0;
+        }
 
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #f9f9f9;
-      min-width: 55px;
-      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-      z-index: 1;
-      right: 0;
-      left: unset;
-      transform-origin: top right;
-      top: 100%;
-      /* Adjust the top position based on the height of the top bar and button size */
-    }
-
-    .dropdown.show .dropdown-content {
-      display: block;
-      left: unset;
-      right: 0;
-      top: 100%;
-      /* Change top position to appear below the button */
-      transform-origin: bottom right;
-    }
-
-    .dropdown-content a {
-      color: black;
-      padding: 8px 6px;
-      text-decoration: none;
-      display: block;
-    }
-
-    .dropdown-content a:hover {
-      background-color: #E0E0E0;
-    }
-
-    .show {
-      display: block;
-    }
-
-    .bold {
+        .show {
+            display: block;
+        }
+         .bold {
       font-weight: bold;
     }
 
@@ -156,59 +119,57 @@
     .strikethrough {
       text-decoration: line-through;
     }
-  </style>
+    </style>
 </head>
-
 <body>
-  <span class="box"><input type="text" /><span></span></span>
   <div class="top-bar">
-    <button class="icon-button" onclick="toggleDropdown(event, 'color', 'canvas')" title="Change Background Color">
-      <img src="images/background-fill.svg" alt="Change Background Color">
-    </button>
+    <button class="icon-button" onclick="toggleDropdown(event, 'colorDropdown', 'canvas')" title="Change Background Color">
+  <img src="images/background-fill.svg" alt="Change Background Color">
+</button>
 
-    <button class="icon-button" onclick="toggleDropdown(event, 'color', 'box')" title="Change Box Color">
-      <img src="images/box-fill.svg" alt="Change Box Color">
-    </button>
+<button class="icon-button" onclick="toggleDropdown(event, 'colorDropdown', 'box')" title="Change Box Color">
+  <img src="images/box-fill.svg" alt="Change Box Color">
+</button>
 
-    <button class="icon-button" onclick="toggleDropdown(event, 'color', 'boxBorder')" title="Change Border Color">
-      <img src="images/border-color.svg" alt="Change Border Color">
-    </button>
+<button class="icon-button" onclick="toggleDropdown(event, 'colorDropdown', 'boxBorder')" title="Change Border Color">
+  <img src="images/border-color.svg" alt="Change Border Color">
+</button>
 
-    <button class="icon-button" onclick="toggleDropdown(event, 'width', 'boxBorder')" title="Change Border Width">
-      <img src="images/box-outline.svg" alt="Change Border Width">
-    </button>
+<button class="icon-button" onclick="toggleDropdown(event, 'widthDropdown', 'boxBorder')" title="Change Border Width">
+  <img src="images/box-outline.svg" alt="Change Border Width">
+</button>
 
-    <button class="icon-button" onclick="toggleDropdown(event, 'style', 'boxBorder')" title="Change Border Style">
-      <img src="images/border-type.svg" alt="Change Border Style">
-    </button>
+<button class="icon-button" onclick="toggleDropdown(event, 'styleDropdown', 'boxBorder')" title="Change Border Style">
+  <img src="images/border-type.svg" alt="Change Border Style">
+</button>
 
-    <button class="icon-button" onclick="toggleDropdown(event, 'color', 'line')" title="Change Line Color">
-      <img src="images/line-color.svg" alt="Change Line Color">
-    </button>
+<button class="icon-button" onclick="toggleDropdown(event, 'colorDropdown', 'line')" title="Change Line Color">
+  <img src="images/line-color.svg" alt="Change Line Color">
+</button>
 
-    <button class="icon-button" onclick="toggleDropdown(event, 'width', 'line')" title="Change Line Width">
-      <img src="images/line-thickness.svg" alt="Change Line Width">
-    </button>
+<button class="icon-button" onclick="toggleDropdown(event, 'widthDropdown', 'line')" title="Change Line Width">
+  <img src="images/line-thickness.svg" alt="Change Line Width">
+</button>
 
-    <button class="icon-button" onclick="toggleDropdown(event, 'style', 'line')" title="Change Line Style">
-      <img src="images/line-type.svg" alt="Change Line Style">
-    </button>
+<button class="icon-button" onclick="toggleDropdown(event, 'styleDropdown', 'line')" title="Change Line Style">
+  <img src="images/line-type.svg" alt="Change Line Style">
+</button>
 
-    <button class="icon-button" onclick="toggleDropdown(event, 'color', 'boxText')" title="Change Text Color">
-      <img src="images/text-color.svg" alt="Change Text Color">
-    </button>
+<button class="icon-button" onclick="toggleDropdown(event, 'colorDropdown', 'boxText')" title="Change Text Color">
+  <img src="images/text-color.svg" alt="Change Text Color">
+</button>
 
-    <button class="icon-button" onclick="styleText('bold')" title="Bold">
-      <img src="images/bold.svg" alt="Bold">
-    </button>
+<button class="icon-button" onclick="styleText('bold')" title="Bold">
+  <img src="images/bold.svg" alt="Bold">
+</button>
 
-    <button class="icon-button" onclick="styleText('italic')" title="Italic">
-      <img src="images/italic.svg" alt="Italic">
-    </button>
+<button class="icon-button" onclick="styleText('italic')" title="Italic">
+  <img src="images/italic.svg" alt="Italic">
+</button>
 
-    <button class="icon-button" onclick="styleText('strikethrough')" title="Strikethrough">
-      <img src="images/strikethrough.svg" alt="Strikethrough">
-    </button>
+<button class="icon-button" onclick="styleText('strikethrough')" title="Strikethrough">
+  <img src="images/strikethrough.svg" alt="Strikethrough">
+</button>
 
     <div class="dropdown" data-dropdown="colorDropdown">
       <div class="dropdown-content">
@@ -224,7 +185,7 @@
         <a href="#" data-color="brown">Brown</a>
       </div>
     </div>
-
+      
     <div class="dropdown" data-dropdown="widthDropdown">
       <div class="dropdown-content">
         <a href="#" data-color="1px">1 px</a>
@@ -237,7 +198,7 @@
         <a href="#" data-color="10px">10 px</a>
       </div>
     </div>
-
+      
     <div class="dropdown" data-dropdown="styleDropdown">
       <div class="dropdown-content">
         <a href="#" data-color="solid">Solid</a>
@@ -246,111 +207,110 @@
         <a href="#" data-color="none">None</a>
       </div>
     </div>
-
-
+      
+      
   </div>
 
   <div class="container">
     <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
     <div id="canvas" onclick="addBox(event)" style="height: 100vh;"></div>
-    <svg id="lineContainer"
-      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
+    <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
   </div>
 
-  <script>
-    let count = 0;
-    let selectedBoxes = [];
-    let selectedLines = [];
-    let lineStartBox = null;
-    let startPoint = null;
-    let lines = []; // Array to store line data
+    <script>
+        let count = 0;
+        let selectedBoxes = [];
+        let selectedLines= [];
+        let lineStartBox = null;
+        let startPoint = null;
+        let lines = []; // Array to store line data
 
-    function addBox(event) {
-      const target = event.target;
-      if (target.classList.contains("box")) {
+       function addBox(event) {
+    const target = event.target;
+    if (target.classList.contains("box")) {
         return;
-      }
-      const xPos = event.clientX;
-      const yPos = event.clientY;
-      const boxWidth = 200; // Adjust the width of the box as needed
-      const boxHeight = 50; // Adjust the height of the box as needed
-      const box = document.createElement("input");
-      box.setAttribute("type", "text");
-      box.classList.add("box");
-      box.id = "box" + count;
-      console.log("box" + count);
-      count++;
-      box.placeholder = "Type here";
-      const boxLeft = xPos - boxWidth / 2 + "px";
-      const boxTop = yPos - boxHeight / 2 + "px";
-      box.style.left = boxLeft;
-      box.style.top = boxTop;
-      box.style.width = boxWidth + "px";
-      box.style.height = boxHeight + "px";
-      box.addEventListener("mousedown", startDrag);
-      box.addEventListener("click", selectBox);
-      document.getElementById("canvas").appendChild(box);
     }
+    const xPos = event.clientX;
+    const yPos = event.clientY;
+    const boxWidth = 200; // Adjust the width of the box as needed
+    const boxHeight = 50; // Adjust the height of the box as needed
+    const box = document.createElement("input");
+    box.setAttribute("type", "text");
+    box.classList.add("box");
+    box.id = "box" + count;
+    console.log("box" + count);
+    count++;
+    box.placeholder = "Type here";
+    const boxLeft = xPos - boxWidth / 2 + "px";
+    const boxTop = yPos - boxHeight / 2 + "px";
+    box.style.left = boxLeft;
+    box.style.top = boxTop;
+    box.style.width = boxWidth + "px";
+    box.style.height = boxHeight + "px";
+    box.addEventListener("mousedown", startDrag);
+    box.addEventListener("click", selectBox);
+    document.getElementById("canvas").appendChild(box);
+}
 
 
-    function startDrag(event) {
-      if (!event.shiftKey) {
-        return; // Exit the function if 'Shift' key is not pressed
-      }
+        function startDrag(event) {
+            if (!event.shiftKey) {
+                return; // Exit the function if 'Shift' key is not pressed
+            }
 
-      const box = event.target;
-      const initialX = event.clientX - box.getBoundingClientRect().left;
-      const initialY = event.clientY - box.getBoundingClientRect().top;
-      box.style.zIndex = "999"; // Bring the dragged box to the front
+            const box = event.target;
+            const initialX = event.clientX - box.getBoundingClientRect().left;
+            const initialY = event.clientY - box.getBoundingClientRect().top;
+            box.style.zIndex = "999"; // Bring the dragged box to the front
 
-      function moveBox(event) {
-        const newX = event.clientX - initialX;
-        const newY = event.clientY - initialY; // Adjust the y-coordinate by subtracting 50
-        box.style.left = newX + "px";
-        box.style.top = newY + "px";
-        updateLines();
+            function moveBox(event) {
+    const newX = event.clientX - initialX;
+    const newY = event.clientY - initialY; // Adjust the y-coordinate by subtracting 50
+    box.style.left = newX + "px";
+    box.style.top = newY + "px";
+    updateLines();
 
-      }
+            }
 
-      function stopDrag() {
-        document.removeEventListener("mousemove", moveBox);
-        document.removeEventListener("mouseup", stopDrag);
-        box.style.zIndex = ""; // Restore the original z-index
-        updateLines(); // Update the lines after dragging stops
-      }
+            function stopDrag() {
+                document.removeEventListener("mousemove", moveBox);
+                document.removeEventListener("mouseup", stopDrag);
+                box.style.zIndex = ""; // Restore the original z-index
+                updateLines(); // Update the lines after dragging stops
+            }
 
-      document.addEventListener("mousemove", moveBox);
-      document.addEventListener("mouseup", stopDrag);
-    }
+            document.addEventListener("mousemove", moveBox);
+            document.addEventListener("mouseup", stopDrag);
+        }
 
     function selectBox(event) {
-      const target = event.target;
-      if (!target.classList.contains("icon-button")) {
+    const target = event.target;
+    if (!target.classList.contains("icon-button")) {
         selectedBoxes = [];
         selectedLines = []; // Reset selected line when a box or line is deselected
         console.log("Box/Line deselected");
-      }
+    }
 
-      if (event.altKey) {
+    if (event.altKey) {
         const box = event.target;
         const boxId = box.id;
         deleteBox(boxId);
         deleteLines(boxId);
         return;
-      }
+    }
 
-      if (!event.ctrlKey) {
-        selectedBoxes.push(event.target);
+    if (!event.ctrlKey) {
+        selectedBoxes = event.target;
         selectedLine = []; // Reset selected line when a box is selected
         console.log("Box selected:", selectedBoxes);
         return;
-      }
+    }
 
-      const box = event.target;
-      if (!lineStartBox) {
+    const box = event.target;
+    if (!lineStartBox) {
         lineStartBox = box;
         startPoint = getCenter(box);
-      } else {
+    } else {
         const endPoint = getCenter(box);
         const startBoxId = lineStartBox.id; // Get the ID of the start box
         const endBoxId = box.id; // Get the ID of the end box
@@ -359,144 +319,234 @@
         createLine(lineId, startBoxId, endBoxId);
         lineStartBox = null;
         startPoint = null;
-      }
-
-      console.log("Selected Line:", selectedLines);
     }
 
+    console.log("Selected Line:", selectedLines);
+}
 
 
 
-    function deleteBox(boxId) {
-      const box = document.getElementById(boxId);
-      if (box) {
-        box.remove();
-      }
-    }
 
-    function deleteLines(boxId) {
-      const svg = document.getElementById("lineContainer");
-      const lines = svg.getElementsByClassName("line");
-      for (let i = lines.length - 1; i >= 0; i--) { // Iterate over the lines and remove the ones connected to the box
-        const line = lines[i];
-        const startBoxId = line.getAttribute("data-start-box");
-        const endBoxId = line.getAttribute("data-end-box");
-        if (startBoxId === boxId || endBoxId === boxId) {
-          line.remove();
+        function deleteBox(boxId) {
+            const box = document.getElementById(boxId);
+            if (box) {
+                box.remove();
+            }
         }
-      }
-    }
 
-    function createLine(lineId, startBoxId, endBoxId) {
-      const svg = document.getElementById("lineContainer");
-      const startBox = document.getElementById(startBoxId);
-      const endBox = document.getElementById(endBoxId);
-      if (startBox && endBox) {
-        const start = getCenter(startBox);
-        const end = getCenter(endBox);
-        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        line.setAttribute("id", lineId);
-        line.setAttribute("x1", start.x);
-        line.setAttribute("y1", start.y);
-        line.setAttribute("x2", end.x);
-        line.setAttribute("y2", end.y);
-        line.setAttribute("data-start-box", startBoxId);
-        line.setAttribute("data-end-box", endBoxId);
-        line.classList.add("line");
-        line.addEventListener("click", selectBox);     // Add click event listener to the line
-        svg.appendChild(line);
-      }
-    }
+        function deleteLines(boxId) {
+            const svg = document.getElementById("lineContainer");
+            const lines = svg.getElementsByClassName("line");
+            for (let i = lines.length - 1; i >= 0; i--) { // Iterate over the lines and remove the ones connected to the box
+                const line = lines[i];
+                const startBoxId = line.getAttribute("data-start-box");
+                const endBoxId = line.getAttribute("data-end-box");
+                if (startBoxId === boxId || endBoxId === boxId) {
+                    line.remove();
+                }
+            }
+        }
+
+       function createLine(lineId, startBoxId, endBoxId) {
+  const svg = document.getElementById("lineContainer");
+  const startBox = document.getElementById(startBoxId);
+  const endBox = document.getElementById(endBoxId);
+  if (startBox && endBox) {
+    const start = getCenter(startBox);
+    const end = getCenter(endBox);
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("id", lineId);
+    line.setAttribute("x1", start.x);
+    line.setAttribute("y1", start.y);
+    line.setAttribute("x2", end.x);
+    line.setAttribute("y2", end.y);
+    line.setAttribute("data-start-box", startBoxId);
+    line.setAttribute("data-end-box", endBoxId);
+    line.classList.add("line");
+    line.addEventListener("click", selectBox);     // Add click event listener to the line
+    svg.appendChild(line);
+  }
+}
 
 
-    function updateLines() {
-      const svg = document.getElementById("lineContainer");
-      svg.innerHTML = ""; // Clear all existing lines
+        function updateLines() {
+            const svg = document.getElementById("lineContainer");
+            svg.innerHTML = ""; // Clear all existing lines
 
-      for (let i = 0; i < lines.length; i += 3) {
-        const lineId = lines[i];
-        const startBoxId = lines[i + 1];
-        const endBoxId = lines[i + 2];
-        createLine(lineId, startBoxId, endBoxId);
-      }
-    }
+            for (let i = 0; i < lines.length; i += 3) {
+                const lineId = lines[i];
+                const startBoxId = lines[i + 1];
+                const endBoxId = lines[i + 2];
+                createLine(lineId, startBoxId, endBoxId);
+            }
+        }
 
-    function getCenter(element) {
-      const rect = element.getBoundingClientRect();
-      const x = rect.left + rect.width / 2;
-      const y = rect.top + rect.height / 2;
-      return { x, y };
-    }
+        function getCenter(element) {
+            const rect = element.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            return { x, y };
+        }
 
-    function styleText(style) {
-      const target = selectedBoxes;
-      if (target.length > 0) {
+function toggleDropdown(event, attribute, target) {
+const button= event.target; 
+const dropdown= document.querySelector('.dropdown[data-dropdown="${dropdownType}"] .dropdown-content');
+if (target=== 'canvas') { 
+dropdown.classList.toggle("show");
+//(code to display dropdown under button)
+    const colorLinks = dropdown.querySelectorAll('a');
+    colorLinks.forEach(link => {
+      link.addEventListener('click', (e) => changeColor(e, [canvas], 'canvas'));
+    });
+  }
+if (target=== 'box') { 
+dropdown.classList.toggle("show");
+//(code to display dropdown under button)
+    const colorLinks = dropdown.querySelectorAll('a');
+    colorLinks.forEach(link => {
+      link.addEventListener('click', (e) => changeColor(e, selectedBoxes, 'box'));
+    });
+  }
+  if (target=== 'boxBorder') { 
+  if (attribute==='color') {
+dropdown.classList.toggle("show");
+//(code to display dropdown under button)
+    const colorLinks = dropdown.querySelectorAll('a');
+    colorLinks.forEach(link => {
+      link.addEventListener('click', (e) => changeColor(e, selectedBoxes, 'boxBorder'));
+    });
+  }
+   else if (attribute==='width') {
+dropdown.classList.toggle("show");
+//(code to display dropdown under button)
+    const widthLinks = dropdown.querySelectorAll('a');
+    widthLinks.forEach(link => {
+      link.addEventListener('click', (e) => changeWidth(e, selectedBoxes, 'boxBorder'));
+    });
+  }
+   else if (attribute==='style') {
+dropdown.classList.toggle("show");
+//(code to display dropdown under button)
+    const styleLinks = dropdown.querySelectorAll('a');
+    styleLinks.forEach(link => {
+      link.addEventListener('click', (e) => changeStyle(e, selectedBoxes, 'boxBorder'));
+    });
+  }
+  }
+    if (target=== 'line') { 
+  if (attribute==='color') {
+dropdown.classList.toggle("show");
+//(code to display dropdown under button)
+    const colorLinks = dropdown.querySelectorAll('a');
+    colorLinks.forEach(link => {
+      link.addEventListener('click', (e) => changeColor(e, selectedBoxes, 'line'));
+    });
+  }
+   else if (attribute==='width') {
+dropdown.classList.toggle("show");
+//(code to display dropdown under button)
+    const widthLinks = dropdown.querySelectorAll('a');
+    widthLinks.forEach(link => {
+      link.addEventListener('click', (e) => changeWidth(e, selectedBoxes, 'line'));
+    });
+  }
+   else if (attribute==='style') {
+dropdown.classList.toggle("show");
+//(code to display dropdown under button)
+    const styleLinks = dropdown.querySelectorAll('a');
+    styleLinks.forEach(link => {
+      link.addEventListener('click', (e) => changeStyle(e, selectedBoxes, 'line'));
+    });
+  }
+  }
+  else if (target=== 'boxText') { 
+dropdown.classList.toggle("show");
+//(code to display dropdown under button)
+    const colorLinks = dropdown.querySelectorAll('a');
+    colorLinks.forEach(link => {
+      link.addEventListener('click', (e) => changeColor(e, selectedBoxes, 'boxText'));
+    });
+  }
+  }
+
+  function changeColor(event, targetID, element) {
+  const newColor= event.target.getAttribute("data-color");
+  for (let i = 0; i < targetID.length; i++) {
+  const target=document.getElementById(targetID[i]);
+  if (element==='text') {
+  target.style.color=newColor;
+  }
+  else if (element==='border') {
+  target.style.borderColor=newColor;
+  }
+  else if (element==='line') {
+  target.style.stroke=newColor;
+  }
+    else if (element==='canvas' || element==='box') {
+  target.style.backgroundColor=newColor;
+  }
+  }
+}
+
+  
+   function changeWidth(event, targetID, element) {
+  const newWidth= event.target.getAttribute("data-width");
+  for (let i = 0; i < targetID.length; i++) {
+  const target=document.getElementById(i);
+  if (element==='border') {
+  target.style.borderWidth=newWidth;
+  }
+  else if (element==='line') {
+  target.style.strokeWidth=newWidth;
+  }
+  }
+  }
+ 
+  function changeStyle(e, targetID, element) {
+  const newStyle= event.target.getAttribute("data-style");
+  for (let i = 0; i < numbers.length; i++) {
+  const target=document.getElementById(i);
+  if (element==='border') {
+  target.style.borderStyle=newStyle;
+  }
+  else if (element==='line') {
+    if (newStyle === "dashed") {
+  target.setAttribute("stroke-dasharray", "5,5"); // Set line style to dashed
+} else if (newStyle === "dotted") {
+  target.setAttribute("stroke-dasharray", "1,5"); // Set line style to dotted
+} else if (newStyle === "solid") {
+  target.removeAttribute("stroke-dasharray"); // Remove the attribute to set line style to solid
+}
+  }
+  }
+  }
+
+         function styleText(style) { //Makes box text bold, etc.
+      target=selectedBoxes;
+      if (target.length > 1 || !isStyleApplied(target[0], style)) {
         for (let i = 0; i < target.length; i++) {
-          applyTextStyle(target[i].id, style);
+          applyTextStyle(target[i], style);
         }
+      } else {
+        removeTextStyle(target[0], style);
       }
     }
 
-    function isStyleApplied(elementId, style) {
+    function isStyleApplied(elementId, style) { //Check if box has style to disable. Used by styleText()
       const element = document.getElementById(elementId);
       return element.classList.contains(style);
     }
 
-    function applyTextStyle(elementId, style) {
+    function applyTextStyle(elementId, style) { //If not style, add it. Used by styleText()
       const element = document.getElementById(elementId);
-      if (!isStyleApplied(elementId, style)) {
-        element.classList.add(style);
-      } else {
-        element.classList.remove(style);
-      }
+      element.classList.add(style);
     }
 
-    function toggleDropdown(event, attribute, target) {
-      const button = event.target;
-      const dropdown = document.querySelector(`.dropdown[data-dropdown="${attribute}Dropdown"] .dropdown-content`);
-      const allDropdowns = document.querySelectorAll(".dropdown-content");
-      allDropdowns.forEach((d) => {
-        if (d !== dropdown) {
-          d.classList.remove("show");
-        }
-      });
-      dropdown.classList.toggle("show");
-      console.log("show" + dropdown);
-      const buttonRect = button.getBoundingClientRect();
-      const dropdownRect = dropdown.getBoundingClientRect();
-      const dropdownTop = buttonRect.top + buttonRect.height;
-      const dropdownLeft = buttonRect.left + buttonRect.width - dropdownRect.width;
-      dropdown.style.top = `${dropdownTop}px`;
-      dropdown.style.left = `${dropdownLeft}px`;
-      const links = dropdown.querySelectorAll('a');
-      links.forEach((link) => {
-        if (target === "canvas") {
-          link.addEventListener("click", (e) => changeColor(e, [canvas], "canvas"));
-        } else if (target === "box") {
-          link.addEventListener("click", (e) => changeColor(e, selectedBoxes, "box"));
-        } else if (target === "boxBorder") {
-          if (attribute === "color") {
-            link.addEventListener("click", (e) => changeColor(e, selectedBoxes, "boxBorder"));
-          } else if (attribute === "width") {
-            link.addEventListener("click", (e) => changeWidth(e, selectedBoxes, "boxBorder"));
-          } else if (attribute === "style") {
-            link.addEventListener("click", (e) => changeStyle(e, selectedBoxes, "boxBorder"));
-          }
-        } else if (target === "line") {
-          if (attribute === "color") {
-            link.addEventListener("click", (e) => changeColor(e, selectedLines, "line"));
-          } else if (attribute === "width") {
-            link.addEventListener("click", (e) => changeWidth(e, selectedLines, "line"));
-          } else if (attribute === "style") {
-            link.addEventListener("click", (e) => changeStyle(e, selectedLines, "line"));
-          }
-        } else if (target === "boxText") {
-          link.addEventListener("click", (e) => changeColor(e, selectedBoxes, "boxText"));
-        }
-      });
+    function removeTextStyle(elementId, style) {// If style, remove it. Used by styleText()
+      const element = document.getElementById(elementId);
+      element.classList.remove(style);
     }
 
-  </script>
+    </script>
 </body>
-
 </html>
