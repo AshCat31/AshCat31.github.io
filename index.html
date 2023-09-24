@@ -5,7 +5,7 @@
 <!--Todo: Make boxes resizable. Make canvas bigger and scrollable. Print. Save.-->
 
 <head>
-  <title>Pop-Up Box!</title>
+  <title>Pop-Up Box</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -453,7 +453,23 @@
       }
     }
 
+    function colorClickListener(e, target, attribute) {
+      return function (e) {
+        changeColor(e, target, attribute);
+      };
+    }
 
+    function widthClickListener(e, target, attribute) {
+      return function (e) {
+        changeWidth(e, target, attribute);
+      };
+    }
+
+    function styleClickListener(e, target, attribute) {
+      return function (e) {
+        changeStyle(e, target, attribute);
+      };
+    }
 
     function toggleDropdown(event, attribute, target) {
       const button = event.target;
@@ -463,25 +479,14 @@
       closeDropdowns();
       dropdown.classList.toggle("show");
       console.log("show" + attribute + dropdown);
-      function colorClickListener(e) {
-        changeColor(e, target, attribute);
-      }
-
-      function widthClickListener(e) {
-        changeWidth(e, target, attribute);
-      }
-
-      function styleClickListener(e) {
-        changeStyle(e, target, attribute);
-      }
       const links = dropdown.querySelectorAll('a');
       links.forEach((link) => {
         if (attribute === "color") {
-          link.addEventListener("click", colorClickListener);
+          link.addEventListener("click", colorClickListener(e, target, attribute));
         } else if (attribute === "width") {
-          link.addEventListener("click", widthClickListener);
+          link.addEventListener("click", widthClickListener(e, target, attribute));
         } else if (attribute === "style") {
-          link.addEventListener("click", styleClickListener);
+          link.addEventListener("click", styleClickListener(e, target, attribute));
         }
       });
     }
