@@ -5,7 +5,7 @@
 <!--Todo: Make boxes resizable. Make canvas bigger and scrollable. Print. Save.-->
 
 <head>
-  <title>Pop-Up Box!</title>
+  <title>Pop-Up Box</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -482,26 +482,26 @@
       const links = dropdown.querySelectorAll('a');
       links.forEach((link) => {
         if (target === "canvas") {
-          link.addEventListener("click", changeColor(link, [canvas], "canvas"));
+          link.addEventListener("click", colorClickListener(link, [canvas], "canvas"));
           console.log(link)
         } else if (target === "boxBorder") {
           if (attribute === "color") {
-            link.addEventListener("click", (e) => changeColor(e, selectedBoxes, "boxBorder"));
+            link.addEventListener("click", colorClickListener(e, selectedBoxes, "boxBorder"));
           } else if (attribute === "width") {
-            link.addEventListener("click", (e) => changeWidth(e, selectedBoxes, "boxBorder"));
+            link.addEventListener("click", widthClickListener(e, selectedBoxes, "boxBorder"));
           } else if (attribute === "style") {
-            link.addEventListener("click", (e) => changeStyle(e, selectedBoxes, "boxBorder"));
+            link.addEventListener("click", styleClickListener(e, selectedBoxes, "boxBorder"));
           }
         } else if (target === "line") {
           if (attribute === "color") {
-            link.addEventListener("click", (e) => changeColor(e, selectedLines, "line"));
+            link.addEventListener("click", colorClickListener(e, selectedLines, "line"));
           } else if (attribute === "width") {
-            link.addEventListener("click", (e) => changeWidth(e, selectedLines, "line"));
+            link.addEventListener("click", widthClickListener(e, selectedLines, "line"));
           } else if (attribute === "style") {
-            link.addEventListener("click", (e) => changeStyle(e, selectedLines, "line"));
+            link.addEventListener("click", styleClickListener(e, selectedLines, "line"));
           }
         } else if (target === "boxText") {
-          link.addEventListener("click", (e) => changeColor(e, selectedBoxes, "boxText"));
+          link.addEventListener("click", colorClickListener(e, selectedBoxes, "boxText"));
         }
       });
     }
