@@ -495,7 +495,7 @@
     function changeColor(color, targetIDs, targetAttr) {
       if (targetAttr === "canvas") {
         // Change the background color of the canvas
-        const canvas = document.getElementById(targetIDs[0]);
+        const canvas = document.getElementById("canvas");
         canvas.style.backgroundColor = color;
       } else if (targetAttr === "box" || targetAttr === "boxText" || targetAttr === "boxBorder" || targetAttr === "line") {
         for (let i = 0; i < targetIDs.length; i++) {
