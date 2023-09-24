@@ -1,11 +1,11 @@
 <html>
 <!-- Pop-Up Box -->
 <!--Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough. -->
-<!--Not working: Dropdowns don't show. Resizing boxes doesn't work. Single box in top left appears that is resizable.-->
+<!--Not working: All colordropdowns change bkg. Resizing boxes doesn't work. Single box in top left appears that is resizable.-->
 <!--Todo: Make boxes resizable. Make canvas bigger and scrollable. Print. Save.-->
 
 <head>
-  <title>Pop-Up Box</title>
+  <title>Pop-Up Box!</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -496,6 +496,7 @@
       const color = e.target.getAttribute("data-color");
       console.log("color " + color)
       if (targetAttr === "canvas") {
+        console.log("canvas")
         // Change the background color of the canvas
         const canvas = document.getElementById("canvas");
         canvas.style.backgroundColor = color;
