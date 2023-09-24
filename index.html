@@ -5,7 +5,7 @@
 <!--Todo: Make boxes resizable. Make canvas bigger and scrollable. Print. Save.-->
 
 <head>
-  <title>Pop-Up Box!</title>
+  <title>Pop-Up Box</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -466,34 +466,34 @@
       dropdown.classList.toggle("show");
       console.log("show" + attribute + dropdown);
       const links = dropdown.querySelectorAll('a');
-      const newAttribute=link.getAttribute('data-color');
       links.forEach((link) => {
         if (target === "canvas") {
-          link.addEventListener("click", (e) => changeColor(newAttribute, [canvas], "canvas"));
+          link.addEventListener("click", (e) => changeColor(e, [canvas], "canvas"));
         } else if (target === "box") {
-          link.addEventListener("click", (e) => changeColor(newAttribute, selectedBoxes, "box"));
+          link.addEventListener("click", (e) => changeColor(e, selectedBoxes, "box"));
         } else if (target === "boxBorder") {
           if (attribute === "color") {
-            link.addEventListener("click", (e) => changeColor(newAttribute, selectedBoxes, "boxBorder"));
+            link.addEventListener("click", (e) => changeColor(e, selectedBoxes, "boxBorder"));
           } else if (attribute === "width") {
-            link.addEventListener("click", (e) => changeWidth(newAttribute, selectedBoxes, "boxBorder"));
+            link.addEventListener("click", (e) => changeWidth(e, selectedBoxes, "boxBorder"));
           } else if (attribute === "style") {
-            link.addEventListener("click", (e) => changeStyle(newAttribute, selectedBoxes, "boxBorder"));
+            link.addEventListener("click", (e) => changeStyle(e, selectedBoxes, "boxBorder"));
           }
         } else if (target === "line") {
           if (attribute === "color") {
-            link.addEventListener("click", (e) => changeColor(newAttribute, selectedLines, "line"));
+            link.addEventListener("click", (e) => changeColor(e, selectedLines, "line"));
           } else if (attribute === "width") {
-            link.addEventListener("click", (e) => changeWidth(newAttribute, selectedLines, "line"));
+            link.addEventListener("click", (e) => changeWidth(e, selectedLines, "line"));
           } else if (attribute === "style") {
-            link.addEventListener("click", (e) => changeStyle(newAttribute, selectedLines, "line"));
+            link.addEventListener("click", (e) => changeStyle(e, selectedLines, "line"));
           }
         } else if (target === "boxText") {
-          link.addEventListener("click", (e) => changeColor(newAttribute, selectedBoxes, "boxText"));
+          link.addEventListener("click", (e) => changeColor(e, selectedBoxes, "boxText"));
         }
       });
     }
-    function changeColor(color, targetIDs, targetAttr) {
+    function changeColor(e, targetIDs, targetAttr) {
+      const color = e.target.getAttribute("data-color");
       console.log("color " + color)
       if (targetAttr === "canvas") {
         // Change the background color of the canvas
