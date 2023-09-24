@@ -5,7 +5,7 @@
 <!--Todo: Make boxes resizable. Make canvas bigger and scrollable. Print. Save.-->
 
 <head>
-  <title>Pop-Up Box</title>
+  <title>Pop-Up Box!</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -475,11 +475,7 @@
       function styleClickListener(e) {
         changeStyle(e, target, target);
       }
-      allDropdowns.forEach((d) => {
-        if (d !== dropdown) {   // Close all other dropdowns
-          d.classList.remove("show");
-        }
-      });
+      closeDropdowns();
       dropdown.classList.toggle("show");
       console.log("show" + attribute + dropdown);
       const links = dropdown.querySelectorAll('a');
@@ -493,6 +489,11 @@
         }
       });
     }
+    closeDropdowns();
+    const allDropdowns = document.querySelectorAll(".dropdown-content");
+    allDropdowns.forEach((dropdown) => {
+      dropdown.classList.remove("show");
+    })
     function changeColor(e, targetIDs, targetAttr) {
       console.log(e)
       const color = e.target.getAttribute("data-color");
@@ -524,6 +525,9 @@
           }
         }
       }
+      //close the dropdown
+      toggleDropdown(e, "color", targetIDs);
+
     }
 
 
