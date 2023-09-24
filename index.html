@@ -5,7 +5,7 @@
 <!--Todo: Make boxes resizable. Make canvas bigger and scrollable. Print. Save.-->
 
 <head>
-  <title>Pop-Up Box</title>
+  <title>Pop-Up Box!</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -492,35 +492,35 @@
         }
       });
     }
-    function changeColor(color, targetID, targetAttr) {
-      // Get the target element(s) by their ID(s)
-      const targetElements = document.getElementById(targetID);
-
+    function changeColor(color, targetIDs, targetAttr) {
       if (targetAttr === "canvas") {
         // Change the background color of the canvas
-        targetElements.style.backgroundColor = color;
-      } else if (targetAttr === "box") {
-        // Change the background color of multiple boxes
-        for (let i = 0; i < targetElements.length; i++) {
-          targetElements[i].style.backgroundColor = color;
+        const canvas = document.getElementById(targetIDs[0]);
+        if (canvas) {
+          canvas.style.backgroundColor = color;
         }
-      } else if (targetAttr === "boxText") {
-        // Change the font color of multiple boxes' text
-        for (let i = 0; i < targetElements.length; i++) {
-          targetElements[i].style.color = color;
-        }
-      } else if (targetAttr === "boxBorder") {
-        // Change the border color of multiple boxes
-        for (let i = 0; i < targetElements.length; i++) {
-          targetElements[i].style.borderColor = color;
-        }
-      } else if (targetAttr === "line") {
-        // Change the color of multiple lines
-        for (let i = 0; i < targetElements.length; i++) {
-          targetElements[i].style.color = color;
+      } else if (targetAttr === "box" || targetAttr === "boxText" || targetAttr === "boxBorder" || targetAttr === "line") {
+        for (let i = 0; i < targetIDs.length; i++) {
+          const targetElement = document.getElementById(targetIDs[i]);
+          if (targetElement) {
+            if (targetAttr === "box") {
+              // Change the background color of the box
+              targetElement.style.backgroundColor = color;
+            } else if (targetAttr === "boxText") {
+              // Change the font color of the box's text
+              targetElement.style.color = color;
+            } else if (targetAttr === "boxBorder") {
+              // Change the border color of the box
+              targetElement.style.borderColor = color;
+            } else if (targetAttr === "line") {
+              // Change the color of the line
+              targetElement.style.color = color;
+            }
+          }
         }
       }
     }
+
 
 
   </script>
