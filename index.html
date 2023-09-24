@@ -1,10 +1,11 @@
 <html>
-  <!-- Pop-Up Box -->
-  <!--Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough. Dropdowns show.-->
-  <!--Not working: Dropdowns don't change Resizing boxes doesn't work. Single box in top left appears that is resizable.-->
-  <!--Todo: Make dropdowns appear under buttons. Make boxes resizable. Make canvas bigger and scrollable. Print. Save.-->
+<!-- Pop-Up Box -->
+<!--Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough. -->
+<!--Not working: Dropdowns don't show. Resizing boxes doesn't work. Single box in top left appears that is resizable.-->
+<!--Todo: Make boxes resizable. Make canvas bigger and scrollable. Print. Save.-->
+
 <head>
-  <title>Pop-Up Boxe</title>
+  <title>Pop-Up Box</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -464,12 +465,6 @@
       });
       dropdown.classList.toggle("show");
       console.log("show" + attribute + dropdown);
-     // const buttonRect = button.getBoundingClientRect();
-     // const dropdownRect = dropdown.getBoundingClientRect();
-     // const dropdownTop = buttonRect.top + buttonRect.height;
-     // const dropdownLeft = buttonRect.left + buttonRect.width - dropdownRect.width;
-     // dropdown.style.top = `${dropdownTop}px`;
-     // dropdown.style.left = `${dropdownLeft}px`;
       const links = dropdown.querySelectorAll('a');
       links.forEach((link) => {
         if (target === "canvas") {
@@ -497,6 +492,36 @@
         }
       });
     }
+    function changeColor(color, targetID, targetAttr) {
+      // Get the target element(s) by their ID(s)
+      const targetElements = document.getElementById(targetID);
+
+      if (targetAttr === "canvas") {
+        // Change the background color of the canvas
+        targetElements.style.backgroundColor = color;
+      } else if (targetAttr === "box") {
+        // Change the background color of multiple boxes
+        for (let i = 0; i < targetElements.length; i++) {
+          targetElements[i].style.backgroundColor = color;
+        }
+      } else if (targetAttr === "boxText") {
+        // Change the font color of multiple boxes' text
+        for (let i = 0; i < targetElements.length; i++) {
+          targetElements[i].style.color = color;
+        }
+      } else if (targetAttr === "boxBorder") {
+        // Change the border color of multiple boxes
+        for (let i = 0; i < targetElements.length; i++) {
+          targetElements[i].style.borderColor = color;
+        }
+      } else if (targetAttr === "line") {
+        // Change the color of multiple lines
+        for (let i = 0; i < targetElements.length; i++) {
+          targetElements[i].style.color = color;
+        }
+      }
+    }
+
 
   </script>
 </body>
