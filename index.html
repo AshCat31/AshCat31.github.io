@@ -502,7 +502,7 @@
       const color = e.target.getAttribute("data-color");
       const dropdown = document.querySelector(`.dropdown[data-dropdown="colorDropdown"] .dropdown-content`);
       const links = dropdown.querySelectorAll('a');
-      console.log("color " + color + "attribute " + targetAttr);
+      console.log("color " + color + ", attribute " + targetAttr + "target: " + targetIDs);
       if (targetAttr === "canvas") {
         console.log("canvas")
         // Change the background color of the canvas
