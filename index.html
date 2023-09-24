@@ -1,5 +1,5 @@
 <html>
-<!-- Pop-Up Box -->
+<!-- Pop-Up Box! -->
 <!--Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough. -->
 <!--Not working: Dropdowns don't show. Resizing boxes doesn't work. Single box in top left appears that is resizable.-->
 <!--Todo: Make boxes resizable. Make canvas bigger and scrollable. Print. Save.-->
@@ -493,6 +493,7 @@
       });
     }
     function changeColor(color, targetIDs, targetAttr) {
+      console.log("color " + color)
       if (targetAttr === "canvas") {
         // Change the background color of the canvas
         const canvas = document.getElementById("canvas");
