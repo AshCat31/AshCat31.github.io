@@ -428,7 +428,7 @@
       return { x, y };
     }
 
-    function styleText(style) {
+    function styleText(style) { //Add style to box text.
       const target = selectedBoxes;
       if (target.length > 0) {
         for (let i = 0; i < target.length; i++) {
@@ -437,12 +437,12 @@
       }
     }
 
-    function isStyleApplied(elementId, style) {
+    function isStyleApplied(elementId, style) { //Check if style is applied. Used by styleText()
       const element = document.getElementById(elementId);
       return element.classList.contains(style);
     }
 
-    function applyTextStyle(elementId, style) {
+    function applyTextStyle(elementId, style) { //Toggle style. Used by styleText()
       const element = document.getElementById(elementId);
       if (!isStyleApplied(elementId, style)) {
         element.classList.add(style);
