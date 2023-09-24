@@ -5,7 +5,7 @@
 <!--Todo: Make boxes resizable. Make canvas bigger and scrollable. Print. Save.-->
 
 <head>
-  <title>Pop-Up Box</title>
+  <title>Pop-Up Box!</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -458,23 +458,22 @@
         changeColor(event, target, attribute);
       }
     }
+    function colorClickListener(e) {
+      changeColor(e, target, target);
+    }
 
+    function widthClickListener(e) {
+      changeWidth(e, target, target);
+    }
+
+    function styleClickListener(e) {
+      changeStyle(e, target, target);
+    }
     function toggleDropdown(event, attribute, target) {
       const button = event.target;
       const dropdown = document.querySelector(`.dropdown[data-dropdown="${attribute}Dropdown"] .dropdown-content`);
       const allDropdowns = document.querySelectorAll(".dropdown-content");
       console.log("event " + event + "attribute " + attribute + " target " + target + " dropdown " + dropdown + " allDropdowns " + allDropdowns + " button " + button);
-      function colorClickListener(e) {
-        changeColor(e, target, target);
-      }
-
-      function widthClickListener(e) {
-        changeWidth(e, target, target);
-      }
-
-      function styleClickListener(e) {
-        changeStyle(e, target, target);
-      }
       closeDropdowns();
       dropdown.classList.toggle("show");
       console.log("show" + attribute + dropdown);
