@@ -5,7 +5,7 @@
 <!--Todo: Make boxes resizable. Make canvas bigger and scrollable. Print. Save.-->
 
 <head>
-  <title>Pop-Up Box</title>
+  <title>Pop-Up Box!</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -483,7 +483,8 @@
       links.forEach((link) => {
         if (target === "canvas") {
           link.addEventListener("click", colorClickListener(link, "canvas", "canvas"));
-          console.log("link " + link)
+          console.log("link:::: ")
+          console.log(link)
         } else if (target === "boxBorder") {
           if (attribute === "color") {
             link.addEventListener("click", colorClickListener(e, selectedBoxes, "boxBorder"));
