@@ -550,7 +550,7 @@
 
     }
     function removeEventListeners(attribute) {
-      console.log("attribute: " + attribute);
+      console.log("removing: " + attribute);
       const dropdown = document.querySelector(`.dropdown[data-dropdown="${attribute}Dropdown"] .dropdown-content`);
       const links = dropdown.querySelectorAll('a');
       links.forEach((link) => {
