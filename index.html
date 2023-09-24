@@ -1,5 +1,5 @@
 <html>
-<!-- Pop-Up Box -->
+<!-- Pop-Up Box! -->
 <!--Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough. -->
 <!--Not working: Everything changes canvas color. Resizing boxes doesn't work. Single box in top left appears that is resizable.-->
 <!--Todo: Make boxes resizable. Make canvas bigger and scrollable. Print. Save.-->
@@ -554,6 +554,8 @@
       const dropdown = document.querySelector(`.dropdown[data-dropdown="${attribute}Dropdown"] .dropdown-content`);
       const links = dropdown.querySelectorAll('a');
       links.forEach((link) => {
+        console.log("removing link");
+        console.log(link);
         if (attribute === "color") {
           link.removeEventListener("click", colorClickListener);
         } else if (attribute === "width") {
