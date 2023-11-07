@@ -1,11 +1,11 @@
 <html>
 <!-- Pop-Up Box! -->
 <!--Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough. -->
-<!--Not working: Everything changes canvas color. Resizing boxes doesn't work. Single box in top left appears that is resizable.-->
+<!--Not working: Everything changes canvas color. Dropdowns appear in same spot. Resizing boxes doesn't work. Single box in top left appears that is resizable.-->
 <!--Todo: Make boxes resizable. Make canvas bigger and scrollable. Print. Save.-->
 
 <head>
-  <title>Pop-Up Box</title>
+  <title>sPop-Up Box</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -45,6 +45,9 @@
       min-width: 2em;
     }
 
+    .box:focus {
+       border: blue; 
+    }
     /* let <input> assume the size of the wrapper */
     .box>input {
       width: 100%;
@@ -389,7 +392,7 @@
       }
     }
 
-    function createLine(lineId, startBoxId, endBoxId) {
+    function createLine(lineId, startBoxId, endBoxId) { 
       const svg = document.getElementById("lineContainer");
       const startBox = document.getElementById(startBoxId);
       const endBox = document.getElementById(endBoxId);
@@ -411,11 +414,11 @@
     }
 
 
-    function updateLines() {
+    function updateLines() { //after moving boxes, rerender lines one by one
       const svg = document.getElementById("lineContainer");
       svg.innerHTML = ""; // Clear all existing lines
 
-      for (let i = 0; i < lines.length; i += 3) {
+      for (let i = 0; i < lines.length; i += 3) { //iterate by 3s since array has 3 elements per line
         const lineId = lines[i];
         const startBoxId = lines[i + 1];
         const endBoxId = lines[i + 2];
@@ -423,7 +426,7 @@
       }
     }
 
-    function getCenter(element) {
+    function getCenter(element) { //get center of box to render lines
       const rect = element.getBoundingClientRect();
       const x = rect.left + rect.width / 2;
       const y = rect.top + rect.height / 2;
@@ -439,7 +442,8 @@
       }
     }
 
-    function isStyleApplied(elementId, style) { //Check if style is applied. Used by styleText()
+    function isStyleApplied(elementId, style) { 
+      //Check if style is applied. Used by styleText() through applyTextStyle()
       const element = document.getElementById(elementId);
       return element.classList.contains(style);
     }
@@ -453,19 +457,19 @@
       }
     }
 
-    function colorClickListener(e, target, attribute) {
+    function colorClickListener(e, target, attribute) { //when color is clicked in colorDropdown
       return function (e) {
         changeColor(e, target, attribute);
       };
     }
 
-    function widthClickListener(e, target, attribute) {
+    function widthClickListener(e, target, attribute) { //when width is clicked in widthDropdown
       return function (e) {
         changeWidth(e, target, attribute);
       };
     }
 
-    function styleClickListener(e, target, attribute) {
+    function styleClickListener(e, target, attribute) { //when style is clicked in styleDropdown
       return function (e) {
         changeStyle(e, target, attribute);
       };
