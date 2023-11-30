@@ -1,587 +1,608 @@
 <html>
-<!-- Pop-Up Box! -->
-<!--Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough (currently underline+strikethrough doesn't work). -->
-<!--Not working: Everything changes canvas color. Dropdowns appear in same spot. Resizing boxes doesn't work. Single box in top left appears that is resizable.-->
-<!--Todo: Make boxes resizable. Make canvas bigger and scrollable. Print. Save.-->
+  <!-- Pop-Up Box! -->
+  <!--Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough (currently underline+strikethrough doesn't work). Tentative box resizing. -->
+  <!--Not working: Everything changes canvas color. Dropdowns appear in same spot. Single box in top left appears that is resizable.-->
+  <!--Todo: Clean code. Make canvas bigger and scrollable. Print. Save.-->
 
-<head>
-  <title>Pop-Up Box</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <style>
-    #canvas {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: white;
-      /* Default background color */
-    }
+  <head>
+    <title>Pop-Up Box</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+      #canvas {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: white;
+        /* Default background color */
+      }
 
-    .box {
-      background-color: white;
-      border: 2px solid black;
-      border-radius: 5px;
-      padding: 5px;
-      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-      position: absolute;
-      width: 200px;
-      height: 50px;
-      z-index: 1;
-      font-weight: normal;
-      font-style: normal;
-      text-decoration: none;
-      resize: both;
-      /* make resizable */
-      overflow: hidden;
-      display: inline-block;
+      .box {
+        background-color: white;
+        border: 2px solid black;
+        border-radius: 3px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        position: absolute;
+        width: 200px;
+        height: 50px;
+        z-index: 1;
+        font-weight: normal;
+        font-style: normal;
+        text-decoration: none;
+        resize: both;
+        /* make resizable */
+        overflow: hidden;
+        display: inline-block;
 
-      /* no extra spaces */
-      margin: 0;
-      white-space: nowrap;
+        /* no extra spaces */
+        margin: 0;
+        white-space: nowrap;
 
-      /* default widths */
-      min-width: 2em;
-    }
+        /* default widths */
+        min-width: 5em;
+      }
 
-    .box:focus {
-       border: blue; 
-    }
-    /* let <input> assume the size of the wrapper */
-    .box>input {
+      .box:focus {
+        border: blue !important;
+      }
+
+      /* let <input> assume the size of the wrapper */
+      .box>input {
         border: 0;
-  width: 100%;
-  height: 100%;
-  display: inline-block;
-    }
-
-    /* add a visible handle */
-    .box>span {
-      display: inline-block;
-      vertical-align: bottom;
-      margin-left: -16px;
-      width: 16px;
-      height: 16px;
-      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAJUlEQVR4AcXJRwEAIBAAIPuXxgiOW3xZYzi1Q3Nqh+bUDk1yD9sQaUG/4ehuEAAAAABJRU5ErkJggg==");
-      cursor: ew-resize;
-    }
-
-    .line {
-      stroke: black;
-      stroke-width: 2px;
-    }
-
-    .top-bar {
-      background-color: lightgray;
-      color: black;
-      padding: 10px;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 9999;
-      border-bottom: 3px solid black;
-      display: flex;
-      justify-content: flex-end;
-      /* Align buttons to the right */
-    }
-
-    .top-bar button {
-      width: 40px;
-      height: 40px;
-      border: 2px solid black;
-      background-color: transparent;
-      margin-left: 5px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-
-    .top-bar button:hover {
-      background-color: #ccc;
-    }
-
-    .top-bar .icon-button img {
-      width: 24px;
-      height: 24px;
-    }
-
-    .dropdown {
-      position: relative;
-      display: inline-block;
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #f9f9f9;
-      min-width: 55px;
-      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-      z-index: 1;
-      right: 0;
-      left: unset;
-      transform-origin: top right;
-      top: 100%;
-      /* Adjust the top position based on the height of the top bar and button size */
-    }
-
-    .dropdown.show .dropdown-content {
-      display: block;
-      left: unset;
-      right: 0;
-      top: 100%;
-      /* Change top position to appear below the button */
-      transform-origin: bottom right;
-    }
-
-    .dropdown-content a {
-      color: black;
-      padding: 8px 6px;
-      text-decoration: none;
-      display: block;
-    }
-
-    .dropdown-content a:hover {
-      background-color: #E0E0E0;
-    }
-
-    .show {
-      display: block;
-    }
-
-    .bold {
-      font-weight: bold;
-    }
-
-    .italic {
-      font-style: italic;
-    }
-
-    .underline {
-      text-decoration: underline;
-    }
-
-    .strikethrough {
-      text-decoration: line-through;
-    }
-  </style>
-</head>
-
-<body>
-  <span id="box-container" class="box">
-    <input type="text" /></span>
-  <div class="top-bar">
-    <button class="icon-button" onclick="toggleDropdown(event, 'color', 'canvas')" title="Change Background Color">
-      <img src="images/background-fill.svg" alt="Change Background Color">
-    </button>
-
-    <button class="icon-button" onclick="toggleDropdown(event, 'color', 'box')" title="Change Box Color">
-      <img src="images/box-fill.svg" alt="Change Box Color">
-    </button>
-
-    <button class="icon-button" onclick="toggleDropdown(event, 'color', 'boxBorder')" title="Change Border Color">
-      <img src="images/border-color.svg" alt="Change Border Color">
-    </button>
-
-    <button class="icon-button" onclick="toggleDropdown(event, 'width', 'boxBorder')" title="Change Border Width">
-      <img src="images/box-outline.svg" alt="Change Border Width">
-    </button>
-
-    <button class="icon-button" onclick="toggleDropdown(event, 'style', 'boxBorder')" title="Change Border Style">
-      <img src="images/border-type.svg" alt="Change Border Style">
-    </button>
-
-    <button class="icon-button" onclick="toggleDropdown(event, 'color', 'line')" title="Change Line Color">
-      <img src="images/line-color.svg" alt="Change Line Color">
-    </button>
-
-    <button class="icon-button" onclick="toggleDropdown(event, 'width', 'line')" title="Change Line Width">
-      <img src="images/line-thickness.svg" alt="Change Line Width">
-    </button>
-
-    <button class="icon-button" onclick="toggleDropdown(event, 'style', 'line')" title="Change Line Style">
-      <img src="images/line-type.svg" alt="Change Line Style">
-    </button>
-
-    <button class="icon-button" onclick="toggleDropdown(event, 'color', 'boxText')" title="Change Text Color">
-      <img src="images/text-color.svg" alt="Change Text Color">
-    </button>
-
-    <button class="icon-button" onclick="styleText('bold')" title="Bold">
-      <img src="images/bold.svg" alt="Bold">
-    </button>
-
-    <button class="icon-button" onclick="styleText('italic')" title="Italic">
-      <img src="images/italic.svg" alt="Italic">
-    </button>
-
-    <button class="icon-button" onclick="styleText('underline')" title="Underline">
-      <img src="images/underline.svg" alt="Underline">
-    </button>
-
-    <button class="icon-button" onclick="styleText('strikethrough')" title="Strikethrough">
-      <img src="images/strikethrough.svg" alt="Strikethrough">
-    </button>
-
-    <div class="dropdown" data-dropdown="colorDropdown">
-      <div class="dropdown-content">
-        <a href="#" data-color="red">Red</a>
-        <a href="#" data-color="orange">Orange</a>
-        <a href="#" data-color="yellow">Yellow</a>
-        <a href="#" data-color="green">Green</a>
-        <a href="#" data-color="blue">Blue</a>
-        <a href="#" data-color="purple">Purple</a>
-        <a href="#" data-color="black">Black</a>
-        <a href="#" data-color="white">White</a>
-        <a href="#" data-color="gray">Gray</a>
-        <a href="#" data-color="brown">Brown</a>
-      </div>
-    </div>
-
-    <div class="dropdown" data-dropdown="widthDropdown">
-      <div class="dropdown-content">
-        <a href="#" data-color="1px">1 px</a>
-        <a href="#" data-color="2px">2 px</a>
-        <a href="#" data-color="3px">3 px</a>
-        <a href="#" data-color="4px">4 px</a>
-        <a href="#" data-color="5px">5 px</a>
-        <a href="#" data-color="6px">6 px</a>
-        <a href="#" data-color="8px">8 px</a>
-        <a href="#" data-color="10px">10 px</a>
-      </div>
-    </div>
-
-    <div class="dropdown" data-dropdown="styleDropdown">
-      <div class="dropdown-content">
-        <a href="#" data-color="solid">Solid</a>
-        <a href="#" data-color="dashed">Dashed</a>
-        <a href="#" data-color="dotted">Dotted</a>
-        <a href="#" data-color="none">None</a>
-      </div>
-    </div>
-
-
-  </div>
-
-  <div class="container">
-    <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
-    <div id="canvas" onclick="addBox(event)" style="height: 100vh;"></div>
-    <svg id="lineContainer"
-      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
-  </div>
-
-  <script>
-    let count = 0;
-    let selectedBoxes = [];
-    let selectedLines = [];
-    let lineStartBox = null;
-    let startPoint = null;
-    let lines = []; // Array to store line data
-
-    function addBox(event) {
-      const target = event.target;
-      if (target.classList.contains("box")) {
-        return;
-      }
-      const xPos = event.clientX;
-      const yPos = event.clientY;
-      const boxWidth = 200; // Adjust the width of the box as needed
-      const boxHeight = 50; // Adjust the height of the box as needed
-      const box = document.createElement("span");
-      box.setAttribute("type", "text");
-      box.classList.add("box");
-      box.id = "box" + count;
-      console.log("box" + count);
-      count++;
-      box.placeholder = "Type here";
-      const boxLeft = xPos - boxWidth / 2 + "px";
-      const boxTop = yPos - boxHeight / 2 + "px";
-      box.style.left = boxLeft;
-      box.style.top = boxTop;
-      box.style.width = boxWidth + "px";
-      box.style.height = boxHeight + "px";
-      box.addEventListener("mousedown", startDrag);
-      box.addEventListener("click", selectBox);
-      document.getElementById("canvas").appendChild(box);
-    }
-
-
-    function startDrag(event) {
-      if (!event.shiftKey) {
-        return; // Exit the function if 'Shift' key is not pressed
+        width: 100%;
+        height: 100%;
+        display: inline-block;
       }
 
-      const box = event.target;
-      const initialX = event.clientX - box.getBoundingClientRect().left;
-      const initialY = event.clientY - box.getBoundingClientRect().top;
-      box.style.zIndex = "999"; // Bring the dragged box to the front
-
-      function moveBox(event) {
-        const newX = event.clientX - initialX;
-        const newY = event.clientY - initialY; // Adjust the y-coordinate by subtracting 50
-        box.style.left = newX + "px";
-        box.style.top = newY + "px";
-        updateLines();
-
+      /* add a visible handle */
+      .box>span {
+        display: inline-block;
+        vertical-align: bottom;
+        margin-left: -16px;
+        width: 16px;
+        height: 16px;
+        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAJUlEQVR4AcXJRwEAIBAAIPuXxgiOW3xZYzi1Q3Nqh+bUDk1yD9sQaUG/4ehuEAAAAABJRU5ErkJggg==");
+        cursor: ew-resize;
       }
 
-      function stopDrag() {
-        document.removeEventListener("mousemove", moveBox);
-        document.removeEventListener("mouseup", stopDrag);
-        box.style.zIndex = ""; // Restore the original z-index
-        updateLines(); // Update the lines after dragging stops
+      .line {
+        stroke: black;
+        stroke-width: 2px;
       }
 
-      document.addEventListener("mousemove", moveBox);
-      document.addEventListener("mouseup", stopDrag);
-    }
-
-    function selectBox(event) {
-      const target = event.target;
-      if (!target.classList.contains("icon-button")) {
-        selectedBoxes = [];
-        selectedLines = []; // Reset selected line when a box or line is deselected
-        console.log("Box/Line deselected");
+      .top-bar {
+        background-color: lightgray;
+        color: black;
+        padding: 10px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        border-bottom: 3px solid black;
+        display: flex;
+        justify-content: flex-end;
+        /* Align buttons to the right */
       }
 
-      if (event.altKey) {
-        const box = event.target;
-        const boxId = box.id;
-        deleteBox(boxId);
-        deleteLines(boxId);
-        return;
+      .top-bar button {
+        width: 40px;
+        height: 40px;
+        border: 2px solid black;
+        background-color: transparent;
+        margin-left: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
       }
 
-      if (!event.ctrlKey) {
-        selectedBoxes.push(event.target);
-        selectedLine = []; // Reset selected line when a box is selected
-        console.log("Box selected:", selectedBoxes);
-        return;
+      .top-bar button:hover {
+        background-color: #ccc;
       }
 
-      const box = event.target;
-      if (!lineStartBox) {
-        lineStartBox = box;
-        startPoint = getCenter(box);
-      } else {
-        const endPoint = getCenter(box);
-        const startBoxId = lineStartBox.id; // Get the ID of the start box
-        const endBoxId = box.id; // Get the ID of the end box
-        const lineId = "line" + lines.length; // Unique ID for the line
-        lines.push(lineId, startBoxId, endBoxId); // Store line data
-        createLine(lineId, startBoxId, endBoxId);
-        lineStartBox = null;
-        startPoint = null;
+      .top-bar .icon-button img {
+        width: 24px;
+        height: 24px;
       }
 
-      console.log("Selected Line:", selectedLines);
-    }
-
-
-
-
-    function deleteBox(boxId) {
-      const box = document.getElementById(boxId);
-      if (box) {
-        box.remove();
+      .dropdown {
+        position: relative;
+        display: inline-block;
       }
-    }
 
-    function deleteLines(boxId) {
-      const svg = document.getElementById("lineContainer");
-      const lines = svg.getElementsByClassName("line");
-      for (let i = lines.length - 1; i >= 0; i--) { // Iterate over the lines and remove the ones connected to the box
-        const line = lines[i];
-        const startBoxId = line.getAttribute("data-start-box");
-        const endBoxId = line.getAttribute("data-end-box");
-        if (startBoxId === boxId || endBoxId === boxId) {
-          line.remove();
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 55px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        right: 0;
+        left: unset;
+        transform-origin: top right;
+        top: 100%;
+        /* Adjust the top position based on the height of the top bar and button size */
+      }
+
+      .dropdown.show .dropdown-content {
+        display: block;
+        left: unset;
+        right: 0;
+        top: 100%;
+        /* Change top position to appear below the button */
+        transform-origin: bottom right;
+      }
+
+      .dropdown-content a {
+        color: black;
+        padding: 8px 6px;
+        text-decoration: none;
+        display: block;
+      }
+
+      .dropdown-content a:hover {
+        background-color: #E0E0E0;
+      }
+
+      .show {
+        display: block;
+      }
+
+      .bold {
+        font-weight: bold;
+      }
+
+      .italic {
+        font-style: italic;
+      }
+
+      .underline {
+        text-decoration: underline;
+      }
+
+      .strikethrough {
+        text-decoration: line-through;
+      }
+
+      @media print {
+        .no-print {
+          display: none;
         }
       }
-    }
 
-    function createLine(lineId, startBoxId, endBoxId) { 
-      const svg = document.getElementById("lineContainer");
-      const startBox = document.getElementById(startBoxId);
-      const endBox = document.getElementById(endBoxId);
-      if (startBox && endBox) {
-        const start = getCenter(startBox);
-        const end = getCenter(endBox);
-        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        line.setAttribute("id", lineId);
-        line.setAttribute("x1", start.x);
-        line.setAttribute("y1", start.y);
-        line.setAttribute("x2", end.x);
-        line.setAttribute("y2", end.y);
-        line.setAttribute("data-start-box", startBoxId);
-        line.setAttribute("data-end-box", endBoxId);
-        line.classList.add("line");
-        line.addEventListener("click", selectBox);     // Add click event listener to the line
-        svg.appendChild(line);
+    </style>
+  </head>
+
+  <body>
+    <div class="top-bar no-print">
+      <button class="icon-button" onclick="toggleDropdown(event, 'color', 'canvas')" title="Change Background Color">
+        <img src="images/background-fill.svg" alt="Change Background Color">
+      </button>
+
+      <button class="icon-button" onclick="toggleDropdown(event, 'color', 'box')" title="Change Box Color">
+        <img src="images/box-fill.svg" alt="Change Box Color">
+      </button>
+
+      <button class="icon-button" onclick="toggleDropdown(event, 'color', 'boxBorder')" title="Change Border Color">
+        <img src="images/border-color.svg" alt="Change Border Color">
+      </button>
+
+      <button class="icon-button" onclick="toggleDropdown(event, 'width', 'boxBorder')" title="Change Border Width">
+        <img src="images/box-outline.svg" alt="Change Border Width">
+      </button>
+
+      <button class="icon-button" onclick="toggleDropdown(event, 'style', 'boxBorder')" title="Change Border Style">
+        <img src="images/border-type.svg" alt="Change Border Style">
+      </button>
+
+      <button class="icon-button" onclick="toggleDropdown(event, 'color', 'line')" title="Change Line Color">
+        <img src="images/line-color.svg" alt="Change Line Color">
+      </button>
+
+      <button class="icon-button" onclick="toggleDropdown(event, 'width', 'line')" title="Change Line Width">
+        <img src="images/line-thickness.svg" alt="Change Line Width">
+      </button>
+
+      <button class="icon-button" onclick="toggleDropdown(event, 'style', 'line')" title="Change Line Style">
+        <img src="images/line-type.svg" alt="Change Line Style">
+      </button>
+
+      <button class="icon-button" onclick="toggleDropdown(event, 'color', 'boxText')" title="Change Text Color">
+        <img src="images/text-color.svg" alt="Change Text Color">
+      </button>
+
+      <button class="icon-button" onclick="styleText('bold')" title="Bold">
+        <img src="images/bold.svg" alt="Bold">
+      </button>
+
+      <button class="icon-button" onclick="styleText('italic')" title="Italic">
+        <img src="images/italic.svg" alt="Italic">
+      </button>
+
+      <button class="icon-button" onclick="styleText('underline')" title="Underline">
+        <img src="images/underline.svg" alt="Underline">
+      </button>
+
+      <button class="icon-button" onclick="styleText('strikethrough')" title="Strikethrough">
+        <img src="images/strikethrough.svg" alt="Strikethrough">
+      </button>
+
+      <div class="dropdown" data-dropdown="colorDropdown">
+        <div class="dropdown-content">
+          <a href="#" data-color="red">Red</a>
+          <a href="#" data-color="orange">Orange</a>
+          <a href="#" data-color="yellow">Yellow</a>
+          <a href="#" data-color="green">Green</a>
+          <a href="#" data-color="blue">Blue</a>
+          <a href="#" data-color="purple">Purple</a>
+          <a href="#" data-color="black">Black</a>
+          <a href="#" data-color="white">White</a>
+          <a href="#" data-color="gray">Gray</a>
+          <a href="#" data-color="brown">Brown</a>
+        </div>
+      </div>
+
+      <div class="dropdown" data-dropdown="widthDropdown">
+        <div class="dropdown-content">
+          <a href="#" data-color="1px">1 px</a>
+          <a href="#" data-color="2px">2 px</a>
+          <a href="#" data-color="3px">3 px</a>
+          <a href="#" data-color="4px">4 px</a>
+          <a href="#" data-color="5px">5 px</a>
+          <a href="#" data-color="6px">6 px</a>
+          <a href="#" data-color="8px">8 px</a>
+          <a href="#" data-color="10px">10 px</a>
+        </div>
+      </div>
+
+      <div class="dropdown" data-dropdown="styleDropdown">
+        <div class="dropdown-content">
+          <a href="#" data-color="solid">Solid</a>
+          <a href="#" data-color="dashed">Dashed</a>
+          <a href="#" data-color="dotted">Dotted</a>
+          <a href="#" data-color="none">None</a>
+        </div>
+      </div>
+
+
+    </div>
+
+    <div class="container">
+      <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
+      <div id="canvas" onclick="addBox(event)" style="height: 100vh;"></div>
+      <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
+    </div>
+
+    <script>
+      let count = 0;
+      let selectedBoxes = [];
+      let selectedLines = [];
+      let lineStartBox = null;
+      let startPoint = null;
+      let lines = []; // Array to store line data
+
+      function addBox(event) {
+        const target = event.target;
+        if (target.classList.contains("box")) {
+          return;
+        }
+        const xPos = event.clientX;
+        const yPos = event.clientY;
+        const boxWidth = 200; // Adjust the width of the box as needed
+        const boxHeight = 50; // Adjust the height of the box as needed
+        const box = document.createElement("input");
+        const boxContainer = document.createElement("span");
+        const boxLeft = xPos - boxWidth / 2 + "px";
+        const boxTop = yPos - boxHeight / 2 + "px";
+        box.setAttribute("type", "text");
+        box.classList.add("box");
+        boxContainer.classList.add("box");
+        box.id = "box" + count;
+        box.style.padding = "0px 5px"
+        boxContainer.id = "containerBox" + count;
+        console.log("box" + count);
+        boxContainer.placeholder = "Type here";
+        boxContainer.style.left = boxLeft;
+        boxContainer.style.top = boxTop;
+        boxContainer.style.width = boxWidth + "px";
+        boxContainer.style.height = boxHeight + "px";
+        boxContainer.addEventListener("mousedown", startDrag);
+        boxContainer.addEventListener("click", selectBox);
+        document.getElementById("canvas").appendChild(boxContainer);
+        document.getElementById("containerBox" + count).appendChild(box);
+        box.focus();
+        count++;
       }
-    }
 
-
-    function updateLines() { //after moving boxes, rerender lines one by one
-      const svg = document.getElementById("lineContainer");
-      svg.innerHTML = ""; // Clear all existing lines
-
-      for (let i = 0; i < lines.length; i += 3) { //iterate by 3s since array has 3 elements per line
-        const lineId = lines[i];
-        const startBoxId = lines[i + 1];
-        const endBoxId = lines[i + 2];
-        createLine(lineId, startBoxId, endBoxId);
+      function getContainerFromBox(boxID) { //see if this works
+        containerID = "containerBox" + boxID.split("box").pop();
+        console.log(containerID);
+        return document.getElementById(containerID);
       }
-    }
 
-    function getCenter(element) { //get center of box to render lines
-      const rect = element.getBoundingClientRect();
-      const x = rect.left + rect.width / 2;
-      const y = rect.top + rect.height / 2;
-      return { x, y };
-    }
+      function startDrag(event) {
+        if (!event.shiftKey) {
+          return; // Exit the function if 'Shift' key is not pressed
+        }
 
-    function styleText(style) { //Add style to box text.
-      const target = selectedBoxes;
-      if (target.length > 0) {
-        for (let i = 0; i < target.length; i++) {
-          applyTextStyle(target[i].id, style);
+        const target = event.target;
+        const box = getContainerFromBox(target.id)
+        const initialX = event.clientX - target.getBoundingClientRect().left;
+        const initialY = event.clientY - target.getBoundingClientRect().top;
+        box.style.zIndex = "999"; // Bring the dragged box to the front
+
+        function moveBox(event) {
+          const newX = event.clientX - initialX;
+          const newY = event.clientY - initialY; // Adjust the y-coordinate by subtracting 50
+          box.style.left = newX + "px";
+          box.style.top = newY + "px";
+          updateLines();
+
+        }
+
+        function stopDrag() {
+          document.removeEventListener("mousemove", moveBox);
+          document.removeEventListener("mouseup", stopDrag);
+          box.style.zIndex = ""; // Restore the original z-index
+          updateLines(); // Update the lines after dragging stops
+        }
+
+        document.addEventListener("mousemove", moveBox);
+        document.addEventListener("mouseup", stopDrag);
+      }
+
+      function selectBox(event) {
+        const target = event.target;
+        const box = getContainerFromBox(target.id);
+        if (!target.classList.contains("icon-button")) {
+          selectedBoxes = [];
+          selectedLines = []; // Reset selected line when a box or line is deselected
+          console.log("Box/Line deselected");
+        }
+
+        if (event.altKey) {
+        console.log("removing box" + boxID)
+          const boxId = box.id;
+          deleteBox(boxId);
+          deleteLines(boxId);
+          return;
+        }
+
+        if (!event.ctrlKey) {
+          selectedBoxes.push(event.target);
+          selectedLine = []; // Reset selected line when a box is selected
+          console.log("Box selected: tba");
+          return;
+        }
+
+        if (!lineStartBox) {
+          lineStartBox = box;
+          startPoint = getCenter(box);
+        } else {
+          const endPoint = getCenter(box);
+          const startBoxId = lineStartBox.id; // Get the ID of the start box
+          const endBoxId = box.id; // Get the ID of the end box
+          const lineId = "line" + lines.length; // Unique ID for the line
+          lines.push(lineId, startBoxId, endBoxId); // Store line data
+          createLine(lineId, startBoxId, endBoxId);
+          lineStartBox = null;
+          startPoint = null;
+        }
+
+        console.log("Selected Line:", selectedLines);
+      }
+
+
+
+
+      function deleteBox(boxId) {
+        const box = document.getElementById(boxId);
+        if (box) {
+          box.remove();
+          console.log("removed box" + boxID);
         }
       }
-    }
 
-    function isStyleApplied(elementId, style) { 
-      //Check if style is applied. Used by styleText() through applyTextStyle()
-      const element = document.getElementById(elementId);
-      return element.classList.contains(style);
-    }
-
-    function applyTextStyle(elementId, style) { //Toggle style. Used by styleText()
-      const element = document.getElementById(elementId);
-      if (!isStyleApplied(elementId, style)) {
-        element.classList.add(style);
-      } else {
-        element.classList.remove(style);
-      }
-    }
-
-    function colorClickListener(e, target, attribute) { //when color is clicked in colorDropdown
-      return function (e) {
-        changeColor(e, target, attribute);
-      };
-    }
-
-    function widthClickListener(e, target, attribute) { //when width is clicked in widthDropdown
-      return function (e) {
-        changeWidth(e, target, attribute);
-      };
-    }
-
-    function styleClickListener(e, target, attribute) { //when style is clicked in styleDropdown
-      return function (e) {
-        changeStyle(e, target, attribute);
-      };
-    }
-
-    function toggleDropdown(event, attribute, target) {
-      const button = event.target;
-      const dropdown = document.querySelector(`.dropdown[data-dropdown="${attribute}Dropdown"] .dropdown-content`);
-      const allDropdowns = document.querySelectorAll(".dropdown-content");
-      console.log("event " + event + "attribute " + attribute + " target " + target + " dropdown " + dropdown + " allDropdowns " + allDropdowns + " button " + button);
-      closeDropdowns();
-      dropdown.classList.toggle("show");
-      console.log("show" + attribute + dropdown);
-      const links = dropdown.querySelectorAll('a');
-      links.forEach((link) => {
-        if (target === "canvas") {
-          link.addEventListener("click", colorClickListener(link, "canvas", "canvas"));
-          console.log("link:::: ")
-          console.log(link)
-        } else if (target === "boxBorder") {
-          if (attribute === "color") {
-            link.addEventListener("click", colorClickListener(e, selectedBoxes, "boxBorder"));
-          } else if (attribute === "width") {
-            link.addEventListener("click", widthClickListener(e, selectedBoxes, "boxBorder"));
-          } else if (attribute === "style") {
-            link.addEventListener("click", styleClickListener(e, selectedBoxes, "boxBorder"));
+      function deleteLines(boxId) {
+        const svg = document.getElementById("lineContainer");
+        const lines = svg.getElementsByClassName("line");
+        for (let i = lines.length - 1; i >= 0; i--) { // Iterate over the lines and remove the ones connected to the box
+          const line = lines[i];
+          const startBoxId = line.getAttribute("data-start-box");
+          const endBoxId = line.getAttribute("data-end-box");
+          if (startBoxId === boxId || endBoxId === boxId) {
+            line.remove();
           }
-        } else if (target === "line") {
-          if (attribute === "color") {
-            link.addEventListener("click", colorClickListener(e, selectedLines, "line"));
-          } else if (attribute === "width") {
-            link.addEventListener("click", widthClickListener(e, selectedLines, "line"));
-          } else if (attribute === "style") {
-            link.addEventListener("click", styleClickListener(e, selectedLines, "line"));
-          }
-        } else if (target === "boxText") {
-          link.addEventListener("click", colorClickListener(e, selectedBoxes, "boxText"));
         }
-      });
-    }
-    // Closes all dropdowns in the document.
-    function closeDropdowns() {
-      const allDropdowns = document.querySelectorAll(".dropdown-content");
-      allDropdowns.forEach((dropdown) => {
-        dropdown.classList.remove("show");
-      })
-    }
-    function changeColor(e, targetIDs, targetAttr) {
-      console.log("e: " + e)
-      const color = e.target.getAttribute("data-color");
-      console.log("color: " + color + ", attribute: " + targetAttr + ", target: " + targetIDs);
-      if (targetIDs === "canvas") {
-        console.log("canvas")
-        // Change the background color of the canvas
-        const canvas = document.getElementById("canvas");
-        canvas.style.backgroundColor = color;
-      } else if (targetAttr === "box" || targetAttr === "boxText" || targetAttr === "boxBorder" || targetAttr === "line") {
-        for (let i = 0; i < targetIDs.length; i++) {
-          const targetElement = document.getElementById(targetIDs[i]);
-          console.log("targetElement: " + targetElement);
-          if (targetElement) {
-            if (targetAttr === "box") {
-              // Change the background color of the box
-              targetElement.style.backgroundColor = color;
-            } else if (targetAttr === "boxText") {
-              // Change the font color of the box's text
-              targetElement.style.color = color;
-            } else if (targetAttr === "boxBorder") {
-              // Change the border color of the box
-              targetElement.style.borderColor = color;
-            } else if (targetAttr === "line") {
-              // Change the color of the line
-              targetElement.style.color = color;
+      }
+
+      function createLine(lineId, startBoxId, endBoxId) {
+        const svg = document.getElementById("lineContainer");
+        const startBox = document.getElementById(startBoxId);
+        const endBox = document.getElementById(endBoxId);
+        if (startBox && endBox) {
+          const start = getCenter(startBox);
+          const end = getCenter(endBox);
+          const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+          line.setAttribute("id", lineId);
+          line.setAttribute("x1", start.x);
+          line.setAttribute("y1", start.y);
+          line.setAttribute("x2", end.x);
+          line.setAttribute("y2", end.y);
+          line.setAttribute("data-start-box", startBoxId);
+          line.setAttribute("data-end-box", endBoxId);
+          line.classList.add("line");
+          line.addEventListener("click", selectBox); // Add click event listener to the line
+          svg.appendChild(line);
+        }
+      }
+
+
+      function updateLines() { //after moving boxes, rerender lines one by one
+        const svg = document.getElementById("lineContainer");
+        svg.innerHTML = ""; // Clear all existing lines
+
+        for (let i = 0; i < lines.length; i += 3) { //iterate by 3s since array has 3 elements per line
+          const lineId = lines[i];
+          const startBoxId = lines[i + 1];
+          const endBoxId = lines[i + 2];
+          createLine(lineId, startBoxId, endBoxId);
+        }
+      }
+
+      function getCenter(element) { //get center of box to render lines
+        const rect = element.getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+        return {
+          x,
+          y
+        };
+      }
+
+      function styleText(style) { //Add style to box text.
+        const target = selectedBoxes;
+        if (target.length > 0) {
+          for (let i = 0; i < target.length; i++) {
+            applyTextStyle(target[i].id, style);
+          }
+        }
+      }
+
+      function isStyleApplied(elementId, style) {
+        //Check if style is applied. Used by styleText() through applyTextStyle()
+        const element = document.getElementById(elementId);
+        return element.classList.contains(style);
+      }
+
+      function applyTextStyle(elementId, style) { //Toggle style. Used by styleText()
+        const element = document.getElementById(elementId);
+        if (!isStyleApplied(elementId, style)) {
+          element.classList.add(style);
+        } else {
+          element.classList.remove(style);
+        }
+      }
+
+      function colorClickListener(e, target, attribute) { //when color is clicked in colorDropdown
+        return function(e) {
+          changeColor(e, target, attribute);
+        };
+      }
+
+      function widthClickListener(e, target, attribute) { //when width is clicked in widthDropdown
+        return function(e) {
+          changeWidth(e, target, attribute);
+        };
+      }
+
+      function styleClickListener(e, target, attribute) { //when style is clicked in styleDropdown
+        return function(e) {
+          changeStyle(e, target, attribute);
+        };
+      }
+
+      function toggleDropdown(event, attribute, target) {
+        const button = event.target;
+        const dropdown = document.querySelector(`.dropdown[data-dropdown="${attribute}Dropdown"] .dropdown-content`);
+        const allDropdowns = document.querySelectorAll(".dropdown-content");
+        console.log("event " + event + "attribute " + attribute + " target " + target + " dropdown " + dropdown + " allDropdowns " + allDropdowns + " button " + button);
+        closeDropdowns();
+        dropdown.classList.toggle("show");
+        console.log("show" + attribute + dropdown);
+        const links = dropdown.querySelectorAll('a');
+        links.forEach((link) => {
+          if (target === "canvas") {
+            link.addEventListener("click", colorClickListener(link, "canvas", "canvas"));
+            console.log("link:::: ")
+            console.log(link)
+          } else if (target === "boxBorder") {
+            if (attribute === "color") {
+              link.addEventListener("click", colorClickListener(e, selectedBoxes, "boxBorder"));
+            } else if (attribute === "width") {
+              link.addEventListener("click", widthClickListener(e, selectedBoxes, "boxBorder"));
+            } else if (attribute === "style") {
+              link.addEventListener("click", styleClickListener(e, selectedBoxes, "boxBorder"));
+            }
+          } else if (target === "line") {
+            if (attribute === "color") {
+              link.addEventListener("click", colorClickListener(e, selectedLines, "line"));
+            } else if (attribute === "width") {
+              link.addEventListener("click", widthClickListener(e, selectedLines, "line"));
+            } else if (attribute === "style") {
+              link.addEventListener("click", styleClickListener(e, selectedLines, "line"));
+            }
+          } else if (target === "boxText") {
+            link.addEventListener("click", colorClickListener(e, selectedBoxes, "boxText"));
+          }
+        });
+      }
+      // Closes all dropdowns in the document.
+      function closeDropdowns() {
+        const allDropdowns = document.querySelectorAll(".dropdown-content");
+        allDropdowns.forEach((dropdown) => {
+          dropdown.classList.remove("show");
+        })
+      }
+
+      function changeColor(e, targetIDs, targetAttr) {
+        console.log("e: " + e)
+        const color = e.target.getAttribute("data-color");
+        console.log("color: " + color + ", attribute: " + targetAttr + ", target: " + targetIDs);
+        if (targetIDs === "canvas") {
+          console.log("canvas")
+          // Change the background color of the canvas
+          const canvas = document.getElementById("canvas");
+          canvas.style.backgroundColor = color;
+        } else if (targetAttr === "box" || targetAttr === "boxText" || targetAttr === "boxBorder" || targetAttr === "line") {
+          for (let i = 0; i < targetIDs.length; i++) {
+            const targetElement = document.getElementById(targetIDs[i]);
+            console.log("targetElement: " + targetElement);
+            if (targetElement) {
+              if (targetAttr === "box") {
+                // Change the background color of the box
+                targetElement.style.backgroundColor = color;
+              } else if (targetAttr === "boxText") {
+                // Change the font color of the box's text
+                targetElement.style.color = color;
+              } else if (targetAttr === "boxBorder") {
+                // Change the border color of the box
+                targetElement.style.borderColor = color;
+              } else if (targetAttr === "line") {
+                // Change the color of the line
+                targetElement.style.color = color;
+              }
             }
           }
         }
+        //close the dropdowns
+        closeDropdowns();
+        //remove event listeners from links
+        removeEventListeners("color");
+
       }
-      //close the dropdowns
-      closeDropdowns();
-      //remove event listeners from links
-      removeEventListeners("color");
 
-    }
-    function removeEventListeners(attribute) {
-      console.log("removing: " + attribute);
-      const dropdown = document.querySelector(`.dropdown[data-dropdown="${attribute}Dropdown"] .dropdown-content`);
-      const links = dropdown.querySelectorAll('a');
-      links.forEach((link) => {
-        console.log("removing link");
-        console.log(link);
-        if (attribute === "color") {
-          link.removeEventListener("click", colorClickListener);
-        } else if (attribute === "width") {
-          link.removeEventListener("click", widthClickListener);
-        } else if (attribute === "style") {
-          link.removeEventListener("click", styleClickListener);
-        }
-      });
-    }
+      function removeEventListeners(attribute) {
+        console.log("removing: " + attribute);
+        const dropdown = document.querySelector(`.dropdown[data-dropdown="${attribute}Dropdown"] .dropdown-content`);
+        const links = dropdown.querySelectorAll('a');
+        links.forEach((link) => {
+          console.log("removing link");
+          console.log(link);
+          if (attribute === "color") {
+            link.removeEventListener("click", colorClickListener);
+          } else if (attribute === "width") {
+            link.removeEventListener("click", widthClickListener);
+          } else if (attribute === "style") {
+            link.removeEventListener("click", styleClickListener);
+          }
+        });
+      }
 
-
-  </script>
-</body>
+    </script>
+  </body>
 
 </html>
