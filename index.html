@@ -167,13 +167,19 @@
         text-decoration: line-through;
       }
 
+      @media print {
+        .no-print {
+          display: none;
+        }
+      }
+
     </style>
   </head>
 
   <body>
     <span id="box-container" class="box">
       <input type="text" /></span>
-    <div class="top-bar">
+    <div class="top-bar no-print">
       <button class="icon-button" onclick="toggleDropdown(event, 'color', 'canvas')" title="Change Background Color">
         <img src="images/background-fill.svg" alt="Change Background Color">
       </button>
