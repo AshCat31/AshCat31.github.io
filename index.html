@@ -23,7 +23,6 @@
       background-color: white;
       border: 2px solid black;
       border-radius: 5px;
-      padding: 5px;
       box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
       position: absolute;
       width: 200px;
@@ -297,13 +296,14 @@
       box.classList.add("box");
       boxContainer.classList.add("box");
       box.id = "box" + count;
-      boxContainer.id = "containerBox" + count;
+      boxContainer.id = "boxContainer" + count;
       console.log("box" + count);
       boxContainer.placeholder = "Type here";
       boxContainer.style.left = boxLeft;
       boxContainer.style.top = boxTop;
       boxContainer.style.width = boxWidth + "px";
       boxContainer.style.height = boxHeight + "px";
+      box.style.padding = "0px 5px"
       boxContainer.addEventListener("mousedown", startDrag);
       boxContainer.addEventListener("click", selectBox);
       document.getElementById("canvas").appendChild(boxContainer);
@@ -311,18 +311,13 @@
       count++;
     }
 
-		function getContainerFromBox(boxID) { //see if this works
-    	containerID = "containerBox" + boxID.split("box".pop());
-    	return containerID;
-    }
 
     function startDrag(event) {
       if (!event.shiftKey) {
         return; // Exit the function if 'Shift' key is not pressed
       }
 
-      const target = event.target;
-      const box = getContainerFromBox(target.id)
+      const box = event.target;
       const initialX = event.clientX - box.getBoundingClientRect().left;
       const initialY = event.clientY - box.getBoundingClientRect().top;
       box.style.zIndex = "999"; // Bring the dragged box to the front
@@ -349,7 +344,6 @@
 
     function selectBox(event) {
       const target = event.target;
-      const box = getContainerFromBox(target.id);
       if (!target.classList.contains("icon-button")) {
         selectedBoxes = [];
         selectedLines = []; // Reset selected line when a box or line is deselected
@@ -357,6 +351,7 @@
       }
 
       if (event.altKey) {
+        const box = event.target;
         const boxId = box.id;
         deleteBox(boxId);
         deleteLines(boxId);
