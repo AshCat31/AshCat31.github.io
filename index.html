@@ -1,8 +1,8 @@
 <html>
   <!-- Pop-Up Box! -->
-  <!--Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough (currently underline+strikethrough doesn't work). -->
-  <!--Not working: Everything changes canvas color. Dropdowns appear in same spot. Resizing boxes doesn't work. Single box in top left appears that is resizable.-->
-  <!--Todo: Make boxes resizable. Make canvas bigger and scrollable. Print. Save.-->
+  <!--Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough (currently underline+strikethrough doesn't work). Tentative box resizing. -->
+  <!--Not working: Everything changes canvas color. Dropdowns appear in same spot. Single box in top left appears that is resizable.-->
+  <!--Todo: Clean code. Make canvas bigger and scrollable. Print. Save.-->
 
   <head>
     <title>Pop-Up Box</title>
@@ -22,7 +22,7 @@
       .box {
         background-color: white;
         border: 2px solid black;
-        border-radius: 5px;
+        border-radius: 3px;
         box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
         position: absolute;
         width: 200px;
@@ -41,11 +41,11 @@
         white-space: nowrap;
 
         /* default widths */
-        min-width: 2em;
+        min-width: 5em;
       }
 
       .box:focus {
-        border: blue;
+        border: blue !important;
       }
 
       /* let <input> assume the size of the wrapper */
@@ -177,8 +177,6 @@
   </head>
 
   <body>
-    <span id="box-container" class="box">
-      <input type="text" /></span>
     <div class="top-bar no-print">
       <button class="icon-button" onclick="toggleDropdown(event, 'color', 'canvas')" title="Change Background Color">
         <img src="images/background-fill.svg" alt="Change Background Color">
@@ -365,6 +363,7 @@
         }
 
         if (event.altKey) {
+        console.log("removing box" + boxID)
           const boxId = box.id;
           deleteBox(boxId);
           deleteLines(boxId);
@@ -402,6 +401,7 @@
         const box = document.getElementById(boxId);
         if (box) {
           box.remove();
+          console.log("removed box" + boxID);
         }
       }
 
