@@ -289,31 +289,40 @@
       const yPos = event.clientY;
       const boxWidth = 200; // Adjust the width of the box as needed
       const boxHeight = 50; // Adjust the height of the box as needed
-      const box = document.createElement("span");
-      box.setAttribute("type", "text");
-      box.classList.add("box");
-      box.id = "box" + count;
-      console.log("box" + count);
-      count++;
-      box.placeholder = "Type here";
+      const box = document.createElement("input");
+      const boxContainer = document.createElement("span");
       const boxLeft = xPos - boxWidth / 2 + "px";
       const boxTop = yPos - boxHeight / 2 + "px";
-      box.style.left = boxLeft;
-      box.style.top = boxTop;
-      box.style.width = boxWidth + "px";
-      box.style.height = boxHeight + "px";
-      box.addEventListener("mousedown", startDrag);
-      box.addEventListener("click", selectBox);
-      document.getElementById("canvas").appendChild(box);
+      box.setAttribute("type", "text");
+      box.classList.add("box");
+      boxContainer.classList.add("box");
+      box.id = "box" + count;
+      boxContainer.id = "containerBox" + count;
+      console.log("box" + count);
+      boxContainer.placeholder = "Type here";
+      boxContainer.style.left = boxLeft;
+      boxContainer.style.top = boxTop;
+      boxContainer.style.width = boxWidth + "px";
+      boxContainer.style.height = boxHeight + "px";
+      boxContainer.addEventListener("mousedown", startDrag);
+      boxContainer.addEventListener("click", selectBox);
+      document.getElementById("canvas").appendChild(boxContainer);
+      document.getElementById("boxContainer" + count).appendChild(box);
+      count++;
     }
 
+		function getContainerFromBox(boxID) { //see if this works
+    	containerID = "containerBox" + boxID.split("box".pop());
+    	return containerID;
+    }
 
     function startDrag(event) {
       if (!event.shiftKey) {
         return; // Exit the function if 'Shift' key is not pressed
       }
 
-      const box = event.target;
+      const target = event.target;
+      const box = getContainerFromBox(target.id)
       const initialX = event.clientX - box.getBoundingClientRect().left;
       const initialY = event.clientY - box.getBoundingClientRect().top;
       box.style.zIndex = "999"; // Bring the dragged box to the front
@@ -340,6 +349,7 @@
 
     function selectBox(event) {
       const target = event.target;
+      const box = getContainerFromBox(target.id);
       if (!target.classList.contains("icon-button")) {
         selectedBoxes = [];
         selectedLines = []; // Reset selected line when a box or line is deselected
@@ -347,7 +357,6 @@
       }
 
       if (event.altKey) {
-        const box = event.target;
         const boxId = box.id;
         deleteBox(boxId);
         deleteLines(boxId);
