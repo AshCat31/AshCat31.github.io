@@ -455,9 +455,10 @@
                         if (b) {
                             console.log(b.id);
                         }
+                        });
                         return;
-                    });
-
+                    
+						}
                     if (!lineStartBox) {
                         lineStartBox = box;
                         startPoint = getCenter(box);
@@ -471,9 +472,10 @@
                         lineStartBox = null;
                         startPoint = null;
                     }
+                    
                     if (selectedLines) {
                         console.log("Selected Line:", selectedLines);
-                    }
+                    
                 }
             }
 
