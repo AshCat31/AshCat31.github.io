@@ -1,7 +1,7 @@
 <html>
     <!-- Pop-Up Box! -->
     <!--Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough (currently underline+strikethrough doesn't work). Tentative box resizing. -->
-    <!--Not working: Everything changes canvas color. Dropdowns appear in same spot. Single box in top left appears that is resizable.-->
+    <!--Not working: Everything changes canvas color. Dropdowns appear in same spot.-->
     <!--Todo: Clean code. Make canvas bigger and scrollable. Print. Save.-->
 
     <head>
@@ -106,6 +106,7 @@
             .top-bar .icon-button img {
                 width: 24px;
                 height: 24px;
+                pointer-events: none;
             }
 
             .dropdown {
@@ -178,41 +179,157 @@
 
     <body>
         <div class="top-bar no-print">
-            <button class="icon-button" onclick="toggleDropdown(event, 'color', 'canvas')" title="Change Background Color">
-                <img src="images/background-fill.svg" alt="Change Background Color">
-            </button>
+            <div class="dropdown" data-dropdown="colorDropdown">
+                <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Background Color">
+                    <img src="images/background-fill.svg" alt="Change Background Color">
+                </button>
+                <div class="dropdown-content">
+                    <a href="#" data-color="red">Red</a>
+                    <a href="#" data-color="orange">Orange</a>
+                    <a href="#" data-color="yellow">Yellow</a>
+                    <a href="#" data-color="green">Green</a>
+                    <a href="#" data-color="blue">Blue</a>
+                    <a href="#" data-color="purple">Purple</a>
+                    <a href="#" data-color="black">Black</a>
+                    <a href="#" data-color="white">White</a>
+                    <a href="#" data-color="gray">Gray</a>
+                    <a href="#" data-color="brown">Brown</a>
+                </div>
+            </div>
 
-            <button class="icon-button" onclick="toggleDropdown(event, 'color', 'box')" title="Change Box Color">
-                <img src="images/box-fill.svg" alt="Change Box Color">
-            </button>
+            <div class="dropdown" data-dropdown="colorDropdown">
+                <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Box Color">
+                    <img src="images/box-fill.svg" alt="Change Box Color">
+                </button>
+                <div class="dropdown-content">
+                    <a href="#" data-color="red">Red</a>
+                    <a href="#" data-color="orange">Orange</a>
+                    <a href="#" data-color="yellow">Yellow</a>
+                    <a href="#" data-color="green">Green</a>
+                    <a href="#" data-color="blue">Blue</a>
+                    <a href="#" data-color="purple">Purple</a>
+                    <a href="#" data-color="black">Black</a>
+                    <a href="#" data-color="white">White</a>
+                    <a href="#" data-color="gray">Gray</a>
+                    <a href="#" data-color="brown">Brown</a>
+                </div>
+            </div>
 
-            <button class="icon-button" onclick="toggleDropdown(event, 'color', 'boxBorder')" title="Change Border Color">
-                <img src="images/border-color.svg" alt="Change Border Color">
-            </button>
+            <div class="dropdown" data-dropdown="colorDropdown">
+                <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Border Color">
+                    <img src="images/border-color.svg" alt="Change Border Color">
+                </button>
+                <div class="dropdown-content">
+                    <a href="#" data-color="red">Red</a>
+                    <a href="#" data-color="orange">Orange</a>
+                    <a href="#" data-color="yellow">Yellow</a>
+                    <a href="#" data-color="green">Green</a>
+                    <a href="#" data-color="blue">Blue</a>
+                    <a href="#" data-color="purple">Purple</a>
+                    <a href="#" data-color="black">Black</a>
+                    <a href="#" data-color="white">White</a>
+                    <a href="#" data-color="gray">Gray</a>
+                    <a href="#" data-color="brown">Brown</a>
+                </div>
+            </div>
 
-            <button class="icon-button" onclick="toggleDropdown(event, 'width', 'boxBorder')" title="Change Border Width">
-                <img src="images/box-outline.svg" alt="Change Border Width">
-            </button>
+            <div class="dropdown" data-dropdown="widthDropdown">
+                <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Border Width">
+                    <img src="images/box-outline.svg" alt="Change Border Width">
+                </button>
+                <div class="dropdown-content">
+                    <a href="#" data-color="1px">1 px</a>
+                    <a href="#" data-color="2px">2 px</a>
+                    <a href="#" data-color="3px">3 px</a>
+                    <a href="#" data-color="4px">4 px</a>
+                    <a href="#" data-color="5px">5 px</a>
+                    <a href="#" data-color="6px">6 px</a>
+                    <a href="#" data-color="8px">8 px</a>
+                    <a href="#" data-color="10px">10 px</a>
+                </div>
+            </div>
 
-            <button class="icon-button" onclick="toggleDropdown(event, 'style', 'boxBorder')" title="Change Border Style">
-                <img src="images/border-type.svg" alt="Change Border Style">
-            </button>
+            <div class="dropdown" data-dropdown="styleDropdown">
+                <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Border Style">
+                    <img src="images/border-type.svg" alt="Change Border Style">
+                </button>
+                <div class="dropdown-content">
+                    <a href="#" data-color="solid">Solid</a>
+                    <a href="#" data-color="dashed">Dashed</a>
+                    <a href="#" data-color="dotted">Dotted</a>
+                    <a href="#" data-color="none">None</a>
+                </div>
+            </div>
 
-            <button class="icon-button" onclick="toggleDropdown(event, 'color', 'line')" title="Change Line Color">
-                <img src="images/line-color.svg" alt="Change Line Color">
-            </button>
 
-            <button class="icon-button" onclick="toggleDropdown(event, 'width', 'line')" title="Change Line Width">
-                <img src="images/line-thickness.svg" alt="Change Line Width">
-            </button>
 
-            <button class="icon-button" onclick="toggleDropdown(event, 'style', 'line')" title="Change Line Style">
-                <img src="images/line-type.svg" alt="Change Line Style">
-            </button>
+            <div class="dropdown" data-dropdown="colorDropdown">
+                <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Line Color">
+                    <img src="images/line-color.svg" alt="Change Line Color">
+                </button>
+                <div class="dropdown-content">
+                    <a href="#" data-color="red">Red</a>
+                    <a href="#" data-color="orange">Orange</a>
+                    <a href="#" data-color="yellow">Yellow</a>
+                    <a href="#" data-color="green">Green</a>
+                    <a href="#" data-color="blue">Blue</a>
+                    <a href="#" data-color="purple">Purple</a>
+                    <a href="#" data-color="black">Black</a>
+                    <a href="#" data-color="white">White</a>
+                    <a href="#" data-color="gray">Gray</a>
+                    <a href="#" data-color="brown">Brown</a>
+                </div>
+            </div>
 
-            <button class="icon-button" onclick="toggleDropdown(event, 'color', 'boxText')" title="Change Text Color">
-                <img src="images/text-color.svg" alt="Change Text Color">
-            </button>
+            <div class="dropdown" data-dropdown="widthDropdown">
+                <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Line Width">
+                    <img src="images/line-thickness.svg" alt="Change Line Width">
+                </button>
+                <div class="dropdown-content">
+                    <a href="#" data-color="1px">1 px</a>
+                    <a href="#" data-color="2px">2 px</a>
+                    <a href="#" data-color="3px">3 px</a>
+                    <a href="#" data-color="4px">4 px</a>
+                    <a href="#" data-color="5px">5 px</a>
+                    <a href="#" data-color="6px">6 px</a>
+                    <a href="#" data-color="8px">8 px</a>
+                    <a href="#" data-color="10px">10 px</a>
+                </div>
+            </div>
+
+            <div class="dropdown" data-dropdown="styleDropdown">
+                <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Line Style">
+                    <img src="images/line-type.svg" alt="Change Line Style">
+                </button>
+                <div class="dropdown-content">
+                    <a href="#" data-color="solid">Solid</a>
+                    <a href="#" data-color="dashed">Dashed</a>
+                    <a href="#" data-color="dotted">Dotted</a>
+                    <a href="#" data-color="none">None</a>
+                </div>
+            </div>
+
+
+
+            <div class="dropdown" data-dropdown="colorDropdown">
+                <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Text Color">
+                    <img src="images/text-color.svg" alt="Change Text Color">
+                </button>
+                <div class="dropdown-content">
+                    <a href="#" data-color="red">Red</a>
+                    <a href="#" data-color="orange">Orange</a>
+                    <a href="#" data-color="yellow">Yellow</a>
+                    <a href="#" data-color="green">Green</a>
+                    <a href="#" data-color="blue">Blue</a>
+                    <a href="#" data-color="purple">Purple</a>
+                    <a href="#" data-color="black">Black</a>
+                    <a href="#" data-color="white">White</a>
+                    <a href="#" data-color="gray">Gray</a>
+                    <a href="#" data-color="brown">Brown</a>
+                </div>
+            </div>
+
+
 
             <button class="icon-button" onclick="styleText('bold')" title="Bold">
                 <img src="images/bold.svg" alt="Bold">
@@ -230,42 +347,6 @@
                 <img src="images/strikethrough.svg" alt="Strikethrough">
             </button>
 
-            <div class="dropdown" data-dropdown="colorDropdown">
-                <div class="dropdown-content">
-                    <a href="#" data-color="red">Red</a>
-                    <a href="#" data-color="orange">Orange</a>
-                    <a href="#" data-color="yellow">Yellow</a>
-                    <a href="#" data-color="green">Green</a>
-                    <a href="#" data-color="blue">Blue</a>
-                    <a href="#" data-color="purple">Purple</a>
-                    <a href="#" data-color="black">Black</a>
-                    <a href="#" data-color="white">White</a>
-                    <a href="#" data-color="gray">Gray</a>
-                    <a href="#" data-color="brown">Brown</a>
-                </div>
-            </div>
-
-            <div class="dropdown" data-dropdown="widthDropdown">
-                <div class="dropdown-content">
-                    <a href="#" data-color="1px">1 px</a>
-                    <a href="#" data-color="2px">2 px</a>
-                    <a href="#" data-color="3px">3 px</a>
-                    <a href="#" data-color="4px">4 px</a>
-                    <a href="#" data-color="5px">5 px</a>
-                    <a href="#" data-color="6px">6 px</a>
-                    <a href="#" data-color="8px">8 px</a>
-                    <a href="#" data-color="10px">10 px</a>
-                </div>
-            </div>
-
-            <div class="dropdown" data-dropdown="styleDropdown">
-                <div class="dropdown-content">
-                    <a href="#" data-color="solid">Solid</a>
-                    <a href="#" data-color="dashed">Dashed</a>
-                    <a href="#" data-color="dotted">Dotted</a>
-                    <a href="#" data-color="none">None</a>
-                </div>
-            </div>
 
 
         </div>
@@ -484,119 +565,30 @@
                 }
             }
 
-            function colorClickListener(e, target, attribute) { //when color is clicked in colorDropdown
-                return function(e) {
-                    changeColor(e, target, attribute);
-                };
-            }
-
-            function widthClickListener(e, target, attribute) { //when width is clicked in widthDropdown
-                return function(e) {
-                    changeWidth(e, target, attribute);
-                };
-            }
-
-            function styleClickListener(e, target, attribute) { //when style is clicked in styleDropdown
-                return function(e) {
-                    changeStyle(e, target, attribute);
-                };
-            }
-
-            function toggleDropdown(event, attribute, target) {
-                const button = event.target;
-                const dropdown = document.querySelector(`.dropdown[data-dropdown="${attribute}Dropdown"] .dropdown-content`);
-                const allDropdowns = document.querySelectorAll(".dropdown-content");
-                console.log("event " + event + "attribute " + attribute + " target " + target + " dropdown " + dropdown + " allDropdowns " + allDropdowns + " button " + button);
-                closeDropdowns();
-                dropdown.classList.toggle("show");
-                console.log("show" + attribute + dropdown);
-                const links = dropdown.querySelectorAll('a');
-                links.forEach((link) => {
-                    if (target === "canvas") {
-                        link.addEventListener("click", colorClickListener(link, "canvas", "canvas"));
-                        console.log("link:::: ")
-                        console.log(link)
-                    } else if (target === "boxBorder") {
-                        if (attribute === "color") {
-                            link.addEventListener("click", colorClickListener(e, selectedBoxes, "boxBorder"));
-                        } else if (attribute === "width") {
-                            link.addEventListener("click", widthClickListener(e, selectedBoxes, "boxBorder"));
-                        } else if (attribute === "style") {
-                            link.addEventListener("click", styleClickListener(e, selectedBoxes, "boxBorder"));
-                        }
-                    } else if (target === "line") {
-                        if (attribute === "color") {
-                            link.addEventListener("click", colorClickListener(e, selectedLines, "line"));
-                        } else if (attribute === "width") {
-                            link.addEventListener("click", widthClickListener(e, selectedLines, "line"));
-                        } else if (attribute === "style") {
-                            link.addEventListener("click", styleClickListener(e, selectedLines, "line"));
-                        }
-                    } else if (target === "boxText") {
-                        link.addEventListener("click", colorClickListener(e, selectedBoxes, "boxText"));
+            function toggleDropdown(a) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
                     }
-                });
-            }
-            // Closes all dropdowns in the document.
-            function closeDropdowns() {
-                const allDropdowns = document.querySelectorAll(".dropdown-content");
-                allDropdowns.forEach((dropdown) => {
-                    dropdown.classList.remove("show");
-                })
+                }
+                a.parentNode.getElementsByClassName("dropdown-content")[0].classList.toggle("show");
             }
 
-            function changeColor(e, targetIDs, targetAttr) {
-                console.log("e: " + e)
-                const color = e.target.getAttribute("data-color");
-                console.log("color: " + color + ", attribute: " + targetAttr + ", target: " + targetIDs);
-                if (targetIDs === "canvas") {
-                    console.log("canvas")
-                    // Change the background color of the canvas
-                    const canvas = document.getElementById("canvas");
-                    canvas.style.backgroundColor = color;
-                } else if (targetAttr === "box" || targetAttr === "boxText" || targetAttr === "boxBorder" || targetAttr === "line") {
-                    for (let i = 0; i < targetIDs.length; i++) {
-                        const targetElement = document.getElementById(targetIDs[i]);
-                        console.log("targetElement: " + targetElement);
-                        if (targetElement) {
-                            if (targetAttr === "box") {
-                                // Change the background color of the box
-                                targetElement.style.backgroundColor = color;
-                            } else if (targetAttr === "boxText") {
-                                // Change the font color of the box's text
-                                targetElement.style.color = color;
-                            } else if (targetAttr === "boxBorder") {
-                                // Change the border color of the box
-                                targetElement.style.borderColor = color;
-                            } else if (targetAttr === "line") {
-                                // Change the color of the line
-                                targetElement.style.color = color;
-                            }
+            // Close the dropdown if the user clicks outside of it
+            window.onclick = function(event) {
+                if (!event.target.matches('.dropbtn')) {
+                    var dropdowns = document.getElementsByClassName("dropdown-content");
+                    var i;
+                    for (i = 0; i < dropdowns.length; i++) {
+                        var openDropdown = dropdowns[i];
+                        if (openDropdown.classList.contains('show')) {
+                            openDropdown.classList.remove('show');
                         }
                     }
                 }
-                //close the dropdowns
-                closeDropdowns();
-                //remove event listeners from links
-                removeEventListeners("color");
-
-            }
-
-            function removeEventListeners(attribute) {
-                console.log("removing: " + attribute);
-                const dropdown = document.querySelector(`.dropdown[data-dropdown="${attribute}Dropdown"] .dropdown-content`);
-                const links = dropdown.querySelectorAll('a');
-                links.forEach((link) => {
-                    console.log("removing link");
-                    console.log(link);
-                    if (attribute === "color") {
-                        link.removeEventListener("click", colorClickListener);
-                    } else if (attribute === "width") {
-                        link.removeEventListener("click", widthClickListener);
-                    } else if (attribute === "style") {
-                        link.removeEventListener("click", styleClickListener);
-                    }
-                });
             }
 
         </script>
