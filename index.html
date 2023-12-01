@@ -41,7 +41,7 @@
                 white-space: nowrap;
 
                 /* default widths */
-                min-width: 5em;
+                min-width: 3em;
             }
 
             .box:focus {
@@ -184,16 +184,16 @@
                     <img src="images/background-fill.svg" alt="Change Background Color">
                 </button>
                 <div class="dropdown-content">
-                    <a href="#" data-color="red">Red</a>
-                    <a href="#" data-color="orange">Orange</a>
-                    <a href="#" data-color="yellow">Yellow</a>
-                    <a href="#" data-color="green">Green</a>
-                    <a href="#" data-color="blue">Blue</a>
-                    <a href="#" data-color="purple">Purple</a>
-                    <a href="#" data-color="black">Black</a>
-                    <a href="#" data-color="white">White</a>
-                    <a href="#" data-color="gray">Gray</a>
-                    <a href="#" data-color="brown">Brown</a>
+                    <a href="#" onclick="changeColor('red', [document.getElementById('canvas')], 'background')" data-style="red">Red</a>
+                    <a href="#" onclick="changeColor('orange', [document.getElementById('canvas')], 'background')" data-style="orange">Orange</a>
+                    <a href="#" onclick="changeColor('yellow', [document.getElementById('canvas')], 'background')" data-style="yellow">Yellow</a>
+                    <a href="#" onclick="changeColor('green', [document.getElementById('canvas')], 'background')" data-style="green">Green</a>
+                    <a href="#" onclick="changeColor('blue', [document.getElementById('canvas')], 'background')" data-style="blue">Blue</a>
+                    <a href="#" onclick="changeColor('purple', [document.getElementById('canvas')], 'background')" data-style="purple">Purple</a>
+                    <a href="#" onclick="changeColor('black', [document.getElementById('canvas')], 'background')" data-style="black">Black</a>
+                    <a href="#" onclick="changeColor('white', [document.getElementById('canvas')], 'background')" data-style="white">White</a>
+                    <a href="#" onclick="changeColor('gray', [document.getElementById('canvas')], 'background')" data-style="gray">Gray</a>
+                    <a href="#" onclick="changeColor('brown', [document.getElementById('canvas')], 'background')" data-style="brown">Brown</a>
                 </div>
             </div>
 
@@ -202,16 +202,16 @@
                     <img src="images/box-fill.svg" alt="Change Box Color">
                 </button>
                 <div class="dropdown-content">
-                    <a href="#" data-color="red">Red</a>
-                    <a href="#" data-color="orange">Orange</a>
-                    <a href="#" data-color="yellow">Yellow</a>
-                    <a href="#" data-color="green">Green</a>
-                    <a href="#" data-color="blue">Blue</a>
-                    <a href="#" data-color="purple">Purple</a>
-                    <a href="#" data-color="black">Black</a>
-                    <a href="#" data-color="white">White</a>
-                    <a href="#" data-color="gray">Gray</a>
-                    <a href="#" data-color="brown">Brown</a>
+                    <a href="#" onclick="changeColor('red', selectedBoxes, 'background')" data-style="red">Red</a>
+                    <a href="#" onclick="changeColor('orange', selectedBoxes, 'background')" data-style="orange">Orange</a>
+                    <a href="#" onclick="changeColor('yellow', selectedBoxes, 'background')" data-style="yellow">Yellow</a>
+                    <a href="#" onclick="changeColor('green', selectedBoxes, 'background')" data-style="green">Green</a>
+                    <a href="#" onclick="changeColor('blue', selectedBoxes, 'background')" data-style="blue">Blue</a>
+                    <a href="#" onclick="changeColor('purple', selectedBoxes, 'background')" data-style="purple">Purple</a>
+                    <a href="#" onclick="changeColor('black', selectedBoxes, 'background')" data-style="black">Black</a>
+                    <a href="#" onclick="changeColor('white', selectedBoxes, 'background')" data-style="white">White</a>
+                    <a href="#" onclick="changeColor('gray', selectedBoxes, 'background')" data-style="gray">Gray</a>
+                    <a href="#" onclick="changeColor('brown', selectedBoxes, 'background')" data-style="brown">Brown</a>
                 </div>
             </div>
 
@@ -220,16 +220,16 @@
                     <img src="images/border-color.svg" alt="Change Border Color">
                 </button>
                 <div class="dropdown-content">
-                    <a href="#" data-color="red">Red</a>
-                    <a href="#" data-color="orange">Orange</a>
-                    <a href="#" data-color="yellow">Yellow</a>
-                    <a href="#" data-color="green">Green</a>
-                    <a href="#" data-color="blue">Blue</a>
-                    <a href="#" data-color="purple">Purple</a>
-                    <a href="#" data-color="black">Black</a>
-                    <a href="#" data-color="white">White</a>
-                    <a href="#" data-color="gray">Gray</a>
-                    <a href="#" data-color="brown">Brown</a>
+                    <a href="#" onclick="changeColor('red', selectedBoxes, 'border')" data-style="red">Red</a>
+                    <a href="#" onclick="changeColor('orange', selectedBoxes, 'border')" data-style="orange">Orange</a>
+                    <a href="#" onclick="changeColor('yellow', selectedBoxes, 'border')" data-style="yellow">Yellow</a>
+                    <a href="#" onclick="changeColor('green', selectedBoxes, 'border')" data-style="green">Green</a>
+                    <a href="#" onclick="changeColor('blue', selectedBoxes, 'border')" data-style="blue">Blue</a>
+                    <a href="#" onclick="changeColor('purple', selectedBoxes, 'border')" data-style="purple">Purple</a>
+                    <a href="#" onclick="changeColor('black', selectedBoxes, 'border')" data-style="black">Black</a>
+                    <a href="#" onclick="changeColor('white', selectedBoxes, 'border')" data-style="white">White</a>
+                    <a href="#" onclick="changeColor('gray', selectedBoxes, 'border')" data-style="gray">Gray</a>
+                    <a href="#" onclick="changeColor('brown', selectedBoxes, 'border')" data-style="brown">Brown</a>
                 </div>
             </div>
 
@@ -238,14 +238,14 @@
                     <img src="images/box-outline.svg" alt="Change Border Width">
                 </button>
                 <div class="dropdown-content">
-                    <a href="#" data-color="1px">1 px</a>
-                    <a href="#" data-color="2px">2 px</a>
-                    <a href="#" data-color="3px">3 px</a>
-                    <a href="#" data-color="4px">4 px</a>
-                    <a href="#" data-color="5px">5 px</a>
-                    <a href="#" data-color="6px">6 px</a>
-                    <a href="#" data-color="8px">8 px</a>
-                    <a href="#" data-color="10px">10 px</a>
+                    <a href="#" data-style="1px">1 px</a>
+                    <a href="#" data-style="2px">2 px</a>
+                    <a href="#" data-style="3px">3 px</a>
+                    <a href="#" data-style="4px">4 px</a>
+                    <a href="#" data-style="5px">5 px</a>
+                    <a href="#" data-style="6px">6 px</a>
+                    <a href="#" data-style="8px">8 px</a>
+                    <a href="#" data-style="10px">10 px</a>
                 </div>
             </div>
 
@@ -254,30 +254,28 @@
                     <img src="images/border-type.svg" alt="Change Border Style">
                 </button>
                 <div class="dropdown-content">
-                    <a href="#" data-color="solid">Solid</a>
-                    <a href="#" data-color="dashed">Dashed</a>
-                    <a href="#" data-color="dotted">Dotted</a>
-                    <a href="#" data-color="none">None</a>
+                    <a href="#" data-style="solid">Solid</a>
+                    <a href="#" data-style="dashed">Dashed</a>
+                    <a href="#" data-style="dotted">Dotted</a>
+                    <a href="#" data-style="none">None</a>
                 </div>
             </div>
-
-
 
             <div class="dropdown" data-dropdown="colorDropdown">
                 <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Line Color">
                     <img src="images/line-color.svg" alt="Change Line Color">
                 </button>
                 <div class="dropdown-content">
-                    <a href="#" data-color="red">Red</a>
-                    <a href="#" data-color="orange">Orange</a>
-                    <a href="#" data-color="yellow">Yellow</a>
-                    <a href="#" data-color="green">Green</a>
-                    <a href="#" data-color="blue">Blue</a>
-                    <a href="#" data-color="purple">Purple</a>
-                    <a href="#" data-color="black">Black</a>
-                    <a href="#" data-color="white">White</a>
-                    <a href="#" data-color="gray">Gray</a>
-                    <a href="#" data-color="brown">Brown</a>
+                    <a href="#" onclick="changeColor('red', selectedLines, 'color')" data-style="red">Red</a>
+                    <a href="#" onclick="changeColor('orange', selectedLines, 'color')" data-style="orange">Orange</a>
+                    <a href="#" onclick="changeColor('yellow', selectedLines, 'color')" data-style="yellow">Yellow</a>
+                    <a href="#" onclick="changeColor('green', selectedLines, 'color')" data-style="green">Green</a>
+                    <a href="#" onclick="changeColor('blue', selectedLines, 'color')" data-style="blue">Blue</a>
+                    <a href="#" onclick="changeColor('purple', selectedLines, 'color')" data-style="purple">Purple</a>
+                    <a href="#" onclick="changeColor('black', selectedLines, 'color')" data-style="black">Black</a>
+                    <a href="#" onclick="changeColor('white', selectedLines, 'color')" data-style="white">White</a>
+                    <a href="#" onclick="changeColor('gray', selectedLines, 'color')" data-style="gray">Gray</a>
+                    <a href="#" onclick="changeColor('brown', selectedLines, 'color')" data-style="brown">Brown</a>
                 </div>
             </div>
 
@@ -286,14 +284,14 @@
                     <img src="images/line-thickness.svg" alt="Change Line Width">
                 </button>
                 <div class="dropdown-content">
-                    <a href="#" data-color="1px">1 px</a>
-                    <a href="#" data-color="2px">2 px</a>
-                    <a href="#" data-color="3px">3 px</a>
-                    <a href="#" data-color="4px">4 px</a>
-                    <a href="#" data-color="5px">5 px</a>
-                    <a href="#" data-color="6px">6 px</a>
-                    <a href="#" data-color="8px">8 px</a>
-                    <a href="#" data-color="10px">10 px</a>
+                    <a href="#" data-style="1px">1 px</a>
+                    <a href="#" data-style="2px">2 px</a>
+                    <a href="#" data-style="3px">3 px</a>
+                    <a href="#" data-style="4px">4 px</a>
+                    <a href="#" data-style="5px">5 px</a>
+                    <a href="#" data-style="6px">6 px</a>
+                    <a href="#" data-style="8px">8 px</a>
+                    <a href="#" data-style="10px">10 px</a>
                 </div>
             </div>
 
@@ -302,10 +300,10 @@
                     <img src="images/line-type.svg" alt="Change Line Style">
                 </button>
                 <div class="dropdown-content">
-                    <a href="#" data-color="solid">Solid</a>
-                    <a href="#" data-color="dashed">Dashed</a>
-                    <a href="#" data-color="dotted">Dotted</a>
-                    <a href="#" data-color="none">None</a>
+                    <a href="#" data-style="solid">Solid</a>
+                    <a href="#" data-style="dashed">Dashed</a>
+                    <a href="#" data-style="dotted">Dotted</a>
+                    <a href="#" data-style="none">None</a>
                 </div>
             </div>
 
@@ -316,16 +314,16 @@
                     <img src="images/text-color.svg" alt="Change Text Color">
                 </button>
                 <div class="dropdown-content">
-                    <a href="#" data-color="red">Red</a>
-                    <a href="#" data-color="orange">Orange</a>
-                    <a href="#" data-color="yellow">Yellow</a>
-                    <a href="#" data-color="green">Green</a>
-                    <a href="#" data-color="blue">Blue</a>
-                    <a href="#" data-color="purple">Purple</a>
-                    <a href="#" data-color="black">Black</a>
-                    <a href="#" data-color="white">White</a>
-                    <a href="#" data-color="gray">Gray</a>
-                    <a href="#" data-color="brown">Brown</a>
+                    <a href="#" onclick="changeColor('red', selectedBoxes, 'color')" data-style="red">Red</a>
+                    <a href="#" onclick="changeColor('orange', selectedBoxes, 'color')" data-style="orange">Orange</a>
+                    <a href="#" onclick="changeColor('yellow', selectedBoxes, 'color')" data-style="yellow">Yellow</a>
+                    <a href="#" onclick="changeColor('green', selectedBoxes, 'color')" data-style="green">Green</a>
+                    <a href="#" onclick="changeColor('blue', selectedBoxes, 'color')" data-style="blue">Blue</a>
+                    <a href="#" onclick="changeColor('purple', selectedBoxes, 'color')" data-style="purple">Purple</a>
+                    <a href="#" onclick="changeColor('black', selectedBoxes, 'color')" data-style="black">Black</a>
+                    <a href="#" onclick="changeColor('white', selectedBoxes, 'color')" data-style="white">White</a>
+                    <a href="#" onclick="changeColor('gray', selectedBoxes, 'color')" data-style="gray">Gray</a>
+                    <a href="#" onclick="changeColor('brown', selectedBoxes, 'color')" data-style="brown">Brown</a>
                 </div>
             </div>
 
@@ -367,13 +365,13 @@
 
             function addBox(event) {
                 const target = event.target;
-                if (target.classList.contains("box")) {
+                if (target.classList.contains("box") || event.altKey) {
                     return;
                 }
                 const xPos = event.clientX;
                 const yPos = event.clientY;
-                const boxWidth = 200; // Adjust the width of the box as needed
-                const boxHeight = 50; // Adjust the height of the box as needed
+                const boxWidth = 150; // Adjust the width of the box as needed
+                const boxHeight = 40; // Adjust the height of the box as needed
                 const box = document.createElement("input");
                 const boxContainer = document.createElement("span");
                 const boxLeft = xPos - boxWidth / 2 + "px";
@@ -452,135 +450,141 @@
                 if (!event.ctrlKey) {
                     selectedBoxes.push(event.target);
                     selectedLine = []; // Reset selected line when a box is selected
-                    console.log("Box selected: tba");
-                    return;
-                }
+                    console.log("Selected Boxes:");
+                    selectedBoxes.forEach((b) => {
+                        if (b) {
+                            console.log(b.id);
+                        }
+                        return;
+                    });
 
-                if (!lineStartBox) {
-                    lineStartBox = box;
-                    startPoint = getCenter(box);
-                } else {
-                    const endPoint = getCenter(box);
-                    const startBoxId = lineStartBox.id; // Get the ID of the start box
-                    const endBoxId = box.id; // Get the ID of the end box
-                    const lineId = "line" + lines.length; // Unique ID for the line
-                    lines.push(lineId, startBoxId, endBoxId); // Store line data
-                    createLine(lineId, startBoxId, endBoxId);
-                    lineStartBox = null;
-                    startPoint = null;
-                }
-                if (selectedLines) {
-                    console.log("Selected Line:", selectedLines);
-                }
-            }
-
-
-
-
-            function deleteBox(boxId) {
-                const box = document.getElementById(boxId);
-                if (box) {
-                    box.remove();
-                    console.log("removed box" + boxId);
-                }
-            }
-
-            function deleteLines(boxId) {
-                const svg = document.getElementById("lineContainer");
-                const lines = svg.getElementsByClassName("line");
-                for (let i = lines.length - 1; i >= 0; i--) { // Iterate over the lines and remove the ones connected to the box
-                    const line = lines[i];
-                    const startBoxId = line.getAttribute("data-start-box");
-                    const endBoxId = line.getAttribute("data-end-box");
-                    if (startBoxId === boxId || endBoxId === boxId) {
-                        line.remove();
+                    if (!lineStartBox) {
+                        lineStartBox = box;
+                        startPoint = getCenter(box);
+                    } else {
+                        const endPoint = getCenter(box);
+                        const startBoxId = lineStartBox.id; // Get the ID of the start box
+                        const endBoxId = box.id; // Get the ID of the end box
+                        const lineId = "line" + lines.length; // Unique ID for the line
+                        lines.push(lineId, startBoxId, endBoxId); // Store line data
+                        createLine(lineId, startBoxId, endBoxId);
+                        lineStartBox = null;
+                        startPoint = null;
+                    }
+                    if (selectedLines) {
+                        console.log("Selected Line:", selectedLines);
                     }
                 }
             }
 
-            function createLine(lineId, startBoxId, endBoxId) {
-                const svg = document.getElementById("lineContainer");
-                const startBox = document.getElementById(startBoxId);
-                const endBox = document.getElementById(endBoxId);
-                if (startBox && endBox) {
-                    const start = getCenter(startBox);
-                    const end = getCenter(endBox);
-                    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                    line.setAttribute("id", lineId);
-                    line.setAttribute("x1", start.x);
-                    line.setAttribute("y1", start.y);
-                    line.setAttribute("x2", end.x);
-                    line.setAttribute("y2", end.y);
-                    line.setAttribute("data-start-box", startBoxId);
-                    line.setAttribute("data-end-box", endBoxId);
-                    line.classList.add("line");
-                    line.addEventListener("click", selectBox); // Add click event listener to the line
-                    svg.appendChild(line);
-                }
-            }
 
 
-            function updateLines() { //after moving boxes, rerender lines one by one
-                const svg = document.getElementById("lineContainer");
-                svg.innerHTML = ""; // Clear all existing lines
-
-                for (let i = 0; i < lines.length; i += 3) { //iterate by 3s since array has 3 elements per line
-                    const lineId = lines[i];
-                    const startBoxId = lines[i + 1];
-                    const endBoxId = lines[i + 2];
-                    createLine(lineId, startBoxId, endBoxId);
-                }
-            }
-
-            function getCenter(element) { //get center of box to render lines
-                const rect = element.getBoundingClientRect();
-                const x = rect.left + rect.width / 2;
-                const y = rect.top + rect.height / 2;
-                return {
-                    x,
-                    y
-                };
-            }
-
-            function styleText(style) { //Add style to box text.
-                const target = selectedBoxes;
-                if (target.length > 0) {
-                    for (let i = 0; i < target.length; i++) {
-                        applyTextStyle(target[i].id, style);
+                function deleteBox(boxId) {
+                    const box = document.getElementById(boxId);
+                    if (box) {
+                        box.remove();
+                        console.log("removed box" + boxId);
                     }
                 }
-            }
 
-            function isStyleApplied(elementId, style) {
-                //Check if style is applied. Used by styleText() through applyTextStyle()
-                const element = document.getElementById(elementId);
-                return element.classList.contains(style);
-            }
-
-            function applyTextStyle(elementId, style) { //Toggle style. Used by styleText()
-                const element = document.getElementById(elementId);
-                if (!isStyleApplied(elementId, style)) {
-                    element.classList.add(style);
-                } else {
-                    element.classList.remove(style);
-                }
-            }
-
-            function toggleDropdown(a) {
-                var dropdowns = document.getElementsByClassName("dropdown-content");
-                var i;
-                for (i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
+                function deleteLines(boxId) {
+                    const svg = document.getElementById("lineContainer");
+                    const lines = svg.getElementsByClassName("line");
+                    for (let i = lines.length - 1; i >= 0; i--) { // Iterate over the lines and remove the ones connected to the box
+                        const line = lines[i];
+                        const startBoxId = line.getAttribute("data-start-box");
+                        const endBoxId = line.getAttribute("data-end-box");
+                        if (startBoxId === boxId || endBoxId === boxId) {
+                            line.remove();
+                        }
                     }
                 }
-                a.parentNode.getElementsByClassName("dropdown-content")[0].classList.toggle("show");
-            }
 
-            // Close the dropdown if the user clicks outside of it
-            window.onclick = function(event) {
-                if (!event.target.matches('.dropbtn')) {
+                function createLine(lineId, startBoxId, endBoxId) {
+                    const svg = document.getElementById("lineContainer");
+                    const startBox = document.getElementById(startBoxId);
+                    const endBox = document.getElementById(endBoxId);
+                    if (startBox && endBox) {
+                        const start = getCenter(startBox);
+                        const end = getCenter(endBox);
+                        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                        line.setAttribute("id", lineId);
+                        line.setAttribute("x1", start.x);
+                        line.setAttribute("y1", start.y);
+                        line.setAttribute("x2", end.x);
+                        line.setAttribute("y2", end.y);
+                        line.setAttribute("data-start-box", startBoxId);
+                        line.setAttribute("data-end-box", endBoxId);
+                        line.classList.add("line");
+                        line.addEventListener("click", selectBox); // Add click event listener to the line
+                        svg.appendChild(line);
+                    }
+                }
+
+
+                function updateLines() { //after moving boxes, rerender lines one by one
+                    const svg = document.getElementById("lineContainer");
+                    svg.innerHTML = ""; // Clear all existing lines
+
+                    for (let i = 0; i < lines.length; i += 3) { //iterate by 3s since array has 3 elements per line
+                        const lineId = lines[i];
+                        const startBoxId = lines[i + 1];
+                        const endBoxId = lines[i + 2];
+                        createLine(lineId, startBoxId, endBoxId);
+                    }
+                }
+
+                function getCenter(element) { //get center of box to render lines
+                    const rect = element.getBoundingClientRect();
+                    const x = rect.left + rect.width / 2;
+                    const y = rect.top + rect.height / 2;
+                    return {
+                        x,
+                        y
+                    };
+                }
+
+                function styleText(style) { //Add style to box text.
+                    const target = selectedBoxes;
+                    if (target.length > 0) {
+                        for (let i = 0; i < target.length; i++) {
+                            applyTextStyle(target[i].id, style);
+                        }
+                    }
+                }
+
+                function isStyleApplied(elementId, style) {
+                    //Check if style is applied. Used by styleText() through applyTextStyle()
+                    const element = document.getElementById(elementId);
+                    return element.classList.contains(style);
+                }
+
+                function applyTextStyle(elementId, style) { //Toggle style. Used by styleText()
+                    const element = document.getElementById(elementId);
+                    if (!isStyleApplied(elementId, style)) {
+                        element.classList.add(style);
+                    } else {
+                        element.classList.remove(style);
+                    }
+                }
+
+                function changeColor(color, target, targetAttr) { //check if works
+                    if (targetAttr == "background") { // Change the background color of each target element
+                        target.forEach((element) => {
+                            element.style.backgroundColor = color;
+                        });
+                    } else if (targetAttr == "color") { // Change the font/line color of each target element
+                        target.forEach((element) => {
+                            element.style.color = color;
+                        });
+                    } else if (targetAttr == "border") { // Change the border color of each target element
+                        target.forEach((element) => {
+                            element.style.borderColor = color;
+                        });
+                    }
+                }
+
+                function toggleDropdown(a) {
                     var dropdowns = document.getElementsByClassName("dropdown-content");
                     var i;
                     for (i = 0; i < dropdowns.length; i++) {
@@ -589,10 +593,24 @@
                             openDropdown.classList.remove('show');
                         }
                     }
+                    a.parentNode.getElementsByClassName("dropdown-content")[0].classList.toggle("show");
                 }
-            }
+
+                // Close the dropdown if the user clicks outside of it
+                window.onclick = function(event) {
+                    if (!event.target.matches('.dropbtn')) {
+                        var dropdowns = document.getElementsByClassName("dropdown-content");
+                        var i;
+                        for (i = 0; i < dropdowns.length; i++) {
+                            var openDropdown = dropdowns[i];
+                            if (openDropdown.classList.contains('show')) {
+                                openDropdown.classList.remove('show');
+                            }
+                        }
+                    }
+                }
 
         </script>
     </body>
 
-</html>
+</html> 
