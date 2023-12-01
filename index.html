@@ -395,6 +395,8 @@
         document.getElementById("canvas").appendChild(boxContainer);
         document.getElementById("containerBox" + count).appendChild(box);
         box.focus();
+        selectedBoxes = [];
+        selectedBoxes.push(box);
         count++;
       }
 
@@ -403,7 +405,7 @@
         const box = getContainerFromBox(target.id);
         if (!target.classList.contains("icon-button") && !event.shiftKey) {
           selectedBoxes = [];
-          selectedLines = []; // Reset selected line when a box or line is deselected
+          selectedLines = []; // not in place yet
           console.log("Box/Line deselected");
         }
 
@@ -439,14 +441,13 @@
           lineStartBox = null;
           startPoint = null;
         }
-        if (selectedLines) {
+        if (selectedLines) { //not in place yet
           console.log("Selected Line:", selectedLines);
         }
       }
 
       function getContainerFromBox(boxID) { //see if this works. It does!
         containerID = "containerBox" + boxID.split("box").pop();
-        console.log(containerID);
         return document.getElementById(containerID);
       }
 
