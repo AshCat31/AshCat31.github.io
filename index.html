@@ -234,14 +234,14 @@
           <img src="images/box-outline.svg" alt="Change Border Width">
         </button>
         <div class="dropdown-content">
-          <a href="#" data-style="1px">1 px</a>
-          <a href="#" data-style="2px">2 px</a>
-          <a href="#" data-style="3px">3 px</a>
-          <a href="#" data-style="4px">4 px</a>
-          <a href="#" data-style="5px">5 px</a>
-          <a href="#" data-style="6px">6 px</a>
-          <a href="#" data-style="8px">8 px</a>
-          <a href="#" data-style="10px">10 px</a>
+          <a href="#" onclick="changeWidth('1px', 'border')" data-style="1px">1 px</a>
+          <a href="#" onclick="changeWidth('2px', 'border')" data-style="2px">2 px</a>
+          <a href="#" onclick="changeWidth('3px', 'border')" data-style="3px">3 px</a>
+          <a href="#" onclick="changeWidth('4px', 'border')" data-style="4px">4 px</a>
+          <a href="#" onclick="changeWidth('5px', 'border')" data-style="5px">5 px</a>
+          <a href="#" onclick="changeWidth('6px', 'border')" data-style="6px">6 px</a>
+          <a href="#" onclick="changeWidth('8px', 'border')" data-style="8px">8 px</a>
+          <a href="#" onclick="changeWidth('10px', 'border')" data-style="10px">10 px</a>
         </div>
       </div>
 
@@ -280,14 +280,14 @@
           <img src="images/line-thickness.svg" alt="Change Line Width">
         </button>
         <div class="dropdown-content">
-          <a href="#" data-style="1px">1 px</a>
-          <a href="#" data-style="2px">2 px</a>
-          <a href="#" data-style="3px">3 px</a>
-          <a href="#" data-style="4px">4 px</a>
-          <a href="#" data-style="5px">5 px</a>
-          <a href="#" data-style="6px">6 px</a>
-          <a href="#" data-style="8px">8 px</a>
-          <a href="#" data-style="10px">10 px</a>
+          <a href="#" onclick="changeWidth('1px', 'line')" data-style="1px">1 px</a>
+          <a href="#" onclick="changeWidth('2px', 'line')" data-style="2px">2 px</a>
+          <a href="#" onclick="changeWidth('3px', 'line')" data-style="3px">3 px</a>
+          <a href="#" onclick="changeWidth('4px', 'line')" data-style="4px">4 px</a>
+          <a href="#" onclick="changeWidth('5px', 'line')" data-style="5px">5 px</a>
+          <a href="#" onclick="changeWidth('6px', 'line')" data-style="6px">6 px</a>
+          <a href="#" onclick="changeWidth('8px', 'line')" data-style="8px">8 px</a>
+          <a href="#" onclick="changeWidth('10px', 'line')" data-style="10px">10 px</a>
         </div>
       </div>
 
@@ -404,7 +404,7 @@
         const box = getContainerFromBox(target.id);
         if (!target.classList.contains("icon-button") && !event.shiftKey) {
           selectedBoxes = [];
-          selectedLines = []; // not in place yet
+          selectedLines = []; // not implemented yet
           console.log("Box/Line deselected");
         }
 
@@ -422,7 +422,7 @@
           console.log("Selected Boxes:");
           selectedBoxes.forEach((b) => {
             if (b) {
-              console.log(b.id);
+              console.log("---" + b.id);
             }
           });
           return;
@@ -440,7 +440,7 @@
           lineStartBox = null;
           startPoint = null;
         }
-        if (selectedLines) { //not in place yet
+        if (selectedLines) { //not inmplemented yet
           console.log("Selected Line:", selectedLines);
         }
       }
@@ -453,13 +453,15 @@
       function startDrag(event) {
         const target = event.target;
         const box = getContainerFromBox(target.id)
+        const border = +getComputedStyle(box).borderTopWidth.slice(0, -2)
+        console.log( border);
         const initialX = event.clientX - target.getBoundingClientRect().left;
         const initialY = event.clientY - target.getBoundingClientRect().top;
         box.style.zIndex = "999"; // Bring the dragged box to the front
 
         function moveBox(event) { //local fun
-          const newX = event.clientX - initialX;
-          const newY = event.clientY - initialY; // Adjust the y-coordinate by subtracting 50
+          const newX = event.clientX - initialX - box.style.borderWidth - border;
+          const newY = event.clientY - initialY - box.style.borderWidth - border;
           box.style.left = newX + "px";
           box.style.top = newY + "px";
           updateLines();
@@ -580,7 +582,20 @@
         }
       }
       
-      function changeStyle(style, target) { //check if works.
+      function changeWidth(width, target) {//check if works.
+        if (target == "line") { // Change the style of each target line
+          selectedLines.forEach((element) => {
+            element.style.strokeWidth = width;
+          });
+        } else if (target == "border") { // Change the border style of each target box
+          selectedBoxes.forEach((element) => {
+          box = getContainerFromBox(element.id);
+            box.style.borderWidth = width;
+          });
+        }
+      }
+      
+      function changeStyle(style, target) { //check if works. Seems working!
         if (target == "line") { // Change the style of each target line
           selectedLines.forEach((element) => {
             element.style.strokeDasharray = style;
