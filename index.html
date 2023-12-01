@@ -360,7 +360,10 @@
 
       function addBox(event) {
         const target = event.target;
-        if (target.classList.contains("box") || event.altKey) {
+        if (target.classList.contains("box")) {
+          return;
+        } else if (event.altKey) {
+          selectedBoxes = [];
           return;
         }
         const xPos = event.clientX;
@@ -454,7 +457,7 @@
         const target = event.target;
         const box = getContainerFromBox(target.id)
         const border = +getComputedStyle(box).borderTopWidth.slice(0, -2)
-        console.log( border);
+        console.log(border);
         const initialX = event.clientX - target.getBoundingClientRect().left;
         const initialY = event.clientY - target.getBoundingClientRect().top;
         box.style.zIndex = "999"; // Bring the dragged box to the front
@@ -576,25 +579,25 @@
           });
         } else if (targetAttr == "border") { // Change the border color of each target element
           target.forEach((element) => {
-          box = getContainerFromBox(element.id);
-            box.style.borderColor = color; 
+            box = getContainerFromBox(element.id);
+            box.style.borderColor = color;
           });
         }
       }
-      
-      function changeWidth(width, target) {//check if works.
+
+      function changeWidth(width, target) { //check if works.
         if (target == "line") { // Change the style of each target line
           selectedLines.forEach((element) => {
             element.style.strokeWidth = width;
           });
         } else if (target == "border") { // Change the border style of each target box
           selectedBoxes.forEach((element) => {
-          box = getContainerFromBox(element.id);
+            box = getContainerFromBox(element.id);
             box.style.borderWidth = width;
           });
         }
       }
-      
+
       function changeStyle(style, target) { //check if works. Seems working!
         if (target == "line") { // Change the style of each target line
           selectedLines.forEach((element) => {
@@ -602,7 +605,7 @@
           });
         } else if (target == "border") { // Change the border style of each target box
           selectedBoxes.forEach((element) => {
-          box = getContainerFromBox(element.id);
+            box = getContainerFromBox(element.id);
             box.style.borderStyle = style;
           });
         }
