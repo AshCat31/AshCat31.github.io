@@ -1,618 +1,615 @@
 <html>
-    <!-- Pop-Up Box! -->
-    <!--Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough (currently underline+strikethrough doesn't work). Tentative box resizing. -->
-    <!--Not working: Everything changes canvas color. Dropdowns appear in same spot.-->
-    <!--Todo: Clean code. Make canvas bigger and scrollable. Print. Save.-->
+  <!-- Pop-Up Box! -->
+  <!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough (currently underline+strikethrough doesn't work). Tentative box resizing & color changing. -->
+  <!-- Bugged: Nothing atm. -->>
+  <!-- Todo: Clean code. Make canvas bigger and scrollable. Print. Save.-->
 
-    <head>
-        <title>Pop-Up Box</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" href="favicon.ico" type="image/x-icon">
-        <style>
-            #canvas {
-                position: absolute;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background-color: white;
-                /* Default background color */
-            }
+  <head>
+    <title>Pop-Up Box</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+      #canvas {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: white;
+        /* Default background color */
+      }
 
-            .box {
-                background-color: white;
-                border: 2px solid black;
-                border-radius: 3px;
-                box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-                position: absolute;
-                width: 200px;
-                height: 50px;
-                z-index: 1;
-                font-weight: normal;
-                font-style: normal;
-                text-decoration: none;
-                resize: both;
-                /* make resizable */
-                overflow: hidden;
-                display: inline-block;
+      .box {
+        background-color: white;
+        border: 2px solid black;
+        border-radius: 3px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        position: absolute;
+        width: 200px;
+        height: 50px;
+        z-index: 1;
+        font-weight: normal;
+        font-style: normal;
+        text-decoration: none;
+        resize: both;
+        /* make resizable */
+        overflow: hidden;
+        display: inline-block;
 
-                /* no extra spaces */
-                margin: 0;
-                white-space: nowrap;
+        /* no extra spaces */
+        margin: 0;
+        white-space: nowrap;
 
-                /* default widths */
-                min-width: 3em;
-            }
+        /* default widths */
+        min-width: 3em;
+      }
 
-            .box:focus {
-                border: blue !important;
-            }
+      .box:focus {
+        border: blue !important;
+      }
 
-            /* let <input> assume the size of the wrapper */
-            .box>input {
-                border: 0;
-                width: 100%;
-                height: 100%;
-                display: inline-block;
-            }
+      /* let <input> assume the size of the wrapper */
+      .box>input {
+        border: 0;
+        width: 100%;
+        height: 100%;
+        display: inline-block;
+      }
 
-            /* add a visible handle */
-            .box>span {
-                display: inline-block;
-                vertical-align: bottom;
-                margin-left: -16px;
-                width: 16px;
-                height: 16px;
-                background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAJUlEQVR4AcXJRwEAIBAAIPuXxgiOW3xZYzi1Q3Nqh+bUDk1yD9sQaUG/4ehuEAAAAABJRU5ErkJggg==");
-                cursor: ew-resize;
-            }
+      /* add a visible handle */
+      .box>span {
+        display: inline-block;
+        vertical-align: bottom;
+        margin-left: -16px;
+        width: 16px;
+        height: 16px;
+        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAJUlEQVR4AcXJRwEAIBAAIPuXxgiOW3xZYzi1Q3Nqh+bUDk1yD9sQaUG/4ehuEAAAAABJRU5ErkJggg==");
+        cursor: ew-resize;
+      }
 
-            .line {
-                stroke: black;
-                stroke-width: 2px;
-            }
+      .line {
+        stroke: black;
+        stroke-width: 2px;
+      }
 
-            .top-bar {
-                background-color: lightgray;
-                color: black;
-                padding: 10px;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                z-index: 9999;
-                border-bottom: 3px solid black;
-                display: flex;
-                justify-content: flex-end;
-                /* Align buttons to the right */
-            }
+      .top-bar {
+        background-color: lightgray;
+        color: black;
+        padding: 10px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        border-bottom: 3px solid black;
+        display: flex;
+        justify-content: flex-end;
+        /* Align buttons to the right */
+      }
 
-            .top-bar button {
-                width: 40px;
-                height: 40px;
-                border: 2px solid black;
-                background-color: transparent;
-                margin-left: 5px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-            }
+      .top-bar button {
+        width: 40px;
+        height: 40px;
+        border: 2px solid black;
+        background-color: transparent;
+        margin-left: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
 
-            .top-bar button:hover {
-                background-color: #ccc;
-            }
+      .top-bar button:hover {
+        background-color: #ccc;
+      }
 
-            .top-bar .icon-button img {
-                width: 24px;
-                height: 24px;
-                pointer-events: none;
-            }
+      .top-bar .icon-button img {
+        width: 24px;
+        height: 24px;
+        pointer-events: none;
+      }
 
-            .dropdown {
-                position: relative;
-                display: inline-block;
-            }
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
 
-            .dropdown-content {
-                display: none;
-                position: absolute;
-                background-color: #f9f9f9;
-                min-width: 55px;
-                box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-                z-index: 1;
-                right: 0;
-                left: unset;
-                transform-origin: top right;
-                top: 100%;
-                /* Adjust the top position based on the height of the top bar and button size */
-            }
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 55px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        right: 0;
+        left: unset;
+        transform-origin: top right;
+        top: 100%;
+        /* Adjust the top position based on the height of the top bar and button size */
+      }
 
-            .dropdown.show .dropdown-content {
-                display: block;
-                left: unset;
-                right: 0;
-                top: 100%;
-                /* Change top position to appear below the button */
-                transform-origin: bottom right;
-            }
+      .dropdown.show .dropdown-content {
+        display: block;
+        left: unset;
+        right: 0;
+        top: 100%;
+        /* Change top position to appear below the button */
+        transform-origin: bottom right;
+      }
 
-            .dropdown-content a {
-                color: black;
-                padding: 8px 6px;
-                text-decoration: none;
-                display: block;
-            }
+      .dropdown-content a {
+        color: black;
+        padding: 8px 6px;
+        text-decoration: none;
+        display: block;
+      }
 
-            .dropdown-content a:hover {
-                background-color: #E0E0E0;
-            }
+      .dropdown-content a:hover {
+        background-color: #E0E0E0;
+      }
 
-            .show {
-                display: block;
-            }
+      .show {
+        display: block;
+      }
 
-            .bold {
-                font-weight: bold;
-            }
+      .bold {
+        font-weight: bold;
+      }
 
-            .italic {
-                font-style: italic;
-            }
+      .italic {
+        font-style: italic;
+      }
 
-            .underline {
-                text-decoration: underline;
-            }
+      .underline {
+        text-decoration: underline;
+      }
 
-            .strikethrough {
-                text-decoration: line-through;
-            }
+      .strikethrough {
+        text-decoration: line-through;
+      }
 
-            @media print {
-                .no-print {
-                    display: none;
-                }
-            }
+      @media print {
+        .no-print {
+          display: none;
+        }
+      }
 
-        </style>
-    </head>
+    </style>
+  </head>
 
-    <body>
-        <div class="top-bar no-print">
-            <div class="dropdown" data-dropdown="colorDropdown">
-                <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Background Color">
-                    <img src="images/background-fill.svg" alt="Change Background Color">
-                </button>
-                <div class="dropdown-content">
-                    <a href="#" onclick="changeColor('red', [document.getElementById('canvas')], 'background')" data-style="red">Red</a>
-                    <a href="#" onclick="changeColor('orange', [document.getElementById('canvas')], 'background')" data-style="orange">Orange</a>
-                    <a href="#" onclick="changeColor('yellow', [document.getElementById('canvas')], 'background')" data-style="yellow">Yellow</a>
-                    <a href="#" onclick="changeColor('green', [document.getElementById('canvas')], 'background')" data-style="green">Green</a>
-                    <a href="#" onclick="changeColor('blue', [document.getElementById('canvas')], 'background')" data-style="blue">Blue</a>
-                    <a href="#" onclick="changeColor('purple', [document.getElementById('canvas')], 'background')" data-style="purple">Purple</a>
-                    <a href="#" onclick="changeColor('black', [document.getElementById('canvas')], 'background')" data-style="black">Black</a>
-                    <a href="#" onclick="changeColor('white', [document.getElementById('canvas')], 'background')" data-style="white">White</a>
-                    <a href="#" onclick="changeColor('gray', [document.getElementById('canvas')], 'background')" data-style="gray">Gray</a>
-                    <a href="#" onclick="changeColor('brown', [document.getElementById('canvas')], 'background')" data-style="brown">Brown</a>
-                </div>
-            </div>
-
-            <div class="dropdown" data-dropdown="colorDropdown">
-                <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Box Color">
-                    <img src="images/box-fill.svg" alt="Change Box Color">
-                </button>
-                <div class="dropdown-content">
-                    <a href="#" onclick="changeColor('red', selectedBoxes, 'background')" data-style="red">Red</a>
-                    <a href="#" onclick="changeColor('orange', selectedBoxes, 'background')" data-style="orange">Orange</a>
-                    <a href="#" onclick="changeColor('yellow', selectedBoxes, 'background')" data-style="yellow">Yellow</a>
-                    <a href="#" onclick="changeColor('green', selectedBoxes, 'background')" data-style="green">Green</a>
-                    <a href="#" onclick="changeColor('blue', selectedBoxes, 'background')" data-style="blue">Blue</a>
-                    <a href="#" onclick="changeColor('purple', selectedBoxes, 'background')" data-style="purple">Purple</a>
-                    <a href="#" onclick="changeColor('black', selectedBoxes, 'background')" data-style="black">Black</a>
-                    <a href="#" onclick="changeColor('white', selectedBoxes, 'background')" data-style="white">White</a>
-                    <a href="#" onclick="changeColor('gray', selectedBoxes, 'background')" data-style="gray">Gray</a>
-                    <a href="#" onclick="changeColor('brown', selectedBoxes, 'background')" data-style="brown">Brown</a>
-                </div>
-            </div>
-
-            <div class="dropdown" data-dropdown="colorDropdown">
-                <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Border Color">
-                    <img src="images/border-color.svg" alt="Change Border Color">
-                </button>
-                <div class="dropdown-content">
-                    <a href="#" onclick="changeColor('red', selectedBoxes, 'border')" data-style="red">Red</a>
-                    <a href="#" onclick="changeColor('orange', selectedBoxes, 'border')" data-style="orange">Orange</a>
-                    <a href="#" onclick="changeColor('yellow', selectedBoxes, 'border')" data-style="yellow">Yellow</a>
-                    <a href="#" onclick="changeColor('green', selectedBoxes, 'border')" data-style="green">Green</a>
-                    <a href="#" onclick="changeColor('blue', selectedBoxes, 'border')" data-style="blue">Blue</a>
-                    <a href="#" onclick="changeColor('purple', selectedBoxes, 'border')" data-style="purple">Purple</a>
-                    <a href="#" onclick="changeColor('black', selectedBoxes, 'border')" data-style="black">Black</a>
-                    <a href="#" onclick="changeColor('white', selectedBoxes, 'border')" data-style="white">White</a>
-                    <a href="#" onclick="changeColor('gray', selectedBoxes, 'border')" data-style="gray">Gray</a>
-                    <a href="#" onclick="changeColor('brown', selectedBoxes, 'border')" data-style="brown">Brown</a>
-                </div>
-            </div>
-
-            <div class="dropdown" data-dropdown="widthDropdown">
-                <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Border Width">
-                    <img src="images/box-outline.svg" alt="Change Border Width">
-                </button>
-                <div class="dropdown-content">
-                    <a href="#" data-style="1px">1 px</a>
-                    <a href="#" data-style="2px">2 px</a>
-                    <a href="#" data-style="3px">3 px</a>
-                    <a href="#" data-style="4px">4 px</a>
-                    <a href="#" data-style="5px">5 px</a>
-                    <a href="#" data-style="6px">6 px</a>
-                    <a href="#" data-style="8px">8 px</a>
-                    <a href="#" data-style="10px">10 px</a>
-                </div>
-            </div>
-
-            <div class="dropdown" data-dropdown="styleDropdown">
-                <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Border Style">
-                    <img src="images/border-type.svg" alt="Change Border Style">
-                </button>
-                <div class="dropdown-content">
-                    <a href="#" data-style="solid">Solid</a>
-                    <a href="#" data-style="dashed">Dashed</a>
-                    <a href="#" data-style="dotted">Dotted</a>
-                    <a href="#" data-style="none">None</a>
-                </div>
-            </div>
-
-            <div class="dropdown" data-dropdown="colorDropdown">
-                <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Line Color">
-                    <img src="images/line-color.svg" alt="Change Line Color">
-                </button>
-                <div class="dropdown-content">
-                    <a href="#" onclick="changeColor('red', selectedLines, 'color')" data-style="red">Red</a>
-                    <a href="#" onclick="changeColor('orange', selectedLines, 'color')" data-style="orange">Orange</a>
-                    <a href="#" onclick="changeColor('yellow', selectedLines, 'color')" data-style="yellow">Yellow</a>
-                    <a href="#" onclick="changeColor('green', selectedLines, 'color')" data-style="green">Green</a>
-                    <a href="#" onclick="changeColor('blue', selectedLines, 'color')" data-style="blue">Blue</a>
-                    <a href="#" onclick="changeColor('purple', selectedLines, 'color')" data-style="purple">Purple</a>
-                    <a href="#" onclick="changeColor('black', selectedLines, 'color')" data-style="black">Black</a>
-                    <a href="#" onclick="changeColor('white', selectedLines, 'color')" data-style="white">White</a>
-                    <a href="#" onclick="changeColor('gray', selectedLines, 'color')" data-style="gray">Gray</a>
-                    <a href="#" onclick="changeColor('brown', selectedLines, 'color')" data-style="brown">Brown</a>
-                </div>
-            </div>
-
-            <div class="dropdown" data-dropdown="widthDropdown">
-                <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Line Width">
-                    <img src="images/line-thickness.svg" alt="Change Line Width">
-                </button>
-                <div class="dropdown-content">
-                    <a href="#" data-style="1px">1 px</a>
-                    <a href="#" data-style="2px">2 px</a>
-                    <a href="#" data-style="3px">3 px</a>
-                    <a href="#" data-style="4px">4 px</a>
-                    <a href="#" data-style="5px">5 px</a>
-                    <a href="#" data-style="6px">6 px</a>
-                    <a href="#" data-style="8px">8 px</a>
-                    <a href="#" data-style="10px">10 px</a>
-                </div>
-            </div>
-
-            <div class="dropdown" data-dropdown="styleDropdown">
-                <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Line Style">
-                    <img src="images/line-type.svg" alt="Change Line Style">
-                </button>
-                <div class="dropdown-content">
-                    <a href="#" data-style="solid">Solid</a>
-                    <a href="#" data-style="dashed">Dashed</a>
-                    <a href="#" data-style="dotted">Dotted</a>
-                    <a href="#" data-style="none">None</a>
-                </div>
-            </div>
-
-
-
-            <div class="dropdown" data-dropdown="colorDropdown">
-                <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Text Color">
-                    <img src="images/text-color.svg" alt="Change Text Color">
-                </button>
-                <div class="dropdown-content">
-                    <a href="#" onclick="changeColor('red', selectedBoxes, 'color')" data-style="red">Red</a>
-                    <a href="#" onclick="changeColor('orange', selectedBoxes, 'color')" data-style="orange">Orange</a>
-                    <a href="#" onclick="changeColor('yellow', selectedBoxes, 'color')" data-style="yellow">Yellow</a>
-                    <a href="#" onclick="changeColor('green', selectedBoxes, 'color')" data-style="green">Green</a>
-                    <a href="#" onclick="changeColor('blue', selectedBoxes, 'color')" data-style="blue">Blue</a>
-                    <a href="#" onclick="changeColor('purple', selectedBoxes, 'color')" data-style="purple">Purple</a>
-                    <a href="#" onclick="changeColor('black', selectedBoxes, 'color')" data-style="black">Black</a>
-                    <a href="#" onclick="changeColor('white', selectedBoxes, 'color')" data-style="white">White</a>
-                    <a href="#" onclick="changeColor('gray', selectedBoxes, 'color')" data-style="gray">Gray</a>
-                    <a href="#" onclick="changeColor('brown', selectedBoxes, 'color')" data-style="brown">Brown</a>
-                </div>
-            </div>
-
-
-
-            <button class="icon-button" onclick="styleText('bold')" title="Bold">
-                <img src="images/bold.svg" alt="Bold">
-            </button>
-
-            <button class="icon-button" onclick="styleText('italic')" title="Italic">
-                <img src="images/italic.svg" alt="Italic">
-            </button>
-
-            <button class="icon-button" onclick="styleText('underline')" title="Underline">
-                <img src="images/underline.svg" alt="Underline">
-            </button>
-
-            <button class="icon-button" onclick="styleText('strikethrough')" title="Strikethrough">
-                <img src="images/strikethrough.svg" alt="Strikethrough">
-            </button>
-
-
-
+  <body>
+    <div class="top-bar no-print">
+      <div class="dropdown" data-dropdown="colorDropdown">
+        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Background Color">
+          <img src="images/background-fill.svg" alt="Change Background Color">
+        </button>
+        <div class="dropdown-content">
+          <a href="#" onclick="changeColor('red', [document.getElementById('canvas')], 'background')" data-style="red">Red</a>
+          <a href="#" onclick="changeColor('orange', [document.getElementById('canvas')], 'background')" data-style="orange">Orange</a>
+          <a href="#" onclick="changeColor('yellow', [document.getElementById('canvas')], 'background')" data-style="yellow">Yellow</a>
+          <a href="#" onclick="changeColor('green', [document.getElementById('canvas')], 'background')" data-style="green">Green</a>
+          <a href="#" onclick="changeColor('blue', [document.getElementById('canvas')], 'background')" data-style="blue">Blue</a>
+          <a href="#" onclick="changeColor('purple', [document.getElementById('canvas')], 'background')" data-style="purple">Purple</a>
+          <a href="#" onclick="changeColor('black', [document.getElementById('canvas')], 'background')" data-style="black">Black</a>
+          <a href="#" onclick="changeColor('white', [document.getElementById('canvas')], 'background')" data-style="white">White</a>
+          <a href="#" onclick="changeColor('gray', [document.getElementById('canvas')], 'background')" data-style="gray">Gray</a>
+          <a href="#" onclick="changeColor('brown', [document.getElementById('canvas')], 'background')" data-style="brown">Brown</a>
         </div>
+      </div>
 
-        <div class="container">
-            <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
-            <div id="canvas" onclick="addBox(event)" style="height: 100vh;"></div>
-            <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
+      <div class="dropdown" data-dropdown="colorDropdown">
+        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Box Color">
+          <img src="images/box-fill.svg" alt="Change Box Color">
+        </button>
+        <div class="dropdown-content">
+          <a href="#" onclick="changeColor('red', selectedBoxes, 'background')" data-style="red">Red</a>
+          <a href="#" onclick="changeColor('orange', selectedBoxes, 'background')" data-style="orange">Orange</a>
+          <a href="#" onclick="changeColor('yellow', selectedBoxes, 'background')" data-style="yellow">Yellow</a>
+          <a href="#" onclick="changeColor('green', selectedBoxes, 'background')" data-style="green">Green</a>
+          <a href="#" onclick="changeColor('blue', selectedBoxes, 'background')" data-style="blue">Blue</a>
+          <a href="#" onclick="changeColor('purple', selectedBoxes, 'background')" data-style="purple">Purple</a>
+          <a href="#" onclick="changeColor('black', selectedBoxes, 'background')" data-style="black">Black</a>
+          <a href="#" onclick="changeColor('white', selectedBoxes, 'background')" data-style="white">White</a>
+          <a href="#" onclick="changeColor('gray', selectedBoxes, 'background')" data-style="gray">Gray</a>
+          <a href="#" onclick="changeColor('brown', selectedBoxes, 'background')" data-style="brown">Brown</a>
         </div>
+      </div>
 
-        <script>
-            let count = 0;
-            let selectedBoxes = [];
-            let selectedLines = [];
-            let lineStartBox = null;
-            let startPoint = null;
-            let lines = []; // Array to store line data
+      <div class="dropdown" data-dropdown="colorDropdown">
+        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Border Color">
+          <img src="images/border-color.svg" alt="Change Border Color">
+        </button>
+        <div class="dropdown-content">
+          <a href="#" onclick="changeColor('red', selectedBoxes, 'border')" data-style="red">Red</a>
+          <a href="#" onclick="changeColor('orange', selectedBoxes, 'border')" data-style="orange">Orange</a>
+          <a href="#" onclick="changeColor('yellow', selectedBoxes, 'border')" data-style="yellow">Yellow</a>
+          <a href="#" onclick="changeColor('green', selectedBoxes, 'border')" data-style="green">Green</a>
+          <a href="#" onclick="changeColor('blue', selectedBoxes, 'border')" data-style="blue">Blue</a>
+          <a href="#" onclick="changeColor('purple', selectedBoxes, 'border')" data-style="purple">Purple</a>
+          <a href="#" onclick="changeColor('black', selectedBoxes, 'border')" data-style="black">Black</a>
+          <a href="#" onclick="changeColor('white', selectedBoxes, 'border')" data-style="white">White</a>
+          <a href="#" onclick="changeColor('gray', selectedBoxes, 'border')" data-style="gray">Gray</a>
+          <a href="#" onclick="changeColor('brown', selectedBoxes, 'border')" data-style="brown">Brown</a>
+        </div>
+      </div>
 
-            function addBox(event) {
-                const target = event.target;
-                if (target.classList.contains("box") || event.altKey) {
-                    return;
-                }
-                const xPos = event.clientX;
-                const yPos = event.clientY;
-                const boxWidth = 150; // Adjust the width of the box as needed
-                const boxHeight = 40; // Adjust the height of the box as needed
-                const box = document.createElement("input");
-                const boxContainer = document.createElement("span");
-                const boxLeft = xPos - boxWidth / 2 + "px";
-                const boxTop = yPos - boxHeight / 2 + "px";
-                box.setAttribute("type", "text");
-                box.classList.add("box");
-                boxContainer.classList.add("box");
-                box.id = "box" + count;
-                box.style.padding = "0px 5px"
-                boxContainer.id = "containerBox" + count;
-                console.log("box" + count);
-                boxContainer.value = "Type here";
-                boxContainer.style.left = boxLeft;
-                boxContainer.style.top = boxTop;
-                boxContainer.style.width = boxWidth + "px";
-                boxContainer.style.height = boxHeight + "px";
-                boxContainer.addEventListener("mousedown", startDrag);
-                boxContainer.addEventListener("click", selectBox);
-                document.getElementById("canvas").appendChild(boxContainer);
-                document.getElementById("containerBox" + count).appendChild(box);
-                box.focus();
-                count++;
+      <div class="dropdown" data-dropdown="widthDropdown">
+        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Border Width">
+          <img src="images/box-outline.svg" alt="Change Border Width">
+        </button>
+        <div class="dropdown-content">
+          <a href="#" data-style="1px">1 px</a>
+          <a href="#" data-style="2px">2 px</a>
+          <a href="#" data-style="3px">3 px</a>
+          <a href="#" data-style="4px">4 px</a>
+          <a href="#" data-style="5px">5 px</a>
+          <a href="#" data-style="6px">6 px</a>
+          <a href="#" data-style="8px">8 px</a>
+          <a href="#" data-style="10px">10 px</a>
+        </div>
+      </div>
+
+      <div class="dropdown" data-dropdown="styleDropdown">
+        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Border Style">
+          <img src="images/border-type.svg" alt="Change Border Style">
+        </button>
+        <div class="dropdown-content">
+          <a href="#" data-style="solid">Solid</a>
+          <a href="#" data-style="dashed">Dashed</a>
+          <a href="#" data-style="dotted">Dotted</a>
+          <a href="#" data-style="none">None</a>
+        </div>
+      </div>
+
+      <div class="dropdown" data-dropdown="colorDropdown">
+        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Line Color">
+          <img src="images/line-color.svg" alt="Change Line Color">
+        </button>
+        <div class="dropdown-content">
+          <a href="#" onclick="changeColor('red', selectedLines, 'color')" data-style="red">Red</a>
+          <a href="#" onclick="changeColor('orange', selectedLines, 'color')" data-style="orange">Orange</a>
+          <a href="#" onclick="changeColor('yellow', selectedLines, 'color')" data-style="yellow">Yellow</a>
+          <a href="#" onclick="changeColor('green', selectedLines, 'color')" data-style="green">Green</a>
+          <a href="#" onclick="changeColor('blue', selectedLines, 'color')" data-style="blue">Blue</a>
+          <a href="#" onclick="changeColor('purple', selectedLines, 'color')" data-style="purple">Purple</a>
+          <a href="#" onclick="changeColor('black', selectedLines, 'color')" data-style="black">Black</a>
+          <a href="#" onclick="changeColor('white', selectedLines, 'color')" data-style="white">White</a>
+          <a href="#" onclick="changeColor('gray', selectedLines, 'color')" data-style="gray">Gray</a>
+          <a href="#" onclick="changeColor('brown', selectedLines, 'color')" data-style="brown">Brown</a>
+        </div>
+      </div>
+
+      <div class="dropdown" data-dropdown="widthDropdown">
+        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Line Width">
+          <img src="images/line-thickness.svg" alt="Change Line Width">
+        </button>
+        <div class="dropdown-content">
+          <a href="#" data-style="1px">1 px</a>
+          <a href="#" data-style="2px">2 px</a>
+          <a href="#" data-style="3px">3 px</a>
+          <a href="#" data-style="4px">4 px</a>
+          <a href="#" data-style="5px">5 px</a>
+          <a href="#" data-style="6px">6 px</a>
+          <a href="#" data-style="8px">8 px</a>
+          <a href="#" data-style="10px">10 px</a>
+        </div>
+      </div>
+
+      <div class="dropdown" data-dropdown="styleDropdown">
+        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Line Style">
+          <img src="images/line-type.svg" alt="Change Line Style">
+        </button>
+        <div class="dropdown-content">
+          <a href="#" data-style="solid">Solid</a>
+          <a href="#" data-style="dashed">Dashed</a>
+          <a href="#" data-style="dotted">Dotted</a>
+          <a href="#" data-style="none">None</a>
+        </div>
+      </div>
+
+
+
+      <div class="dropdown" data-dropdown="colorDropdown">
+        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Text Color">
+          <img src="images/text-color.svg" alt="Change Text Color">
+        </button>
+        <div class="dropdown-content">
+          <a href="#" onclick="changeColor('red', selectedBoxes, 'color')" data-style="red">Red</a>
+          <a href="#" onclick="changeColor('orange', selectedBoxes, 'color')" data-style="orange">Orange</a>
+          <a href="#" onclick="changeColor('yellow', selectedBoxes, 'color')" data-style="yellow">Yellow</a>
+          <a href="#" onclick="changeColor('green', selectedBoxes, 'color')" data-style="green">Green</a>
+          <a href="#" onclick="changeColor('blue', selectedBoxes, 'color')" data-style="blue">Blue</a>
+          <a href="#" onclick="changeColor('purple', selectedBoxes, 'color')" data-style="purple">Purple</a>
+          <a href="#" onclick="changeColor('black', selectedBoxes, 'color')" data-style="black">Black</a>
+          <a href="#" onclick="changeColor('white', selectedBoxes, 'color')" data-style="white">White</a>
+          <a href="#" onclick="changeColor('gray', selectedBoxes, 'color')" data-style="gray">Gray</a>
+          <a href="#" onclick="changeColor('brown', selectedBoxes, 'color')" data-style="brown">Brown</a>
+        </div>
+      </div>
+
+
+
+      <button class="icon-button" onclick="styleText('bold')" title="Bold">
+        <img src="images/bold.svg" alt="Bold">
+      </button>
+
+      <button class="icon-button" onclick="styleText('italic')" title="Italic">
+        <img src="images/italic.svg" alt="Italic">
+      </button>
+
+      <button class="icon-button" onclick="styleText('underline')" title="Underline">
+        <img src="images/underline.svg" alt="Underline">
+      </button>
+
+      <button class="icon-button" onclick="styleText('strikethrough')" title="Strikethrough">
+        <img src="images/strikethrough.svg" alt="Strikethrough">
+      </button>
+
+
+
+    </div>
+
+    <div class="container">
+      <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
+      <div id="canvas" onclick="addBox(event)" style="height: 100vh;"></div>
+      <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
+    </div>
+
+    <script>
+      let count = 0;
+      let selectedBoxes = [];
+      let selectedLines = [];
+      let lineStartBox = null;
+      let startPoint = null;
+      let lines = []; // Array to store line data
+
+      function addBox(event) {
+        const target = event.target;
+        if (target.classList.contains("box") || event.altKey) {
+          return;
+        }
+        const xPos = event.clientX;
+        const yPos = event.clientY;
+        const boxWidth = 150; // Adjust the width of the box as needed
+        const boxHeight = 40; // Adjust the height of the box as needed
+        const box = document.createElement("input");
+        const boxContainer = document.createElement("span");
+        const boxLeft = xPos - boxWidth / 2 + "px";
+        const boxTop = yPos - boxHeight / 2 + "px";
+        // Set up boxContainer properties
+        boxContainer.id = "containerBox" + count;
+        boxContainer.value = "Type here";
+        boxContainer.style.left = boxLeft;
+        boxContainer.style.top = boxTop;
+        boxContainer.style.width = boxWidth + "px";
+        boxContainer.style.height = boxHeight + "px";
+        // Add event listeners to boxContainer
+        boxContainer.addEventListener("mousedown", startDrag);
+        boxContainer.addEventListener("click", selectBox);
+        // Set up box properties
+        box.id = "box" + count;
+        box.style.padding = "0px 5px";
+        // Set box type attribute
+        box.setAttribute("type", "text");
+        // Add classes to both box and boxContainer
+        box.classList.add("box");
+        boxContainer.classList.add("box");
+        // Log box id
+        console.log("box" + count);
+        document.getElementById("canvas").appendChild(boxContainer);
+        document.getElementById("containerBox" + count).appendChild(box);
+        box.focus();
+        count++;
+      }
+
+      function getContainerFromBox(boxID) { //see if this works. It does!
+        containerID = "containerBox" + boxID.split("box").pop();
+        console.log(containerID);
+        return document.getElementById(containerID);
+      }
+
+      function startDrag(event) {
+        const target = event.target;
+        const box = getContainerFromBox(target.id)
+        const initialX = event.clientX - target.getBoundingClientRect().left;
+        const initialY = event.clientY - target.getBoundingClientRect().top;
+        box.style.zIndex = "999"; // Bring the dragged box to the front
+
+        function moveBox(event) { //local fun
+          const newX = event.clientX - initialX;
+          const newY = event.clientY - initialY; // Adjust the y-coordinate by subtracting 50
+          box.style.left = newX + "px";
+          box.style.top = newY + "px";
+          updateLines();
+        }
+
+        function stopDrag() { //local func
+          document.removeEventListener("mousemove", moveBox);
+          document.removeEventListener("mouseup", stopDrag);
+          box.style.zIndex = ""; // Restore the original z-index
+          updateLines(); // Update the lines after dragging stops
+        }
+        document.addEventListener("mousemove", moveBox);
+        document.addEventListener("mouseup", stopDrag);
+      }
+
+      function selectBox(event) {
+        const target = event.target;
+        const box = getContainerFromBox(target.id);
+        if (!target.classList.contains("icon-button") && !event.shiftKey) {
+          selectedBoxes = [];
+          selectedLines = []; // Reset selected line when a box or line is deselected
+          console.log("Box/Line deselected");
+        }
+
+        if (event.altKey) {
+          const boxId = box.id;
+          deleteBox(boxId);
+          deleteLines(boxId);
+          console.log("removing box" + boxId)
+          return;
+        }
+
+        if (!event.ctrlKey) {
+          selectedBoxes.push(event.target);
+          selectedLine = []; // Reset selected line when a box is selected
+          console.log("Selected Boxes:");
+          selectedBoxes.forEach((b) => {
+            if (b) {
+              console.log(b.id);
             }
+          });
+          return;
+        }
+        if (!lineStartBox) {
+          lineStartBox = box;
+          startPoint = getCenter(box);
+        } else {
+          const endPoint = getCenter(box);
+          const startBoxId = lineStartBox.id; // Get the ID of the start box
+          const endBoxId = box.id; // Get the ID of the end box
+          const lineId = "line" + lines.length; // Unique ID for the line
+          lines.push(lineId, startBoxId, endBoxId); // Store line data
+          createLine(lineId, startBoxId, endBoxId);
+          lineStartBox = null;
+          startPoint = null;
+        }
+        if (selectedLines) {
+          console.log("Selected Line:", selectedLines);
+        }
+      }
 
-            function getContainerFromBox(boxID) { //see if this works. It does!
-                containerID = "containerBox" + boxID.split("box").pop();
-                console.log(containerID);
-                return document.getElementById(containerID);
+      function deleteBox(boxId) {
+        const box = document.getElementById(boxId);
+        if (box) {
+          box.remove();
+          console.log("removed box" + boxId);
+        }
+      }
+
+      function deleteLines(boxId) {
+        const svg = document.getElementById("lineContainer");
+        const lines = svg.getElementsByClassName("line");
+        for (let i = lines.length - 1; i >= 0; i--) { // Iterate over the lines and remove the ones connected to the box
+          const line = lines[i];
+          const startBoxId = line.getAttribute("data-start-box");
+          const endBoxId = line.getAttribute("data-end-box");
+          if (startBoxId === boxId || endBoxId === boxId) {
+            line.remove();
+          }
+        }
+      }
+
+      function createLine(lineId, startBoxId, endBoxId) {
+        const svg = document.getElementById("lineContainer");
+        const startBox = document.getElementById(startBoxId);
+        const endBox = document.getElementById(endBoxId);
+        if (startBox && endBox) {
+          const start = getCenter(startBox);
+          const end = getCenter(endBox);
+          const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+          line.setAttribute("id", lineId);
+          line.setAttribute("x1", start.x);
+          line.setAttribute("y1", start.y);
+          line.setAttribute("x2", end.x);
+          line.setAttribute("y2", end.y);
+          line.setAttribute("data-start-box", startBoxId);
+          line.setAttribute("data-end-box", endBoxId);
+          line.classList.add("line");
+          line.addEventListener("click", selectBox); // Add click event listener to the line
+          svg.appendChild(line);
+        }
+      }
+
+
+      function updateLines() { //after moving boxes, rerender lines one by one
+        const svg = document.getElementById("lineContainer");
+        svg.innerHTML = ""; // Clear all existing lines
+        for (let i = 0; i < lines.length; i += 3) { //iterate by 3s since array has 3 elements per line
+          const lineId = lines[i];
+          const startBoxId = lines[i + 1];
+          const endBoxId = lines[i + 2];
+          createLine(lineId, startBoxId, endBoxId);
+        }
+      }
+
+      function getCenter(element) { //get center of box to render lines
+        const rect = element.getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+        return {
+          x,
+          y
+        };
+      }
+
+      function styleText(style) { //Add style to box text.
+        const target = selectedBoxes;
+        if (target.length > 0) {
+          for (let i = 0; i < target.length; i++) {
+            applyTextStyle(target[i].id, style);
+          }
+        }
+      }
+
+      function isStyleApplied(elementId, style) {
+        //Check if style is applied. Used by styleText() through applyTextStyle()
+        const element = document.getElementById(elementId);
+        return element.classList.contains(style);
+      }
+
+      function applyTextStyle(elementId, style) { //Toggle style. Used by styleText()
+        const element = document.getElementById(elementId);
+        if (!isStyleApplied(elementId, style)) {
+          element.classList.add(style);
+        } else {
+          element.classList.remove(style);
+        }
+      }
+
+      function changeColor(color, target, targetAttr) { //check if works
+        if (targetAttr == "background") { // Change the background color of each target element
+          target.forEach((element) => {
+            element.style.backgroundColor = color;
+          });
+        } else if (targetAttr == "color") { // Change the font/line color of each target element
+          target.forEach((element) => {
+            element.style.color = color;
+          });
+        } else if (targetAttr == "border") { // Change the border color of each target element
+          target.forEach((element) => {
+            element.style.borderColor = color;
+          });
+        }
+      }
+
+      function toggleDropdown(a) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+        a.parentNode.getElementsByClassName("dropdown-content")[0].classList.toggle("show");
+      }
+
+      // Close the dropdown if the user clicks outside of it
+      window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+          var dropdowns = document.getElementsByClassName("dropdown-content");
+          var i;
+          for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+              openDropdown.classList.remove('show');
             }
+          }
+        }
+      }
 
-            function startDrag(event) {
-                const target = event.target;
-                const box = getContainerFromBox(target.id)
-                const initialX = event.clientX - target.getBoundingClientRect().left;
-                const initialY = event.clientY - target.getBoundingClientRect().top;
-                box.style.zIndex = "999"; // Bring the dragged box to the front
+    </script>
+  </body>
 
-                function moveBox(event) {
-                    const newX = event.clientX - initialX;
-                    const newY = event.clientY - initialY; // Adjust the y-coordinate by subtracting 50
-                    box.style.left = newX + "px";
-                    box.style.top = newY + "px";
-                    updateLines();
-
-                }
-
-                function stopDrag() {
-                    document.removeEventListener("mousemove", moveBox);
-                    document.removeEventListener("mouseup", stopDrag);
-                    box.style.zIndex = ""; // Restore the original z-index
-                    updateLines(); // Update the lines after dragging stops
-                }
-
-                document.addEventListener("mousemove", moveBox);
-                document.addEventListener("mouseup", stopDrag);
-            }
-
-            function selectBox(event) {
-                const target = event.target;
-                const box = getContainerFromBox(target.id);
-                if (!target.classList.contains("icon-button") && !event.shiftKey) {
-                    selectedBoxes = [];
-                    selectedLines = []; // Reset selected line when a box or line is deselected
-                    console.log("Box/Line deselected");
-                }
-
-                if (event.altKey) {
-                    const boxId = box.id;
-                    deleteBox(boxId);
-                    deleteLines(boxId);
-                    console.log("removing box" + boxId)
-
-                    return;
-                }
-
-                if (!event.ctrlKey) {
-                    selectedBoxes.push(event.target);
-                    selectedLine = []; // Reset selected line when a box is selected
-                    console.log("Selected Boxes:");
-                    selectedBoxes.forEach((b) => {
-                        if (b) {
-                            console.log(b.id);
-                        }
-                        });
-                        return;
-                    
-						}
-                    if (!lineStartBox) {
-                        lineStartBox = box;
-                        startPoint = getCenter(box);
-                    } else {
-                        const endPoint = getCenter(box);
-                        const startBoxId = lineStartBox.id; // Get the ID of the start box
-                        const endBoxId = box.id; // Get the ID of the end box
-                        const lineId = "line" + lines.length; // Unique ID for the line
-                        lines.push(lineId, startBoxId, endBoxId); // Store line data
-                        createLine(lineId, startBoxId, endBoxId);
-                        lineStartBox = null;
-                        startPoint = null;
-                    }
-                    
-                    if (selectedLines) {
-                        console.log("Selected Line:", selectedLines);
-                    
-                }
-            }
-
-
-
-                function deleteBox(boxId) {
-                    const box = document.getElementById(boxId);
-                    if (box) {
-                        box.remove();
-                        console.log("removed box" + boxId);
-                    }
-                }
-
-                function deleteLines(boxId) {
-                    const svg = document.getElementById("lineContainer");
-                    const lines = svg.getElementsByClassName("line");
-                    for (let i = lines.length - 1; i >= 0; i--) { // Iterate over the lines and remove the ones connected to the box
-                        const line = lines[i];
-                        const startBoxId = line.getAttribute("data-start-box");
-                        const endBoxId = line.getAttribute("data-end-box");
-                        if (startBoxId === boxId || endBoxId === boxId) {
-                            line.remove();
-                        }
-                    }
-                }
-
-                function createLine(lineId, startBoxId, endBoxId) {
-                    const svg = document.getElementById("lineContainer");
-                    const startBox = document.getElementById(startBoxId);
-                    const endBox = document.getElementById(endBoxId);
-                    if (startBox && endBox) {
-                        const start = getCenter(startBox);
-                        const end = getCenter(endBox);
-                        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                        line.setAttribute("id", lineId);
-                        line.setAttribute("x1", start.x);
-                        line.setAttribute("y1", start.y);
-                        line.setAttribute("x2", end.x);
-                        line.setAttribute("y2", end.y);
-                        line.setAttribute("data-start-box", startBoxId);
-                        line.setAttribute("data-end-box", endBoxId);
-                        line.classList.add("line");
-                        line.addEventListener("click", selectBox); // Add click event listener to the line
-                        svg.appendChild(line);
-                    }
-                }
-
-
-                function updateLines() { //after moving boxes, rerender lines one by one
-                    const svg = document.getElementById("lineContainer");
-                    svg.innerHTML = ""; // Clear all existing lines
-
-                    for (let i = 0; i < lines.length; i += 3) { //iterate by 3s since array has 3 elements per line
-                        const lineId = lines[i];
-                        const startBoxId = lines[i + 1];
-                        const endBoxId = lines[i + 2];
-                        createLine(lineId, startBoxId, endBoxId);
-                    }
-                }
-
-                function getCenter(element) { //get center of box to render lines
-                    const rect = element.getBoundingClientRect();
-                    const x = rect.left + rect.width / 2;
-                    const y = rect.top + rect.height / 2;
-                    return {
-                        x,
-                        y
-                    };
-                }
-
-                function styleText(style) { //Add style to box text.
-                    const target = selectedBoxes;
-                    if (target.length > 0) {
-                        for (let i = 0; i < target.length; i++) {
-                            applyTextStyle(target[i].id, style);
-                        }
-                    }
-                }
-
-                function isStyleApplied(elementId, style) {
-                    //Check if style is applied. Used by styleText() through applyTextStyle()
-                    const element = document.getElementById(elementId);
-                    return element.classList.contains(style);
-                }
-
-                function applyTextStyle(elementId, style) { //Toggle style. Used by styleText()
-                    const element = document.getElementById(elementId);
-                    if (!isStyleApplied(elementId, style)) {
-                        element.classList.add(style);
-                    } else {
-                        element.classList.remove(style);
-                    }
-                }
-
-                function changeColor(color, target, targetAttr) { //check if works
-                    if (targetAttr == "background") { // Change the background color of each target element
-                        target.forEach((element) => {
-                            element.style.backgroundColor = color;
-                        });
-                    } else if (targetAttr == "color") { // Change the font/line color of each target element
-                        target.forEach((element) => {
-                            element.style.color = color;
-                        });
-                    } else if (targetAttr == "border") { // Change the border color of each target element
-                        target.forEach((element) => {
-                            element.style.borderColor = color;
-                        });
-                    }
-                }
-
-                function toggleDropdown(a) {
-                    var dropdowns = document.getElementsByClassName("dropdown-content");
-                    var i;
-                    for (i = 0; i < dropdowns.length; i++) {
-                        var openDropdown = dropdowns[i];
-                        if (openDropdown.classList.contains('show')) {
-                            openDropdown.classList.remove('show');
-                        }
-                    }
-                    a.parentNode.getElementsByClassName("dropdown-content")[0].classList.toggle("show");
-                }
-
-                // Close the dropdown if the user clicks outside of it
-                window.onclick = function(event) {
-                    if (!event.target.matches('.dropbtn')) {
-                        var dropdowns = document.getElementsByClassName("dropdown-content");
-                        var i;
-                        for (i = 0; i < dropdowns.length; i++) {
-                            var openDropdown = dropdowns[i];
-                            if (openDropdown.classList.contains('show')) {
-                                openDropdown.classList.remove('show');
-                            }
-                        }
-                    }
-                }
-
-        </script>
-    </body>
-
-</html> 
+</html>
