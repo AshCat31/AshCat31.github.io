@@ -16,7 +16,6 @@
         right: 0;
         bottom: 0;
         background-color: white;
-        /* Default background color */
       }
 
       .box {
@@ -35,12 +34,9 @@
         /* make resizable */
         overflow: hidden;
         display: inline-block;
-
         /* no extra spaces */
         margin: 0;
         white-space: nowrap;
-
-        /* default widths */
         min-width: 3em;
       }
 
@@ -48,7 +44,7 @@
         border: blue !important;
       }
 
-      /* let <input> assume the size of the wrapper */
+      /* let <input> assume the size of the wrapper. Working??? */
       .box>input {
         border: 0;
         width: 100%;
@@ -56,7 +52,7 @@
         display: inline-block;
       }
 
-      /* add a visible handle */
+      /* add a visible handle. Working??? */
       .box>span {
         display: inline-block;
         vertical-align: bottom;
@@ -125,7 +121,7 @@
         left: unset;
         transform-origin: top right;
         top: 100%;
-        /* Adjust the top position based on the height of the top bar and button size */
+        /* Adjust the top based on the top bar */
       }
 
       .dropdown.show .dropdown-content {
@@ -133,8 +129,8 @@
         left: unset;
         right: 0;
         top: 100%;
-        /* Change top position to appear below the button */
         transform-origin: bottom right;
+        /* Change top position to appear below the button */
       }
 
       .dropdown-content a {
@@ -402,37 +398,6 @@
         count++;
       }
 
-      function getContainerFromBox(boxID) { //see if this works. It does!
-        containerID = "containerBox" + boxID.split("box").pop();
-        console.log(containerID);
-        return document.getElementById(containerID);
-      }
-
-      function startDrag(event) {
-        const target = event.target;
-        const box = getContainerFromBox(target.id)
-        const initialX = event.clientX - target.getBoundingClientRect().left;
-        const initialY = event.clientY - target.getBoundingClientRect().top;
-        box.style.zIndex = "999"; // Bring the dragged box to the front
-
-        function moveBox(event) { //local fun
-          const newX = event.clientX - initialX;
-          const newY = event.clientY - initialY; // Adjust the y-coordinate by subtracting 50
-          box.style.left = newX + "px";
-          box.style.top = newY + "px";
-          updateLines();
-        }
-
-        function stopDrag() { //local func
-          document.removeEventListener("mousemove", moveBox);
-          document.removeEventListener("mouseup", stopDrag);
-          box.style.zIndex = ""; // Restore the original z-index
-          updateLines(); // Update the lines after dragging stops
-        }
-        document.addEventListener("mousemove", moveBox);
-        document.addEventListener("mouseup", stopDrag);
-      }
-
       function selectBox(event) {
         const target = event.target;
         const box = getContainerFromBox(target.id);
@@ -477,6 +442,37 @@
         if (selectedLines) {
           console.log("Selected Line:", selectedLines);
         }
+      }
+
+      function getContainerFromBox(boxID) { //see if this works. It does!
+        containerID = "containerBox" + boxID.split("box").pop();
+        console.log(containerID);
+        return document.getElementById(containerID);
+      }
+
+      function startDrag(event) {
+        const target = event.target;
+        const box = getContainerFromBox(target.id)
+        const initialX = event.clientX - target.getBoundingClientRect().left;
+        const initialY = event.clientY - target.getBoundingClientRect().top;
+        box.style.zIndex = "999"; // Bring the dragged box to the front
+
+        function moveBox(event) { //local fun
+          const newX = event.clientX - initialX;
+          const newY = event.clientY - initialY; // Adjust the y-coordinate by subtracting 50
+          box.style.left = newX + "px";
+          box.style.top = newY + "px";
+          updateLines();
+        }
+
+        function stopDrag() { //local func
+          document.removeEventListener("mousemove", moveBox);
+          document.removeEventListener("mouseup", stopDrag);
+          box.style.zIndex = ""; // Restore the original z-index
+          updateLines(); // Update the lines after dragging stops
+        }
+        document.addEventListener("mousemove", moveBox);
+        document.addEventListener("mouseup", stopDrag);
       }
 
       function deleteBox(boxId) {
