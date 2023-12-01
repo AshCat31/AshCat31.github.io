@@ -250,10 +250,10 @@
           <img src="images/border-type.svg" alt="Change Border Style">
         </button>
         <div class="dropdown-content">
-          <a href="#" data-style="solid">Solid</a>
-          <a href="#" data-style="dashed">Dashed</a>
-          <a href="#" data-style="dotted">Dotted</a>
-          <a href="#" data-style="none">None</a>
+          <a href="#" onclick="changeStyle('solid', 'border')" data-style="solid">Solid</a>
+          <a href="#" onclick="changeStyle('dashed', 'border')" data-style="dashed">Dashed</a>
+          <a href="#" onclick="changeStyle('dotted', 'border')" data-style="dotted">Dotted</a>
+          <a href="#" onclick="changeStyle('none', 'border')" data-style="none">None</a>
         </div>
       </div>
 
@@ -296,10 +296,9 @@
           <img src="images/line-type.svg" alt="Change Line Style">
         </button>
         <div class="dropdown-content">
-          <a href="#" data-style="solid">Solid</a>
-          <a href="#" data-style="dashed">Dashed</a>
-          <a href="#" data-style="dotted">Dotted</a>
-          <a href="#" data-style="none">None</a>
+          <a href="#" onclick="changeStyle('0', 'line')" data-style="solid">Solid</a>
+          <a href="#" onclick="changeStyle('3 2', 'line')" data-style="dashed">Dashed</a>
+          <a href="#" onclick="changeStyle('1', 'line')" data-style="dotted">Dotted</a>
         </div>
       </div>
 
@@ -564,18 +563,32 @@
         }
       }
 
-      function changeColor(color, target, targetAttr) { //check if works
+      function changeColor(color, target, targetAttr) { //check if works. seems to!
         if (targetAttr == "background") { // Change the background color of each target element
           target.forEach((element) => {
             element.style.backgroundColor = color;
           });
         } else if (targetAttr == "color") { // Change the font/line color of each target element
           target.forEach((element) => {
-            element.style.color = color;
+            element.style.color = color; //stroke instead for line?
           });
         } else if (targetAttr == "border") { // Change the border color of each target element
           target.forEach((element) => {
-            element.style.borderColor = color;
+          box = getContainerFromBox(element.id);
+            box.style.borderColor = color; 
+          });
+        }
+      }
+      
+      function changeStyle(style, target) { //check if works.
+        if (target == "line") { // Change the style of each target line
+          selectedLines.forEach((element) => {
+            element.style.strokeDasharray = style;
+          });
+        } else if (target == "border") { // Change the border style of each target box
+          selectedBoxes.forEach((element) => {
+          box = getContainerFromBox(element.id);
+            box.style.borderStyle = style;
           });
         }
       }
