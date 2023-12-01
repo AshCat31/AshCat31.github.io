@@ -385,7 +385,7 @@
                 box.style.padding = "0px 5px"
                 boxContainer.id = "containerBox" + count;
                 console.log("box" + count);
-                boxContainer.placeholder = "Type here";
+                boxContainer.value = "Type here";
                 boxContainer.style.left = boxLeft;
                 boxContainer.style.top = boxTop;
                 boxContainer.style.width = boxWidth + "px";
@@ -441,10 +441,11 @@
                 }
 
                 if (event.altKey) {
-                    console.log("removing box" + boxID)
                     const boxId = box.id;
                     deleteBox(boxId);
                     deleteLines(boxId);
+                    console.log("removing box" + boxID)
+
                     return;
                 }
 
