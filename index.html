@@ -358,6 +358,8 @@
       let startPoint = null;
       let lines = []; // Array to store line data
 
+      
+
       function addBox(event) {
         const target = event.target;
         if (target.classList.contains("box")) {
@@ -636,6 +638,32 @@
           }
         }
       }
+      
+      window.addEventListener("keydown", onKeypress)
+
+      function onKeypress(e) {
+        if (e.ctrlKey && e.key === 'u') {
+          e.preventDefault();
+          styleText("underline");
+        } else if (e.ctrlKey && e.key === 'b') {
+          e.preventDefault();
+          styleText("bold");
+        } else if (e.ctrlKey && e.key === 'i') {
+          e.preventDefault();
+          styleText("italic");
+        }
+        if ((e.ctrlKey && e.key === '5') || (e.altKey && e.shiftKey && e.key === '5')) {
+          e.preventDefault();
+          styleText("strikethrough");
+        }
+      }
+
+      /* function selectLines (& mb boxes?) upon mousedown? on canvas
+      			save mouse x/y on mousedown in vars
+            check every start/end x/y of lines to see if they are between initial & current mouse x/y
+            if so, add line to selectedLines
+            renderSelRectangle?
+            */
 
     </script>
   </body>
