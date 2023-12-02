@@ -335,6 +335,22 @@
         </div>
       </div>
       
+      <div class="dropdown" data-dropdown="widthDropdown">
+        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Text Size">
+          <img src="images/text-size.svg" alt="Change Text Size">
+        </button>
+        <div class="dropdown-content">
+          <a href="#" onclick="changeWidth('8px', 'text')" data-style="8px">8 px</a>
+          <a href="#" onclick="changeWidth('12px', 'text')" data-style="12px">12 px</a>
+          <a href="#" onclick="changeWidth('16px', 'text')" data-style="16px">16 px</a>
+          <a href="#" onclick="changeWidth('18px', 'text')" data-style="18px">18 px</a>
+          <a href="#" onclick="changeWidth('20px', 'text')" data-style="20px">20 px</a>
+          <a href="#" onclick="changeWidth('30px', 'text')" data-style="30px">30 px</a>
+          <a href="#" onclick="changeWidth('40px', 'text')" data-style="40px">40 px</a>
+          <a href="#" onclick="changeWidth('60px', 'text')" data-style="60px">60 px</a>
+        </div>
+      </div>
+      
       <button class="icon-button" onclick="styleText('bold')" title="Bold">
         <img src="images/bold.svg" alt="Bold">
       </button>
@@ -408,8 +424,7 @@
         // Add classes to both box and boxContainer
         box.classList.add("box");
         boxContainer.classList.add("box");
-        // Log box id
-        console.log("box" + count);
+        console.log("made " + box.id);
         document.getElementById("canvas").appendChild(boxContainer);
         document.getElementById("containerBox" + count).appendChild(box);
         box.focus();
@@ -431,7 +446,7 @@
           const boxId = box.id;
           deleteBox(boxId);
           deleteLines(boxId);
-          console.log("removing box" + boxId);
+          console.log("removing box " + boxId);
           return;
         }
 
@@ -460,7 +475,7 @@
           startPoint = null;
         }
         if (selectedLines) { //not inmplemented yet
-          console.log("Selected Line:", selectedLines);
+          console.log("Selected Line: ", selectedLines);
         }
       }
 
@@ -473,7 +488,6 @@
         const target = event.target;
         const box = getContainerFromBox(target.id)
         const border = +getComputedStyle(box).borderTopWidth.slice(0, -2)
-        console.log(border);
         const initialX = event.clientX - target.getBoundingClientRect().left;
         const initialY = event.clientY - target.getBoundingClientRect().top;
         box.style.zIndex = "999"; // Bring the dragged box to the front
@@ -500,7 +514,7 @@
         const box = document.getElementById(boxId);
         if (box) {
           box.remove();
-          console.log("removed box" + boxId);
+          console.log("removed box " + boxId);
         }
       }
 
@@ -585,7 +599,6 @@
       }
 
       function changeColor(color, target, targetAttr) { //check if works. seems to!
-        console.log("t-" + target);
         if (targetAttr == "background") { // Change the background color of each target element
           target.forEach((element) => {
             element.style.backgroundColor = color;
@@ -603,14 +616,18 @@
       }
 
       function changeWidth(width, target) { //check if works.
-        if (target == "line") { // Change the style of each target line
+        if (target == "line") { // Change the width of each target line
           selectedLines.forEach((element) => {
             element.style.strokeWidth = width;
           });
-        } else if (target == "border") { // Change the border style of each target box
+        } else if (target == "border") { // Change the border width of each target box
           selectedBoxes.forEach((element) => {
             box = getContainerFromBox(element.id);
             box.style.borderWidth = width;
+          });
+          } else if (target == "text") { // Change the size of each target box's text
+          selectedBoxes.forEach((element) => {
+            element.style.fontSize = width;
           });
         }
       }
@@ -684,7 +701,6 @@
           target = [document.getElementById('canvas')];
         }
         const attribute = e.target.dataset.attribute;
-        console.log(color, target[0].id, attribute);
         changeColor(color, target, attribute);
       }
 
