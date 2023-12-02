@@ -190,6 +190,9 @@
           <a href="#" onclick="changeColor('white', [document.getElementById('canvas')], 'background')" data-style="white">White</a>
           <a href="#" onclick="changeColor('gray', [document.getElementById('canvas')], 'background')" data-style="gray">Gray</a>
           <a href="#" onclick="changeColor('brown', [document.getElementById('canvas')], 'background')" data-style="brown">Brown</a>
+          <a href="#" data-style="custom">Custom
+            <input class="color-picker" type="color" value="#000000" data-target="canvas" data-attribute="background" />
+          </a>
         </div>
       </div>
 
@@ -208,6 +211,9 @@
           <a href="#" onclick="changeColor('white', selectedBoxes, 'background')" data-style="white">White</a>
           <a href="#" onclick="changeColor('gray', selectedBoxes, 'background')" data-style="gray">Gray</a>
           <a href="#" onclick="changeColor('brown', selectedBoxes, 'background')" data-style="brown">Brown</a>
+          <a href="#" data-style="custom">Custom
+            <input class="color-picker" type="color" value="#000000" data-target="boxes" data-attribute="background" />
+          </a>
         </div>
       </div>
 
@@ -226,6 +232,9 @@
           <a href="#" onclick="changeColor('white', selectedBoxes, 'border')" data-style="white">White</a>
           <a href="#" onclick="changeColor('gray', selectedBoxes, 'border')" data-style="gray">Gray</a>
           <a href="#" onclick="changeColor('brown', selectedBoxes, 'border')" data-style="brown">Brown</a>
+          <a href="#" data-style="custom">Custom
+            <input class="color-picker" type="color" value="#000000" data-target="boxes" data-attribute="border" />
+          </a>
         </div>
       </div>
 
@@ -272,6 +281,9 @@
           <a href="#" onclick="changeColor('white', selectedLines, 'color')" data-style="white">White</a>
           <a href="#" onclick="changeColor('gray', selectedLines, 'color')" data-style="gray">Gray</a>
           <a href="#" onclick="changeColor('brown', selectedLines, 'color')" data-style="brown">Brown</a>
+          <a href="#" data-style="custom">Custom
+            <input class="color-picker" type="color" value="#000000" data-target="lines" data-attribute="color" />
+          </a>
         </div>
       </div>
 
@@ -302,8 +314,6 @@
         </div>
       </div>
 
-
-
       <div class="dropdown" data-dropdown="colorDropdown">
         <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Text Color">
           <img src="images/text-color.svg" alt="Change Text Color">
@@ -319,11 +329,12 @@
           <a href="#" onclick="changeColor('white', selectedBoxes, 'color')" data-style="white">White</a>
           <a href="#" onclick="changeColor('gray', selectedBoxes, 'color')" data-style="gray">Gray</a>
           <a href="#" onclick="changeColor('brown', selectedBoxes, 'color')" data-style="brown">Brown</a>
+          <a href="#" data-style="custom">Custom
+            <input class="color-picker" type="color" value="#000000" data-target="boxes" data-attribute="color" />
+          </a>
         </div>
       </div>
-
-
-
+      
       <button class="icon-button" onclick="styleText('bold')" title="Bold">
         <img src="images/bold.svg" alt="Bold">
       </button>
@@ -339,8 +350,6 @@
       <button class="icon-button" onclick="styleText('strikethrough')" title="Strikethrough">
         <img src="images/strikethrough.svg" alt="Strikethrough">
       </button>
-
-
 
     </div>
 
@@ -358,7 +367,12 @@
       let startPoint = null;
       let lines = []; // Array to store line data
 
-      
+      const colorPickers = document.querySelectorAll(".color-picker")
+      colorPickers.forEach((picker) => {
+        picker.addEventListener("input", setCustomColor, false);
+        picker.addEventListener("change", setCustomColor, false);
+        picker.select();
+      });
 
       function addBox(event) {
         const target = event.target;
@@ -417,7 +431,7 @@
           const boxId = box.id;
           deleteBox(boxId);
           deleteLines(boxId);
-          console.log("removing box" + boxId)
+          console.log("removing box" + boxId);
           return;
         }
 
@@ -571,6 +585,7 @@
       }
 
       function changeColor(color, target, targetAttr) { //check if works. seems to!
+        console.log("t-" + target);
         if (targetAttr == "background") { // Change the background color of each target element
           target.forEach((element) => {
             element.style.backgroundColor = color;
@@ -638,7 +653,7 @@
           }
         }
       }
-      
+
       window.addEventListener("keydown", onKeypress)
 
       function onKeypress(e) {
@@ -656,6 +671,21 @@
           e.preventDefault();
           styleText("strikethrough");
         }
+      }
+
+      function setCustomColor(e) { //see if this works. Appears to!
+        const color = e.target.value;
+        let target = e.target.dataset.target;
+        if (target == "boxes") {
+          target = selectedBoxes;
+        } else if (target == "lines") {
+          target = selectedLines;
+        } else if (target == "canvas") {
+          target = [document.getElementById('canvas')];
+        }
+        const attribute = e.target.dataset.attribute;
+        console.log(color, target[0].id, attribute);
+        changeColor(color, target, attribute);
       }
 
       /* function selectLines (& mb boxes?) upon mousedown? on canvas
