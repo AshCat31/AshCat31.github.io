@@ -334,7 +334,7 @@
           </a>
         </div>
       </div>
-      
+
       <div class="dropdown" data-dropdown="widthDropdown">
         <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Text Size">
           <img src="images/text-size.svg" alt="Change Text Size">
@@ -350,7 +350,7 @@
           <a href="#" onclick="changeWidth('60px', 'text')" data-style="60px">60 px</a>
         </div>
       </div>
-      
+
       <button class="icon-button" onclick="styleText('bold')" title="Bold">
         <img src="images/bold.svg" alt="Bold">
       </button>
@@ -625,7 +625,7 @@
             box = getContainerFromBox(element.id);
             box.style.borderWidth = width;
           });
-          } else if (target == "text") { // Change the size of each target box's text
+        } else if (target == "text") { // Change the size of each target box's text
           selectedBoxes.forEach((element) => {
             element.style.fontSize = width;
           });
@@ -671,25 +671,6 @@
         }
       }
 
-      window.addEventListener("keydown", onKeypress)
-
-      function onKeypress(e) {
-        if (e.ctrlKey && e.key === 'u') {
-          e.preventDefault();
-          styleText("underline");
-        } else if (e.ctrlKey && e.key === 'b') {
-          e.preventDefault();
-          styleText("bold");
-        } else if (e.ctrlKey && e.key === 'i') {
-          e.preventDefault();
-          styleText("italic");
-        }
-        if ((e.ctrlKey && e.key === '5') || (e.altKey && e.shiftKey && e.key === '5')) {
-          e.preventDefault();
-          styleText("strikethrough");
-        }
-      }
-
       function setCustomColor(e) { //see if this works. Appears to!
         const color = e.target.value;
         let target = e.target.dataset.target;
@@ -702,6 +683,29 @@
         }
         const attribute = e.target.dataset.attribute;
         changeColor(color, target, attribute);
+      }
+
+      window.addEventListener("keydown", onKeypress)
+
+      function onKeypress(e) {
+        if (e.ctrlKey && e.key === 'u') {
+          e.preventDefault();
+          styleText("underline");
+        } else if (e.ctrlKey && e.key === 'b') {
+          e.preventDefault();
+          styleText("bold");
+        } else if (e.ctrlKey && e.key === 'i') {
+          e.preventDefault();
+          styleText("italic");
+        } else if ((e.ctrlKey && e.key === '5') || (e.altKey && e.shiftKey && e.key === '5')) {
+          e.preventDefault();
+          styleText("strikethrough");
+        } else if (e.altKey && e.key === 'Backspace') {
+          e.preventDefault();
+          selectedBoxes.forEach((box) => {
+            deleteBox(getContainerFromBox(box.id).id);
+          });
+        }
       }
 
       /* function selectLines (& mb boxes?) upon mousedown? on canvas
