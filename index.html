@@ -441,8 +441,7 @@
         if (target.classList.contains("box")) {
           return;
         } else if (event.altKey) {
-          console.log("desel");
-          selectedBoxes = [];
+          deselectBoxes();
           return;
         }
         const xPos = event.clientX;
@@ -470,13 +469,17 @@
         box.setAttribute("type", "text");
         // Add classes to both box and boxContainer
         box.classList.add("box");
+        box.classList.add("box-input");
+
         boxContainer.classList.add("box");
-        console.log("made " + box.id);
         document.getElementById("canvas").appendChild(boxContainer);
         document.getElementById("containerBox" + count).appendChild(box);
         box.focus();
-        selectedBoxes = [];
+        if (!event.shiftKey) {
+          deselectBoxes();
+        }
         selectedBoxes.push(box);
+        console.log("made/selected " + box.id);
         count++;
       }
 
@@ -484,11 +487,8 @@
         const target = event.target;
         const box = getContainerFromBox(target.id);
         if (!target.classList.contains("icon-button") && !event.shiftKey) {
-          selectedBoxes = [];
-          selectedLines = []; // not implemented yet
-          console.log("Box/Line deselected");
+          deselectBoxes();
         }
-
         if (event.altKey) {
           const boxId = box.id;
           deleteBox(boxId);
@@ -496,7 +496,6 @@
           console.log("removing box " + boxId);
           return;
         }
-
         if (!event.ctrlKey) {
           selectedBoxes.push(event.target);
           selectedLine = []; // Reset selected line when a box is selected
@@ -524,6 +523,12 @@
         if (selectedLines) { //not inmplemented yet
           console.log("Selected Line: ", selectedLines);
         }
+      }
+
+      function deselectBoxes() {
+        // remove selection indicator first?
+        selectedBoxes = [];
+        console.log("Deselected boxes");
       }
 
       function getContainerFromBox(boxID) { //see if this works. It does!
@@ -760,8 +765,12 @@
           styleText("strikethrough");
         } else if (e.ctrlKey && e.key === 'a') {
           e.preventDefault();
-          selectedBoxes = document.querySelectorAll(".box");
-          console.log(selectedBoxes);
+          selectedBoxes = [...document.querySelectorAll(".box-input")];
+          console.log("selected all");
+        } else if (e.ctrlKey && e.key === 'd') {
+          e.preventDefault();
+          deselectBoxes();
+          console.log("deselected all");
         } else if (e.altKey && e.key === 'Backspace') {
           e.preventDefault();
           selectedBoxes.forEach((box) => {
