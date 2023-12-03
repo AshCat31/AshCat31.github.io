@@ -2,7 +2,7 @@
   <!-- Pop-Up Box! -->
   <!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough (currently underline+strikethrough doesn't work). Tentative box resizing & styling -->
   <!-- Bugged: Changing box border prevents resizing. -->>
-  <!-- Todo: Clean code. Make canvas bigger and scrollable. Print. Save.-->
+  <!-- Todo: Ctrl+A to select all. Drag all selected boxes. Highlight selected boxes. Select lines. Clean code. Make canvas bigger and scrollable. Print. Save.-->
 
   <head>
     <title>Pop-Up Box</title>
@@ -105,6 +105,11 @@
         pointer-events: none;
       }
 
+      .no-max-width {
+        max-width: none !important;
+        width: 300px !important;
+      }
+
       .dropdown {
         position: relative;
         display: inline-block;
@@ -178,8 +183,8 @@
   <body>
     <div class="top-bar no-print">
       <div class="dropdown" data-dropdown="colorDropdown">
-        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Background Color">
-          <img src="images/background-fill.svg" alt="Change Background Color">
+        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Background Color">
+          <img src="images/background-fill.svg" alt="Background Color">
         </button>
         <div class="dropdown-content">
           <a href="#" onclick="changeColor('red', [document.getElementById('canvas')], 'background')" data-style="red">Red</a>
@@ -199,8 +204,8 @@
       </div>
 
       <div class="dropdown" data-dropdown="colorDropdown">
-        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Box Color">
-          <img src="images/box-fill.svg" alt="Change Box Color">
+        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Box Color">
+          <img src="images/box-fill.svg" alt="Box Color">
         </button>
         <div class="dropdown-content">
           <a href="#" onclick="changeColor('red', selectedBoxes, 'background')" data-style="red">Red</a>
@@ -220,8 +225,8 @@
       </div>
 
       <div class="dropdown" data-dropdown="colorDropdown">
-        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Border Color">
-          <img src="images/border-color.svg" alt="Change Border Color">
+        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Border Color">
+          <img src="images/border-color.svg" alt="Border Color">
         </button>
         <div class="dropdown-content">
           <a href="#" onclick="changeColor('red', selectedBoxes, 'border')" data-style="red">Red</a>
@@ -241,8 +246,8 @@
       </div>
 
       <div class="dropdown" data-dropdown="widthDropdown">
-        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Border Width">
-          <img src="images/box-outline.svg" alt="Change Border Width">
+        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Border Width">
+          <img src="images/box-outline.svg" alt="Border Width">
         </button>
         <div class="dropdown-content">
           <a href="#" onclick="changeWidth('1px', 'border')" data-style="1px">1 px</a>
@@ -257,8 +262,8 @@
       </div>
 
       <div class="dropdown" data-dropdown="styleDropdown">
-        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Border Style">
-          <img src="images/border-style.svg" alt="Change Border Style">
+        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Border Style">
+          <img src="images/border-style.svg" alt="Border Style">
         </button>
         <div class="dropdown-content">
           <a href="#" onclick="changeStyle('solid', 'border')" data-style="solid">Solid</a>
@@ -269,8 +274,8 @@
       </div>
 
       <div class="dropdown" data-dropdown="colorDropdown">
-        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Line Color">
-          <img src="images/line-color.svg" alt="Change Line Color">
+        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Line Color">
+          <img src="images/line-color.svg" alt="Line Color">
         </button>
         <div class="dropdown-content">
           <a href="#" onclick="changeColor('red', selectedLines, 'color')" data-style="red">Red</a>
@@ -290,8 +295,8 @@
       </div>
 
       <div class="dropdown" data-dropdown="widthDropdown">
-        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Line Width">
-          <img src="images/line-thickness.svg" alt="Change Line Width">
+        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Line Width">
+          <img src="images/line-thickness.svg" alt="Line Width">
         </button>
         <div class="dropdown-content">
           <a href="#" onclick="changeWidth('1px', 'line')" data-style="1px">1 px</a>
@@ -306,8 +311,8 @@
       </div>
 
       <div class="dropdown" data-dropdown="styleDropdown">
-        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Line Style">
-          <img src="images/line-type.svg" alt="Change Line Style">
+        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Line Style">
+          <img src="images/line-type.svg" alt="Line Style">
         </button>
         <div class="dropdown-content">
           <a href="#" onclick="changeStyle('0', 'line')" data-style="solid">Solid</a>
@@ -317,8 +322,8 @@
       </div>
 
       <div class="dropdown" data-dropdown="colorDropdown">
-        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Text Color">
-          <img src="images/text-color.svg" alt="Change Text Color">
+        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Text Color">
+          <img src="images/text-color.svg" alt="Text Color">
         </button>
         <div class="dropdown-content">
           <a href="#" onclick="changeColor('red', selectedBoxes, 'color')" data-style="red">Red</a>
@@ -338,8 +343,8 @@
       </div>
 
       <div class="dropdown" data-dropdown="widthDropdown">
-        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Change Text Size">
-          <img src="images/text-size.svg" alt="Change Text Size">
+        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Text Size">
+          <img src="images/text-size.svg" alt="Text Size">
         </button>
         <div class="dropdown-content">
           <a href="#" onclick="changeWidth('8px', 'text')" data-style="8px">8 px</a>
@@ -371,6 +376,24 @@
       <button class="icon-button" onclick="styleText('strikethrough')" title="Strikethrough">
         <img src="images/strikethrough.svg" alt="Strikethrough">
       </button>
+
+      <div class="dropdown">
+        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Usage">
+          <img src="images/info.svg" alt="Usage">
+        </button>
+        <div class="dropdown-content no-max-width">
+          <a href="#">Create Box by Clicking the Canvas</a>
+          <a href="#">Move Box by Clicking and Dragging</a>
+          <a href="#">Connect Boxes by Ctrl-Clicking Them</a>
+          <a href="#">Delete Box by Alt-Clicking</a>
+          <a href="#">Resize Box by Clicking and Dragging Bottom Right Corner</a>
+          <a href="#">Select Box by Clicking, Shift+Click to Multiselect</a>
+          <a href="#">Delete All Selected Boxes with Alt+Backspace</a>
+          <a href="#">Change Canvas, Box, and Line Styles with Top Bar Buttons</a>
+          <a href="#">Ctrl+B for Bold, Ctrl+I for Italics, Ctrl+U for Underline, and Ctrl+5 for Strikethrough</a>
+
+        </div>
+      </div>
 
     </div>
 
@@ -668,8 +691,11 @@
       }
 
       function toggleDropdown(e) {
+        isShown = e.parentNode.getElementsByClassName("dropdown-content")[0].classList.contains("show");
         closeDropdowns();
-        e.parentNode.getElementsByClassName("dropdown-content")[0].classList.toggle("show");
+        if (!isShown) {
+          e.parentNode.getElementsByClassName("dropdown-content")[0].classList.toggle("show");
+        }
       }
 
       function closeDropdowns() {
@@ -717,10 +743,6 @@
         changeWidth(width, target);
       }
 
-      setUpCustomInputs();
-
-      window.addEventListener("keydown", onKeypress)
-
       function onKeypress(e) {
         if (e.ctrlKey && e.key === 'u') {
           e.preventDefault();
@@ -749,6 +771,9 @@
             if so, add line to selectedLines
             renderSelRectangle?
             */
+
+      setUpCustomInputs();
+      window.addEventListener("keydown", onKeypress)
 
     </script>
   </body>
