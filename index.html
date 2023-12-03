@@ -1,7 +1,7 @@
 <html>
   <!-- Pop-Up Box! -->
   <!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough (currently underline+strikethrough doesn't work). Tentative box resizing & color changing. -->
-  <!-- Bugged: Nothing atm. -->>
+  <!-- Bugged: Changing box border prevents resizing. -->>
   <!-- Todo: Clean code. Make canvas bigger and scrollable. Print. Save.-->
 
   <head>
@@ -497,7 +497,7 @@
           const newY = event.clientY - initialY - box.style.borderWidth - border;
           box.style.left = newX + "px";
           box.style.top = newY + "px";
-          updateLines();
+          updateLines(); //update lines while dragging
         }
 
         function stopDrag() { //local func
@@ -703,6 +703,7 @@
         } else if (e.altKey && e.key === 'Backspace') {
           e.preventDefault();
           selectedBoxes.forEach((box) => {
+            deleteLines(getContainerFromBox(box.id).id);
             deleteBox(getContainerFromBox(box.id).id);
           });
         }
