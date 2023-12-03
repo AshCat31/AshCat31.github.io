@@ -1,8 +1,8 @@
 <html>
   <!-- Pop-Up Box! -->
-  <!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough (currently underline+strikethrough doesn't work). Tentative box resizing & styling -->
+  <!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough (currently underline+strikethrough can't work). Tentative box resizing & styling -->
   <!-- Bugged: Changing box border prevents resizing. -->
-  <!-- Todo: Ctrl+A to select all. Drag all selected boxes. Highlight selected boxes. Select lines (if not possible, make line color button apply to new lines instead ). Clean code. Make canvas bigger and scrollable. Print. Save.-->
+  <!-- Todo: Drag all selected boxes. Highlight selected boxes. Select lines (if not possible, make line color button apply to new lines instead ). Clean code. Make canvas bigger and scrollable. Print. Save.-->
 
   <head>
     <title>Pop-Up Box</title>
@@ -388,6 +388,8 @@
           <a href="#">Delete Box by Alt-Clicking</a>
           <a href="#">Resize Box by Clicking and Dragging Bottom Right Corner</a>
           <a href="#">Select Box by Clicking, Shift+Click to Multiselect</a>
+          <a href="#">Select All Boxes with Ctrl+A</a>
+          <a href="#">Deselect All Boxes with Ctrl+D</a>
           <a href="#">Delete All Selected Boxes with Alt+Backspace</a>
           <a href="#">Change Canvas, Box, and Line Styles with Top Bar Buttons</a>
           <a href="#">Ctrl+B for Bold, Ctrl+I for Italics, Ctrl+U for Underline, and Ctrl+5 for Strikethrough</a>
@@ -470,7 +472,6 @@
         // Add classes to both box and boxContainer
         box.classList.add("box");
         box.classList.add("box-input");
-
         boxContainer.classList.add("box");
         document.getElementById("canvas").appendChild(boxContainer);
         document.getElementById("containerBox" + count).appendChild(box);
@@ -715,20 +716,6 @@
         }
       }
 
-      // Close the dropdown if the user clicks outside of it
-      window.onclick = function(event) {
-        if (!event.target.matches('.dropbtn')) {
-          var dropdowns = document.getElementsByClassName("dropdown-content");
-          var i;
-          for (i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-              openDropdown.classList.remove('show');
-            }
-          }
-        }
-      }
-
       function setCustomColor(e) { //see if this works. Appears to!
         const color = e.target.value;
         let target = e.target.dataset.target;
@@ -815,16 +802,11 @@
         canvas.addEventListener("mousemove", renderSelection);
         canvas.addEventListener("mouseup", endSelection);
 
-        //after mouseup document.removeEventListener("mousemove", moveBox);
-
       }
 
-      canvas.addEventListener('mousedown', startSelection);
 
       /*   function startDrag(event) {
-
-
-           function moveBox(event) { //local fun
+            function moveBox(event) { //local fun
              const newX = event.clientX - initialX - box.style.borderWidth - border;
              const newY = event.clientY - initialY - box.style.borderWidth - border;
              box.style.left = newX + "px";
@@ -841,8 +823,19 @@
            document.addEventListener("mousemove", moveBox);
            document.addEventListener("mouseup", stopDrag);
          } */
-
-
+      // Close the dropdown if the user clicks outside of it
+      window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+          let dropdowns = document.getElementsByClassName("dropdown-content");
+          for (i = 0; i < dropdowns.length; i++) {
+            let openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+              openDropdown.classList.remove('show');
+            }
+          }
+        }
+      }
+      canvas.addEventListener('mousedown', startSelection);
       setUpCustomInputs();
       window.addEventListener("keydown", onKeypress);
 
