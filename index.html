@@ -1,8 +1,8 @@
 <html>
   <!-- Pop-Up Box! -->
   <!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough (currently underline+strikethrough doesn't work). Tentative box resizing & styling -->
-  <!-- Bugged: Changing box border prevents resizing. -->>
-  <!-- Todo: Ctrl+A to select all. Drag all selected boxes. Highlight selected boxes. Select lines. Clean code. Make canvas bigger and scrollable. Print. Save.-->
+  <!-- Bugged: Changing box border prevents resizing. -->
+  <!-- Todo: Ctrl+A to select all. Drag all selected boxes. Highlight selected boxes. Select lines (if not possible, make line color button apply to new lines instead ). Clean code. Make canvas bigger and scrollable. Print. Save.-->
 
   <head>
     <title>Pop-Up Box</title>
@@ -22,7 +22,7 @@
         background-color: white;
         border: 2px solid black;
         border-radius: 4px;
-        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3s);
         position: absolute;
         width: 200px;
         height: 50px;
@@ -187,16 +187,16 @@
           <img src="images/background-fill.svg" alt="Background Color">
         </button>
         <div class="dropdown-content">
-          <a href="#" onclick="changeColor('red', [document.getElementById('canvas')], 'background')" data-style="red">Red</a>
-          <a href="#" onclick="changeColor('orange', [document.getElementById('canvas')], 'background')" data-style="orange">Orange</a>
-          <a href="#" onclick="changeColor('yellow', [document.getElementById('canvas')], 'background')" data-style="yellow">Yellow</a>
-          <a href="#" onclick="changeColor('green', [document.getElementById('canvas')], 'background')" data-style="green">Green</a>
-          <a href="#" onclick="changeColor('blue', [document.getElementById('canvas')], 'background')" data-style="blue">Blue</a>
-          <a href="#" onclick="changeColor('purple', [document.getElementById('canvas')], 'background')" data-style="purple">Purple</a>
-          <a href="#" onclick="changeColor('black', [document.getElementById('canvas')], 'background')" data-style="black">Black</a>
-          <a href="#" onclick="changeColor('white', [document.getElementById('canvas')], 'background')" data-style="white">White</a>
-          <a href="#" onclick="changeColor('gray', [document.getElementById('canvas')], 'background')" data-style="gray">Gray</a>
-          <a href="#" onclick="changeColor('brown', [document.getElementById('canvas')], 'background')" data-style="brown">Brown</a>
+          <a href="#" onclick="changeColor('red', [canvas], 'background')" data-style="red">Red</a>
+          <a href="#" onclick="changeColor('orange', [canvas], 'background')" data-style="orange">Orange</a>
+          <a href="#" onclick="changeColor('yellow', [canvas], 'background')" data-style="yellow">Yellow</a>
+          <a href="#" onclick="changeColor('green', [canvas], 'background')" data-style="green">Green</a>
+          <a href="#" onclick="changeColor('blue', [canvas], 'background')" data-style="blue">Blue</a>
+          <a href="#" onclick="changeColor('purple', [canvas], 'background')" data-style="purple">Purple</a>
+          <a href="#" onclick="changeColor('black', [canvas], 'background')" data-style="black">Black</a>
+          <a href="#" onclick="changeColor('white', [canvas], 'background')" data-style="white">White</a>
+          <a href="#" onclick="changeColor('gray', [canvas], 'background')" data-style="gray">Gray</a>
+          <a href="#" onclick="changeColor('brown', [canvas], 'background')" data-style="brown">Brown</a>
           <a href="#" data-style="custom">Custom
             <input class="custom-color" type="color" value="#000000" data-target="canvas" data-attribute="background" />
           </a>
@@ -410,9 +410,10 @@
       let lineStartBox = null;
       let lineStartPoint = null;
       let lines = []; // Array to store line data
+      const canvas = document.getElementById('canvas');
 
       function setUpCustomInputs() {
-        const colorInputs = document.querySelectorAll(".custom-color")
+        const colorInputs = document.querySelectorAll(".custom-color");
         colorInputs.forEach((input) => {
           input.addEventListener("input", setCustomColor, false);
           input.addEventListener("change", setCustomColor, false);
@@ -423,7 +424,7 @@
           });
           input.select();
         });
-        const widthInputs = document.querySelectorAll(".custom-width")
+        const widthInputs = document.querySelectorAll(".custom-width");
         widthInputs.forEach((input) => {
           input.addEventListener("input", setCustomWidth, false);
           input.addEventListener('keydown', function onEvent(event) {
@@ -440,6 +441,7 @@
         if (target.classList.contains("box")) {
           return;
         } else if (event.altKey) {
+          console.log("desel");
           selectedBoxes = [];
           return;
         }
@@ -531,8 +533,8 @@
 
       function startDrag(event) {
         const target = event.target;
-        const box = getContainerFromBox(target.id)
-        const border = +getComputedStyle(box).borderTopWidth.slice(0, -2)
+        const box = getContainerFromBox(target.id);
+        const border = +getComputedStyle(box).borderTopWidth.slice(0, -2);
         const initialX = event.clientX - target.getBoundingClientRect().left;
         const initialY = event.clientY - target.getBoundingClientRect().top;
         box.style.zIndex = "999"; // Bring the dragged box to the front
@@ -730,7 +732,7 @@
         } else if (target == "lines") {
           target = selectedLines;
         } else if (target == "canvas") {
-          target = [document.getElementById('canvas')];
+          target = [canvas];
         }
         const attribute = e.target.dataset.attribute;
         changeColor(color, target, attribute);
@@ -756,6 +758,10 @@
         } else if ((e.ctrlKey && e.key === '5') || (e.altKey && e.shiftKey && e.key === '5')) {
           e.preventDefault();
           styleText("strikethrough");
+        } else if (e.ctrlKey && e.key === 'a') {
+          e.preventDefault();
+          selectedBoxes = document.querySelectorAll(".box");
+          console.log(selectedBoxes);
         } else if (e.altKey && e.key === 'Backspace') {
           e.preventDefault();
           selectedBoxes.forEach((box) => {
@@ -765,15 +771,71 @@
         }
       }
 
-      /* function selectLines (& mb boxes?) upon mousedown? on canvas
-      			save mouse x/y on mousedown in vars
-            check every start/end x/y of lines to see if they are between initial & current mouse x/y
-            if so, add line to selectedLines
-            renderSelRectangle?
-            */
+      function startSelection(event) { // v v tentative seems working. sel boxes? put addBox back where it was?
+        //render rectangle on mousemove but dont actually select until end when x/y change is known
+        if (event.altKey) {
+          console.log("desel");
+          return;
+        }
+        const initialX = event.pageX;
+        const initialY = event.pageY;
+        const threshhold = 10; //move into endSel?
+        let newX = 0;
+        let newY = 0;
+
+        function renderSelection() { //have to start top left? or can get it to work any direction
+          return; //TBA w/ newX/Y
+        }
+
+        function endSelection(e) { //is only happening at start on next
+          newX = e.pageX;
+          newY = e.pageY; //these two necessary? if set in renderSel shouldnt
+          if ((Math.abs(initialX - newX) < threshhold) && (Math.abs(initialY - newY) < threshhold)) {
+            return;
+          } else {
+            return;
+            //check for all lines whether start and end points are both 
+            //(<end & >start) || (>end & <start) [endpt is lower/more right than start & vice versa]
+            //if so add it so selectedLines
+          }
+
+          canvas.removeEventListener("mousemove", renderSelection);
+          canvas.removeEventListener("mouseup", endSelection);
+        }
+
+        canvas.addEventListener("mousemove", renderSelection);
+        canvas.addEventListener("mouseup", endSelection);
+
+        //after mouseup document.removeEventListener("mousemove", moveBox);
+
+      }
+
+      canvas.addEventListener('mousedown', startSelection);
+
+      /*   function startDrag(event) {
+
+
+           function moveBox(event) { //local fun
+             const newX = event.clientX - initialX - box.style.borderWidth - border;
+             const newY = event.clientY - initialY - box.style.borderWidth - border;
+             box.style.left = newX + "px";
+             box.style.top = newY + "px";
+             updateLines(); //update lines while dragging
+           }
+
+           function stopDrag() { //local func
+             document.removeEventListener("mousemove", moveBox);
+             document.removeEventListener("mouseup", stopDrag);
+             box.style.zIndex = ""; // Restore the original z-index
+             updateLines(); // Update the lines after dragging stops
+           }
+           document.addEventListener("mousemove", moveBox);
+           document.addEventListener("mouseup", stopDrag);
+         } */
+
 
       setUpCustomInputs();
-      window.addEventListener("keydown", onKeypress)
+      window.addEventListener("keydown", onKeypress);
 
     </script>
   </body>
