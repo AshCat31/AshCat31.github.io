@@ -45,6 +45,13 @@
         outline: 3px solid #7db1e8;
         z-index: 10;
       }
+      
+      .line.selected {
+        filter: drop-shadow(1px 1px 1px #7db1e8)
+        drop-shadow(-1px 1px 1px #7db1e8)
+         drop-shadow(1px -1px 1px #7db1e8)
+        drop-shadow(-1px -1px 1px #7db1e8);
+}
 
       .box.start {
         outline: 3px solid #d2796a;
@@ -427,7 +434,7 @@
 
     <div class="container">
       <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
-      <div id="canvas" onclick="addBox(event)" style="height: 100vh;"></div>
+      <div id="canvas" style="height: 100vh;"></div> <!--onclick="addBox(event)" --> 
       <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
     </div>
 
@@ -541,10 +548,10 @@
         }
         if (!lineStartBox) { // handle line creation
           lineStartBox = box;
-          lineStartPoint = getCenter(box);
+          lineStartPoint = getCenter(box); //necessary?
           box.classList.add("start");
         } else {
-          const endPoint = getCenter(box);
+          const endPoint = getCenter(box); //necessary?
           const startBoxId = lineStartBox.id; // Get the ID of the start box
           const endBoxId = box.id; // Get the ID of the end box
           const lineId = "line" + lines.length; // Unique ID for the line
@@ -571,9 +578,15 @@
             box.classList.remove("selected");
           }
         });
+        selectedLines.forEach((line) => {
+          if (line) {
+            line.classList.remove("selected");
+          }
+        });
         // remove selection indicator first?
         selectedBoxes = [];
-        console.log("Deselected boxes");
+        selectedLines = [];
+console.log("Deselected boxes/lines");
       }
 
       function getContainerFromBox(boxID) { //see if this works. It does!
@@ -836,36 +849,56 @@
         }
       }
 
-      function startSelection(event) { // v v tentative seems working. sel boxes? put addBox back where it was?
+      function startSelection(event) { // sel boxes? put addBox back where it was?
         //render rectangle on mousemove but dont actually select until end when x/y change is known
         if (event.altKey) {
           console.log("desel");
           return;
+        } 
+        if (event.target.classList.contains("box")) {
+        return;
         }
-        const initialX = event.pageX;
-        const initialY = event.pageY;
+        const startX = event.pageX;
+        const startY = event.pageY;
         const threshhold = 10; //move into endSel?
-        let newX = 0;
-        let newY = 0;
+        let endX = 0;
+        let endY = 0;
 
-        function renderSelection() { //have to start top left? or can get it to work any direction
+        function renderSelection() { //have to start top left? or can get it to work any direction. start off like not
           return; //TBA w/ newX/Y
         }
 
         function endSelection(e) { //is only happening at start on next
-          newX = e.pageX;
-          newY = e.pageY; //these two necessary? if set in renderSel shouldnt
-          if ((Math.abs(initialX - newX) < threshhold) && (Math.abs(initialY - newY) < threshhold)) {
+          canvas.removeEventListener("mousemove", renderSelection);
+          canvas.removeEventListener("mouseup", endSelection);
+          endX = e.pageX;
+          endY = e.pageY; //these two necessary? if set in renderSel shouldnt
+          if ((Math.abs(startX - endX) < threshhold) && (Math.abs(startY - endY) < threshhold)) {
+          addBox(event); //moved back in here to prevent addingbox on click+drag
             return; // if just a click
           } else {
+          deselectBoxes();
+            lines.forEach((line) => {
+            console.log(line.lineID);
+              const lineStart = getCenter(document.getElementById(line.startBox));
+              const lineEnd = getCenter(document.getElementById(line.endBox));
+              const xStartBetween = ((lineStart.x > startX && lineStart.x < endX) || (lineStart.x < startX && lineStart.x > endX));
+              const xEndBetween = ((lineEnd.x > startX && lineEnd.x < endX) || (lineEnd.x < startX && lineEnd.x > endX));
+              const yStartBetween = ((lineStart.y > startY && lineStart.y < endY) || (lineStart.y < startY && lineStart.y > endY));
+              const yEndBetween = ((lineEnd.y > startY && lineEnd.y < endY) || (lineEnd.y < startY && lineEnd.y > endY));
+              console.log(xStartBetween + '' + xEndBetween + '' + yStartBetween + '' + yEndBetween);
+              if (xStartBetween && xEndBetween && yStartBetween && yEndBetween) {
+                selectedLines.push(document.getElementById(line.lineID));
+                document.getElementById(line.lineID).classList.add("selected");
+                console.log("added: " + line.lineID);
+              }
+            });
             return;
             //check for all lines whether start and end points are both 
             //(<end & >start) || (>end & <start) [endpt is lower/more right than start & vice versa]
             //if so add it so selectedLines
           }
 
-          canvas.removeEventListener("mousemove", renderSelection);
-          canvas.removeEventListener("mouseup", endSelection);
         }
 
         canvas.addEventListener("mousemove", renderSelection);
@@ -911,4 +944,4 @@
     </script>
   </body>
 
-</html>s
+</html>
