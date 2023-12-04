@@ -42,7 +42,7 @@
       }
 
       .box.selected {
-        outline: 3px solid lightblue;
+        outline: 3px solid #7db1e8;
         z-index: 10;
       }
 
@@ -563,18 +563,33 @@
       }
 
       function startDrag(event) {
+        let allInitialX = [];
+        let allInitialY = [];
         const target = event.target;
         const box = getContainerFromBox(target.id);
         const border = +getComputedStyle(box).borderTopWidth.slice(0, -2);
         const initialX = event.clientX - target.getBoundingClientRect().left;
         const initialY = event.clientY - target.getBoundingClientRect().top;
         box.style.zIndex = "999"; // Bring the dragged box to the front
+        selectedBoxes.forEach((b) => {
+          bC = getContainerFromBox(b.id);
+          allInitialX.push(event.clientX - bC.getBoundingClientRect().left);
+          allInitialY.push(event.clientY - bC.getBoundingClientRect().top);
+        });
 
-        function moveBox(event) { //local fun
+        function moveBox(event) { //local func
           const newX = event.clientX - initialX - box.style.borderWidth - border;
           const newY = event.clientY - initialY - box.style.borderWidth - border;
           box.style.left = newX + "px";
           box.style.top = newY + "px";
+          for (let i = 0; i < selectedBoxes.length; i++) {
+            let thisBox = getContainerFromBox(selectedBoxes[i].id);
+            newBoxX = event.clientX - allInitialX[i] - thisBox.style.borderWidth - border;
+            newBoxY = event.clientY - allInitialY[i] - thisBox.style.borderWidth - border;
+            thisBox.style.left = newBoxX + "px";
+            thisBox.style.top = newBoxY + "px";
+
+          }
           updateLines(); //update lines while dragging
         }
 
