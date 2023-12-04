@@ -436,7 +436,7 @@
       let selectedLines = [];
       let lineStartBox = null;
       let lineStartPoint = null;
-      let lines = []; // Array to store line data
+      let lines = []; // unlike selBoxes, store info not element cuz must create new ele w/ that info
       const canvas = document.getElementById('canvas');
 
       function setUpCustomInputs() {
@@ -457,7 +457,7 @@
           input.addEventListener('keydown', function onEvent(event) {
             if (event.key === "Enter") {
               closeDropdowns();
-              input.value = ''
+              input.value = '';
             }
           });
         });
@@ -546,7 +546,8 @@
           const endBoxId = box.id; // Get the ID of the end box
           const lineId = "line" + lines.length; // Unique ID for the line
           lineStartBox.classList.remove("start");
-          lines.push(lineId, startBoxId, endBoxId); // Store line data
+          const newLineData = {lineID: lineId, startBox: startBoxId, endBox: endBoxId};
+          lines.push(newLineData); // Store line data //in object
           createLine(lineId, startBoxId, endBoxId);
           lineStartBox = null;
           lineStartPoint = null;
@@ -625,13 +626,13 @@
 
       function deleteLines(boxId) {
         const svg = document.getElementById("lineContainer"); //necessary?
-        const lines = svg.getElementsByClassName("line");
-        for (let i = lines.length - 1; i >= 0; i--) { // Iterate over the lines and remove the ones connected to the box
-          const line = lines[i];
+        const allLines = svg.getElementsByClassName("line"); //does const not break with this shared name? changed lines-> allLines
+        for (let i = allLines.length - 1; i >= 0; i--) { // Iterate over the lines and remove the ones connected to the box
+          const line = allLines[i];
           const startBoxId = line.getAttribute("data-start-box");
           const endBoxId = line.getAttribute("data-end-box");
           if (startBoxId === boxId || endBoxId === boxId) {
-            line.remove(); // remove from array too?
+            line.remove(); // remove from array too? It doesn't. prob shouldnt unless all deleted
           }
         }
       }
@@ -661,10 +662,10 @@
       function updateLines() { //after moving boxes, rerender lines one by one
         const svg = document.getElementById("lineContainer");
         svg.innerHTML = ""; // Clear all existing lines
-        for (let i = 0; i < lines.length; i += 3) { //iterate by 3s since array has 3 elements per line
-          const lineId = lines[i];
-          const startBoxId = lines[i + 1];
-          const endBoxId = lines[i + 2];
+        for (let i = 0; i < lines.length; i ++) { //iterate by 3s since array has 3 elements per line// not as obj
+          const lineId = lines[i].lineID; //lines[i][0]
+          const startBoxId = lines[i].startBox;
+          const endBoxId = lines[i].endBox;
           createLine(lineId, startBoxId, endBoxId);
         }
       }
@@ -820,6 +821,7 @@
             deleteBox(getContainerFromBox(box.id).id);
           });
           count = 0; //reset count only if delete all to prevent too high nums?
+          lines = []; //reset all lines too. see if works?
         }
       }
 
@@ -843,7 +845,7 @@
           newX = e.pageX;
           newY = e.pageY; //these two necessary? if set in renderSel shouldnt
           if ((Math.abs(initialX - newX) < threshhold) && (Math.abs(initialY - newY) < threshhold)) {
-            return;
+            return; // if just a click
           } else {
             return;
             //check for all lines whether start and end points are both 
@@ -859,7 +861,6 @@
         canvas.addEventListener("mouseup", endSelection);
 
       }
-
 
       /*   function startDrag(event) {
             function moveBox(event) { //local fun
@@ -879,6 +880,7 @@
            document.addEventListener("mousemove", moveBox);
            document.addEventListener("mouseup", stopDrag);
          } */
+         
       // Close the dropdown if the user clicks outside of it
       window.onclick = function(event) {
         if (!event.target.matches('.dropbtn')) {
