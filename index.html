@@ -2,7 +2,7 @@
   <!-- Pop-Up Box! -->
   <!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough (currently underline+strikethrough can't work). Tentative box resizing & styling -->
   <!-- Bugged: Changing box border prevents resizing. -->
-  <!-- Todo: Select lines (if not possible, make line color button apply to new lines instead ). Clarify box vs container. Clean code. Make canvas bigger and scrollable. Print. Save.-->
+  <!-- Todo: Drag all selected boxes. Highlight selected boxes. Select lines (if not possible, make line color button apply to new lines instead ). Clarify box vs container. Clean code. Make canvas bigger and scrollable. Print. Save.-->
 
   <head>
     <title>Pop-Up Box</title>
@@ -44,6 +44,10 @@
       .box.selected {
         outline: 3px solid #7db1e8;
         z-index: 10;
+      }
+      
+      .box.start {
+        outline: 3px solid #d2796a;
       }
 
       .box:focus {
@@ -519,22 +523,25 @@
           box.classList.add("selected");
           selectedBoxes.push(event.target);
           //selectedLine = []; // Reset selected line when a box is selected
-          console.log("Selected Boxes:");
+          let selectedBoxIDs = [];
           selectedBoxes.forEach((b) => {
             if (b) {
-              console.log("---" + b.id);
+              selectedBoxIDs.push(b.id);
             }
+          console.log("Selected Boxes:" + selectedBoxIDs);
           });
           return;
         }
-        if (!lineStartBox) {
+        if (!lineStartBox) { // handle line creation
           lineStartBox = box;
           lineStartPoint = getCenter(box);
+          box.classList.add("start");
         } else {
           const endPoint = getCenter(box);
           const startBoxId = lineStartBox.id; // Get the ID of the start box
           const endBoxId = box.id; // Get the ID of the end box
           const lineId = "line" + lines.length; // Unique ID for the line
+          lineStartBox.classList.remove("start");
           lines.push(lineId, startBoxId, endBoxId); // Store line data
           createLine(lineId, startBoxId, endBoxId);
           lineStartBox = null;
@@ -563,7 +570,9 @@
       }
 
       function startDrag(event) {
+      if (!event.shiftKey && !event.ctrlKey && !event.altKey) { //was breaking connecting w/o
         selectBox(event); //means must hold shift to drag multiple, but wont automatically drag all boxes too
+        }
         let allInitialX = [];
         let allInitialY = [];
         const target = event.target;
@@ -572,9 +581,9 @@
         const initialY = event.clientY - target.getBoundingClientRect().top;
         box.style.zIndex = "999"; // Bring the dragged box to the front
         selectedBoxes.forEach((b) => {
-          bC = getContainerFromBox(b.id);
-          allInitialX.push(event.clientX - bC.getBoundingClientRect().left);
-          allInitialY.push(event.clientY - bC.getBoundingClientRect().top);
+          let bContainer = getContainerFromBox(b.id);
+          allInitialX.push(event.clientX - bContainer.getBoundingClientRect().left);
+          allInitialY.push(event.clientY - bContainer.getBoundingClientRect().top);
         });
 
         function moveBox(event) { //local func
