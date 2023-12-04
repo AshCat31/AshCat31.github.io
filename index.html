@@ -45,7 +45,7 @@
         outline: 3px solid #7db1e8;
         z-index: 10;
       }
-      
+
       .box.start {
         outline: 3px solid #d2796a;
       }
@@ -411,6 +411,7 @@
           <a href="#">Select Box by Clicking, Shift+Click to Multiselect</a>
           <a href="#">Select All Boxes with Ctrl+A</a>
           <a href="#">Deselect All Boxes with Ctrl+D</a>
+          <a href="#">Move All Selected Boxes by Shift-Clicking and Dragging</a>
           <a href="#">Delete All Selected Boxes with Alt+Backspace</a>
           <a href="#">Change Canvas, Box, and Line Styles with Top Bar Buttons</a>
           <a href="#">Ctrl+B for Bold, Ctrl+I for Italics, Ctrl+U for Underline, and Ctrl+5 for Strikethrough</a>
@@ -528,7 +529,7 @@
             if (b) {
               selectedBoxIDs.push(b.id);
             }
-          console.log("Selected Boxes:" + selectedBoxIDs);
+            console.log("Selected Boxes:" + selectedBoxIDs);
           });
           return;
         }
@@ -570,8 +571,8 @@
       }
 
       function startDrag(event) {
-      if (!event.shiftKey && !event.ctrlKey && !event.altKey) { //was breaking connecting w/o
-        selectBox(event); //means must hold shift to drag multiple, but wont automatically drag all boxes too
+        if (!event.shiftKey && !event.ctrlKey && !event.altKey) { //was breaking connecting w/o
+          selectBox(event); //means must hold shift to drag multiple, but wont automatically drag all boxes too
         }
         let allInitialX = [];
         let allInitialY = [];
@@ -815,6 +816,7 @@
             deleteLines(getContainerFromBox(box.id).id);
             deleteBox(getContainerFromBox(box.id).id);
           });
+          count = 0; //reset count only if delete all to prevent too high nums?
         }
       }
 
