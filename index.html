@@ -2,7 +2,7 @@
   <!-- Pop-Up Box! -->
   <!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough (currently underline+strikethrough can't work). Tentative box resizing & styling -->
   <!-- Bugged: Changing box border prevents resizing. -->
-  <!-- Todo: Drag all selected boxes. Highlight selected boxes. Select lines (if not possible, make line color button apply to new lines instead ). Clean code. Make canvas bigger and scrollable. Print. Save.-->
+  <!-- Todo: Drag all selected boxes. Highlight selected boxes. Select lines (if not possible, make line color button apply to new lines instead ). Clarify box vs container. Clean code. Make canvas bigger and scrollable. Print. Save.-->
 
   <head>
     <title>Pop-Up Box</title>
@@ -23,6 +23,7 @@
         border: 2px solid black;
         border-radius: 4px;
         box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.3);
+        outline: none;
         position: absolute;
         width: 200px;
         height: 50px;
@@ -30,14 +31,19 @@
         font-weight: normal;
         font-style: normal;
         text-decoration: none;
-        resize: both;
         /* make resizable */
+        resize: both;
         overflow: hidden;
         display: inline-block;
         /* no extra spaces */
         margin: 0;
         white-space: nowrap;
         min-width: 3em;
+      }
+
+      .box.selected {
+        outline: 3px solid lightblue;
+        z-index: 10;
       }
 
       .box:focus {
@@ -154,9 +160,10 @@
       .dropdown-content a:hover {
         background-color: #E0E0E0;
         outline: 1px solid black;
-}
-      
-      a > input { /* All input children of a (dropdowns) */
+      }
+
+      a>input {
+        /* All input children of a (dropdowns) */
         size: 20px;
         width: 100%;
       }
@@ -482,6 +489,7 @@
         // Add classes to both box and boxContainer
         box.classList.add("box");
         box.classList.add("box-input");
+        boxContainer.classList.add("selected");
         boxContainer.classList.add("box");
         document.getElementById("canvas").appendChild(boxContainer);
         document.getElementById("containerBox" + count).appendChild(box);
@@ -508,8 +516,9 @@
           return;
         }
         if (!event.ctrlKey) {
+          box.classList.add("selected");
           selectedBoxes.push(event.target);
-          selectedLine = []; // Reset selected line when a box is selected
+          //selectedLine = []; // Reset selected line when a box is selected
           console.log("Selected Boxes:");
           selectedBoxes.forEach((b) => {
             if (b) {
@@ -531,12 +540,18 @@
           lineStartBox = null;
           lineStartPoint = null;
         }
-        if (selectedLines) { //not inmplemented yet
+        /*if (selectedLines) { //not inmplemented yet
           console.log("Selected Line: ", selectedLines);
-        }
+        }*/
       }
 
       function deselectBoxes() {
+        selectedBoxes.forEach((b) => {
+          let box = getContainerFromBox(b.id);
+          if (box) {
+            box.classList.remove("selected");
+          }
+        });
         // remove selection indicator first?
         selectedBoxes = [];
         console.log("Deselected boxes");
@@ -582,14 +597,14 @@
       }
 
       function deleteLines(boxId) {
-        const svg = document.getElementById("lineContainer");
+        const svg = document.getElementById("lineContainer"); //necessary?
         const lines = svg.getElementsByClassName("line");
         for (let i = lines.length - 1; i >= 0; i--) { // Iterate over the lines and remove the ones connected to the box
           const line = lines[i];
           const startBoxId = line.getAttribute("data-start-box");
           const endBoxId = line.getAttribute("data-end-box");
           if (startBoxId === boxId || endBoxId === boxId) {
-            line.remove();
+            line.remove(); // remove from array too?
           }
         }
       }
@@ -763,6 +778,9 @@
         } else if (e.ctrlKey && e.key === 'a') {
           e.preventDefault();
           selectedBoxes = [...document.querySelectorAll(".box-input")];
+          selectedBoxes.forEach((b) => {
+            getContainerFromBox(b.id).classList.add("selected");
+          });
           console.log("selected all");
         } else if (e.ctrlKey && e.key === 'd') {
           e.preventDefault();
