@@ -2,7 +2,7 @@
   <!-- Pop-Up Box! -->
   <!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough (currently underline+strikethrough can't work). Tentative box resizing & styling -->
   <!-- Bugged: Changing box border prevents resizing. -->
-  <!-- Todo: Drag all selected boxes. Highlight selected boxes. Select lines (if not possible, make line color button apply to new lines instead ). Clarify box vs container. Clean code. Make canvas bigger and scrollable. Print. Save.-->
+  <!-- Todo: Select lines (if not possible, make line color button apply to new lines instead ). Clarify box vs container. Clean code. Make canvas bigger and scrollable. Print. Save.-->
 
   <head>
     <title>Pop-Up Box</title>
@@ -563,11 +563,11 @@
       }
 
       function startDrag(event) {
+        selectBox(event); //means must hold shift to drag multiple, but wont automatically drag all boxes too
         let allInitialX = [];
         let allInitialY = [];
         const target = event.target;
         const box = getContainerFromBox(target.id);
-        const border = +getComputedStyle(box).borderTopWidth.slice(0, -2);
         const initialX = event.clientX - target.getBoundingClientRect().left;
         const initialY = event.clientY - target.getBoundingClientRect().top;
         box.style.zIndex = "999"; // Bring the dragged box to the front
@@ -578,17 +578,16 @@
         });
 
         function moveBox(event) { //local func
-          const newX = event.clientX - initialX - box.style.borderWidth - border;
-          const newY = event.clientY - initialY - box.style.borderWidth - border;
+          const newX = event.clientX - initialX - box.style.borderWidth;
+          const newY = event.clientY - initialY - box.style.borderWidth;
           box.style.left = newX + "px";
           box.style.top = newY + "px";
           for (let i = 0; i < selectedBoxes.length; i++) {
             let thisBox = getContainerFromBox(selectedBoxes[i].id);
-            newBoxX = event.clientX - allInitialX[i] - thisBox.style.borderWidth - border;
-            newBoxY = event.clientY - allInitialY[i] - thisBox.style.borderWidth - border;
+            newBoxX = event.clientX - allInitialX[i] - thisBox.style.borderWidth;
+            newBoxY = event.clientY - allInitialY[i] - thisBox.style.borderWidth;
             thisBox.style.left = newBoxX + "px";
             thisBox.style.top = newBoxY + "px";
-
           }
           updateLines(); //update lines while dragging
         }
