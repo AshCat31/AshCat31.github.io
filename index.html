@@ -524,10 +524,12 @@
           return;
         }
         if (!event.ctrlKey) {
+        if (!selectedBoxes.includes(event.target)) { // only add if not alr in
           box.classList.add("selected");
-          selectedBoxes.push(event.target);
+          selectedBoxes.push(event.target); 
+          }
           //selectedLine = []; // Reset selected line when a box is selected
-          let selectedBoxIDs = [];
+          let selectedBoxIDs = []; // to log selected boxes
           selectedBoxes.forEach((b) => {
             if (b) {
               selectedBoxIDs.push(b.id);
@@ -657,7 +659,6 @@
           svg.appendChild(line);
         }
       }
-
 
       function updateLines() { //after moving boxes, rerender lines one by one
         const svg = document.getElementById("lineContainer");
