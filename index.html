@@ -196,6 +196,7 @@
         .no-print {
           display: none;
         }
+
         .box {
           outline: none !important;
         }
@@ -524,9 +525,9 @@
           return;
         }
         if (!event.ctrlKey) {
-        if (!selectedBoxes.includes(event.target)) { // only add if not alr in
-          box.classList.add("selected");
-          selectedBoxes.push(event.target); 
+          if (!selectedBoxes.includes(event.target)) { // only add if not alr in
+            box.classList.add("selected");
+            selectedBoxes.push(event.target);
           }
           //selectedLine = []; // Reset selected line when a box is selected
           let selectedBoxIDs = []; // to log selected boxes
@@ -548,7 +549,11 @@
           const endBoxId = box.id; // Get the ID of the end box
           const lineId = "line" + lines.length; // Unique ID for the line
           lineStartBox.classList.remove("start");
-          const newLineData = {lineID: lineId, startBox: startBoxId, endBox: endBoxId};
+          const newLineData = {
+            lineID: lineId,
+            startBox: startBoxId,
+            endBox: endBoxId
+          };
           lines.push(newLineData); // Store line data //in object
           createLine(lineId, startBoxId, endBoxId);
           lineStartBox = null;
@@ -611,7 +616,10 @@
         function stopDrag() { //local func
           document.removeEventListener("mousemove", moveBox);
           document.removeEventListener("mouseup", stopDrag);
-          box.style.zIndex = ""; // Restore the original z-index
+          selectedBoxes.forEach((b) => {
+            let bContainer = getContainerFromBox(b.id);
+            bContainer.style.zIndex = ""; // Restore the original z-index. seems iffy
+          });
           updateLines(); // Update the lines after dragging stops
         }
         document.addEventListener("mousemove", moveBox);
@@ -663,7 +671,7 @@
       function updateLines() { //after moving boxes, rerender lines one by one
         const svg = document.getElementById("lineContainer");
         svg.innerHTML = ""; // Clear all existing lines
-        for (let i = 0; i < lines.length; i ++) { //iterate by 3s since array has 3 elements per line// not as obj
+        for (let i = 0; i < lines.length; i++) { //iterate by 3s since array has 3 elements per line// not as obj
           const lineId = lines[i].lineID; //lines[i][0]
           const startBoxId = lines[i].startBox;
           const endBoxId = lines[i].endBox;
@@ -881,7 +889,7 @@
            document.addEventListener("mousemove", moveBox);
            document.addEventListener("mouseup", stopDrag);
          } */
-         
+
       // Close the dropdown if the user clicks outside of it
       window.onclick = function(event) {
         if (!event.target.matches('.dropbtn')) {
