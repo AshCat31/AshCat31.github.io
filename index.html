@@ -45,13 +45,10 @@
         outline: 3px solid #7db1e8;
         z-index: 10;
       }
-      
+
       .line.selected {
-        filter: drop-shadow(1px 1px 1px #7db1e8)
-        drop-shadow(-1px 1px 1px #7db1e8)
-         drop-shadow(1px -1px 1px #7db1e8)
-        drop-shadow(-1px -1px 1px #7db1e8);
-}
+        filter: drop-shadow(1px 1px 1px #7db1e8) drop-shadow(-1px 1px 1px #7db1e8) drop-shadow(1px -1px 1px #7db1e8) drop-shadow(-1px -1px 1px #7db1e8);
+      }
 
       .box.start {
         outline: 3px solid #d2796a;
@@ -434,7 +431,8 @@
 
     <div class="container">
       <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
-      <div id="canvas" style="height: 100vh;"></div> <!--onclick="addBox(event)" --> 
+      <div id="canvas" style="height: 100vh;"></div>
+      <!--onclick="addBox(event)" -->
       <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
     </div>
 
@@ -583,10 +581,9 @@
             line.classList.remove("selected");
           }
         });
-        // remove selection indicator first?
         selectedBoxes = [];
         selectedLines = [];
-console.log("Deselected boxes/lines");
+        console.log("Deselected boxes/lines");
       }
 
       function getContainerFromBox(boxID) { //see if this works. It does!
@@ -734,6 +731,7 @@ console.log("Deselected boxes/lines");
         } else if (targetAttr == "color") { // Change the font/line color of each target element
           target.forEach((element) => {
             element.style.color = color; //stroke instead for line?
+            element.style.stroke = color;
           });
         } else if (targetAttr == "border") { // Change the border color of each target element
           target.forEach((element) => {
@@ -854,9 +852,9 @@ console.log("Deselected boxes/lines");
         if (event.altKey) {
           console.log("desel");
           return;
-        } 
+        }
         if (event.target.classList.contains("box")) {
-        return;
+          return;
         }
         const startX = event.pageX;
         const startY = event.pageY;
@@ -872,14 +870,14 @@ console.log("Deselected boxes/lines");
           canvas.removeEventListener("mousemove", renderSelection);
           canvas.removeEventListener("mouseup", endSelection);
           endX = e.pageX;
-          endY = e.pageY; //these two necessary? if set in renderSel shouldnt
+          endY = e.pageY;
           if ((Math.abs(startX - endX) < threshhold) && (Math.abs(startY - endY) < threshhold)) {
-          addBox(event); //moved back in here to prevent addingbox on click+drag
+            addBox(event); //moved back in here to prevent addingbox on click+drag
             return; // if just a click
           } else {
-          deselectBoxes();
+            deselectBoxes();
             lines.forEach((line) => {
-            console.log(line.lineID);
+              console.log(line.lineID);
               const lineStart = getCenter(document.getElementById(line.startBox));
               const lineEnd = getCenter(document.getElementById(line.endBox));
               const xStartBetween = ((lineStart.x > startX && lineStart.x < endX) || (lineStart.x < startX && lineStart.x > endX));
@@ -894,9 +892,6 @@ console.log("Deselected boxes/lines");
               }
             });
             return;
-            //check for all lines whether start and end points are both 
-            //(<end & >start) || (>end & <start) [endpt is lower/more right than start & vice versa]
-            //if so add it so selectedLines
           }
 
         }
@@ -905,25 +900,6 @@ console.log("Deselected boxes/lines");
         canvas.addEventListener("mouseup", endSelection);
 
       }
-
-      /*   function startDrag(event) {
-            function moveBox(event) { //local fun
-             const newX = event.clientX - initialX - box.style.borderWidth - border;
-             const newY = event.clientY - initialY - box.style.borderWidth - border;
-             box.style.left = newX + "px";
-             box.style.top = newY + "px";
-             updateLines(); //update lines while dragging
-           }
-
-           function stopDrag() { //local func
-             document.removeEventListener("mousemove", moveBox);
-             document.removeEventListener("mouseup", stopDrag);
-             box.style.zIndex = ""; // Restore the original z-index
-             updateLines(); // Update the lines after dragging stops
-           }
-           document.addEventListener("mousemove", moveBox);
-           document.addEventListener("mouseup", stopDrag);
-         } */
 
       // Close the dropdown if the user clicks outside of it
       window.onclick = function(event) {
