@@ -2,7 +2,7 @@
   <!-- Pop-Up Box! -->
   <!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough (currently underline+strikethrough can't work). Tentative box resizing & box/line styling -->
   <!-- Bugged: Line styling erased when moving boxes. Changing box border prevents resizing. Alt+Bkspc funky. Must move box after resizing to updateLines. -->
-  <!-- Todo: Clarify box vs container. Standardize Id/ID. Clean code. Make canvas bigger and scrollable. Print. Save.-->
+  <!-- Todo: Deselct selected box on shift+click. Clarify box vs container. Standardize Id/ID. Clean code. Make canvas bigger and scrollable. Print. Save.-->
 
   <head>
     <title>Pop-Up Box</title>
@@ -346,8 +346,8 @@
         </button>
         <div class="dropdown-content">
           <a href="#" onclick="changeStyle('0', 'line')" data-style="solid">Solid</a>
-          <a href="#" onclick="changeStyle('3 2', 'line')" data-style="dashed">Dashed</a>
-          <a href="#" onclick="changeStyle('1', 'line')" data-style="dotted">Dotted</a>
+          <a href="#" onclick="changeStyle('7 5', 'line')" data-style="dashed">Dashed</a>
+          <a href="#" onclick="changeStyle('3', 'line')" data-style="dotted">Dotted</a>
         </div>
       </div>
 
@@ -568,9 +568,6 @@
           lineStartBox = null;
           lineStartPoint = null;
         }
-        /*if (selectedLines) { //not inmplemented yet
-          console.log("Selected Line: ", selectedLines);
-        }*/
       }
 
       function deselectBoxes() {
@@ -759,8 +756,8 @@
           selectedLines.forEach((element) => {
             element.style.strokeWidth = width;
             const lineID = element.id;
-              const lineInfo = lines.find(l => l.lineID === lineID); //does this work? yup
-              lineInfo['lineWidth'] = width;
+            const lineInfo = lines.find(l => l.lineID === lineID); //does this work? yup
+            lineInfo['lineWidth'] = width;
           });
         } else if (target == "border") { // Change the border width of each target box
           selectedBoxes.forEach((element) => {
@@ -779,8 +776,8 @@
           selectedLines.forEach((element) => {
             element.style.strokeDasharray = style;
             const lineID = element.id;
-              const lineInfo = lines.find(l => l.lineID === lineID); //does this work? yup
-              lineInfo['lineDash'] = style;
+            const lineInfo = lines.find(l => l.lineID === lineID); //does this work? yup
+            lineInfo['lineDash'] = style;
           });
         } else if (target == "border") { // Change the border style of each target box
           selectedBoxes.forEach((element) => {
