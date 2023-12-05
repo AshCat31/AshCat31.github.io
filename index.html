@@ -67,7 +67,7 @@
         background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAJUlEQVR4AcXJRwEAIBAAIPuXxgiOW3xZYzi1Q3Nqh+bUDk1yD9sQaUG/4ehuEAAAAABJRU5ErkJggg==");
         cursor: ew-resize;
       }
-      
+
       .box.selected {
         outline: 3px solid #7db1e8;
         z-index: 10;
@@ -661,7 +661,7 @@
         }
       }
 
-      function createLine(lineInfo) {  //(lineId, startBoxId, endBoxId) {
+      function createLine(lineInfo) { //(lineId, startBoxId, endBoxId) {
         const svg = document.getElementById("lineContainer");
         const startBox = document.getElementById(lineInfo.startBox);
         const endBox = document.getElementById(lineInfo.endBox);
@@ -675,10 +675,10 @@
           line.setAttribute("y1", start.y);
           line.setAttribute("x2", end.x);
           line.setAttribute("y2", end.y);
-          line.setAttribute("style", "stroke: " + lineInfo.lineColor + ";");
-          console.log(line.getAttribute("style"));
-          line.setAttribute("stroke-width", lineInfo.lineWidth);
-          line.setAttribute("stroke-dasharray", lineInfo.lineDash);
+          line.setAttribute("style", "stroke: " + lineInfo.lineColor + ";" +
+            "stroke-width: " + lineInfo.lineWidth + ";" +
+            "stroke-dasharray: " + lineInfo.lineDash + ";"
+          );
           line.setAttribute("data-start-box", lineInfo.startBox);
           line.setAttribute("data-end-box", lineInfo.endtBox);
           line.addEventListener("click", selectBox); // Add click event listener to the line
@@ -690,12 +690,12 @@
         const svg = document.getElementById("lineContainer");
         svg.innerHTML = ""; // Clear all existing lines
         lines.forEach((line) => {
-        createLine(line);
-        //line.createLine(); if OOP
+          createLine(line);
+          //line.createLine(); if OOP
           //lineEle.setAttribute("fill", line.lineColor);
         });
-        }
-      
+      }
+
 
       function getCenter(element) { //get center of box to render lines
         const rect = element.getBoundingClientRect();
@@ -739,13 +739,11 @@
         } else if (targetAttr == "color") { // Change the font/line color of each target element
           target.forEach((element) => {
             element.style.color = color; //stroke instead for line?
-            if (target == selectedLines); { //            console.log(target[0].id);
-            element.style.stroke = color; //let car = cars.find(car => car.color === "red");
-            const lineID = element.id;
-            const lineInfo = lines.find(l => l.lineID === lineID); //does this work?
-            lineInfo['lineColor'] = color;
-            console.log(lineInfo.lineColor);
-            
+            if (target == selectedLines); { // inefficient
+              element.style.stroke = color;
+              const lineID = element.id;
+              const lineInfo = lines.find(l => l.lineID === lineID); //does this work? yup
+              lineInfo['lineColor'] = color;
             }
           });
         } else if (targetAttr == "border") { // Change the border color of each target element
@@ -760,6 +758,9 @@
         if (target == "line") { // Change the width of each target line
           selectedLines.forEach((element) => {
             element.style.strokeWidth = width;
+            const lineID = element.id;
+              const lineInfo = lines.find(l => l.lineID === lineID); //does this work? yup
+              lineInfo['lineWidth'] = width;
           });
         } else if (target == "border") { // Change the border width of each target box
           selectedBoxes.forEach((element) => {
@@ -777,6 +778,9 @@
         if (target == "line") { // Change the style of each target line
           selectedLines.forEach((element) => {
             element.style.strokeDasharray = style;
+            const lineID = element.id;
+              const lineInfo = lines.find(l => l.lineID === lineID); //does this work? yup
+              lineInfo['lineDash'] = style;
           });
         } else if (target == "border") { // Change the border style of each target box
           selectedBoxes.forEach((element) => {
