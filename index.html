@@ -2,7 +2,7 @@
   <!-- Pop-Up Box! -->
   <!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough (currently underline+strikethrough can't work). Tentative box resizing & box/line styling -->
   <!-- Bugged: Line styling erased when moving boxes. Changing box border prevents resizing. Alt+Bkspc funky. Must move box after resizing to updateLines. -->
-  <!-- Todo: Deselct selected box on shift+click. Clarify box vs container. Standardize Id/ID. Clean code. Make canvas bigger and scrollable. Print. Save.-->
+  <!-- Todo: Render selection rectangle. Deselct selected box on shift+click. Clarify box vs container. Standardize Id/ID. Clean code. Make canvas bigger and scrollable. Print. Save.-->
 
   <head>
     <title>Pop-Up Box</title>
@@ -195,6 +195,12 @@
 
       .strikethrough {
         text-decoration: line-through;
+      }
+
+      .selection-box {
+        stroke: blue;
+        stroke-width: 3px;
+        fill: none;
       }
 
       @media print {
@@ -821,7 +827,6 @@
 
       function setCustomWidth(e) { //see if this works. seeeems liker!
         const width = e.target.value + "px";
-        console.log(width);
         let target = e.target.dataset.target;
         changeWidth(width, target);
       }
@@ -857,7 +862,7 @@
             deleteBox(getContainerFromBox(box.id).id);
           });
           count = 0; //reset count only if delete all to prevent too high nums?
-          lines = []; //reset all lines too. see if works?
+          //lines = []; //reset all lines too. see if works? no. erases all
           lineStartBox = null;
           lineStartPoint = null;
         }
@@ -878,7 +883,28 @@
         let endX = 0;
         let endY = 0;
 
-        function renderSelection() { //have to start top left? or can get it to work any direction. start off like not
+        function renderSelection(e) { //have to start top left? or can get it to work any direction. start off like not
+          const width = startX - e.pageX;
+          const height = startY - e.pageY;
+          let selectionRect = document.createElementNS("http://www.w3.org/2000/svg", "rect"); //rect works?
+          selectionRect.classList.add("selection-box")
+          selectionRect.setAttribute("x", startX);
+          selectionRect.setAttribute("y", startY);
+          selectionRect.setAttribute("width", width);
+          selectionRect.setAttribute("height", height);
+          canvas.appendChild(selectionRect);
+          //console.log(selectionRect.getAttribute("stroke")); stroke null. doesnt see from CSS?
+          // add class to style? mb ID?
+          /*  const svg = document.getElementById("lineContainer");
+                    line.classList.add("line");
+                    line.setAttribute("id", lineInfo.lineID);
+                    line.setAttribute("x1", start.x);
+                    line.setAttribute("y1", start.y);
+                    line.setAttribute("style", "stroke: " + lineInfo.lineColor + ";" +
+                      "stroke-width: " + lineInfo.lineWidth + ";" +
+                      "stroke-dasharray: " + lineInfo.lineDash + ";"
+                    );
+                    svg.appendChild(line);*/
           return; //TBA w/ newX/Y
         }
 
@@ -889,6 +915,7 @@
           endY = e.pageY;
           if ((Math.abs(startX - endX) < threshhold) && (Math.abs(startY - endY) < threshhold)) {
             addBox(event); //moved back in here to prevent addingbox on click+drag
+            // remove when done
             return; // if just a click
           } else {
             deselectBoxes();
@@ -900,7 +927,7 @@
               const xEndBetween = ((lineEnd.x > startX && lineEnd.x < endX) || (lineEnd.x < startX && lineEnd.x > endX));
               const yStartBetween = ((lineStart.y > startY && lineStart.y < endY) || (lineStart.y < startY && lineStart.y > endY));
               const yEndBetween = ((lineEnd.y > startY && lineEnd.y < endY) || (lineEnd.y < startY && lineEnd.y > endY));
-              console.log(xStartBetween + '' + xEndBetween + '' + yStartBetween + '' + yEndBetween);
+              console.log(line.lineID + ": " + xStartBetween + '' + xEndBetween + '' + yStartBetween + '' + yEndBetween);
               if (xStartBetween && xEndBetween && yStartBetween && yEndBetween && document.getElementById(line.lineID)) {
                 selectedLines.push(document.getElementById(line.lineID));
                 document.getElementById(line.lineID).classList.add("selected");
@@ -914,7 +941,6 @@
 
         canvas.addEventListener("mousemove", renderSelection);
         canvas.addEventListener("mouseup", endSelection);
-
       }
 
       // Close the dropdown if the user clicks outside of it
