@@ -261,6 +261,7 @@
           <a href="#" onclick="changeColor('white', selectedBoxes, 'background')" data-style="white">White</a>
           <a href="#" onclick="changeColor('gray', selectedBoxes, 'background')" data-style="gray">Gray</a>
           <a href="#" onclick="changeColor('brown', selectedBoxes, 'background')" data-style="brown">Brown</a>
+          <a href="#" onclick="changeColor('transparent', selectedBoxes, 'background')" data-style="none">None</a>
           <a href="#" data-style="custom">Custom
             <input class="custom-color" type="color" value="#000000" data-target="boxes" data-attribute="background" />
           </a>
@@ -538,59 +539,63 @@
           deselectBoxes();
         }
         const box = getContainerFromBox(target.id);
-        if (event.altKey) {
-          const boxId = box.id;
-          deleteBox(boxId);
-          deleteLines(boxId);
-          console.log("removing box " + boxId);
-          return;
-        }
-        if (!event.ctrlKey) {
+        if (box) {
+          if (event.altKey) {
+            const boxId = box.id;
+            deleteBox(boxId);
+            deleteLines(boxId);
+            console.log("removing box " + boxId);
+            return;
+          }
+          if (!event.ctrlKey) {
+            if (!selectedBoxes.includes(event.target)) { // only add if not alr in
+              box.classList.add("selected");
+              selectedBoxes.push(event.target);
+            } else {
+              // remove it
+              selectedBoxes.splice(selectedBoxes.indexOf(event.target), 1);
+              box.classList.remove("selected");
+              //arr.indexOf(value)
+            }
+            //selectedLine = []; // Reset selected line when a box is selected
+            let selectedBoxIDs = []; // to log selected boxes
+            selectedBoxes.forEach((b) => {
+              if (b) {
+                selectedBoxIDs.push(b.id);
+              }
+              console.log("Selected Boxes:" + selectedBoxIDs);
+            });
+            return;
+          }
           if (!selectedBoxes.includes(event.target)) { // only add if not alr in
             box.classList.add("selected");
             selectedBoxes.push(event.target);
-          } else {
-            // remove it
-            selectedBoxes.splice(selectedBoxes.indexOf(event.target), 1);
-            box.classList.remove("selected");
-            //arr.indexOf(value)
           }
-          //selectedLine = []; // Reset selected line when a box is selected
-          let selectedBoxIDs = []; // to log selected boxes
-          selectedBoxes.forEach((b) => {
-            if (b) {
-              selectedBoxIDs.push(b.id);
-            }
-            console.log("Selected Boxes:" + selectedBoxIDs);
-          });
-          return;
-        }
-        if (!selectedBoxes.includes(event.target)) { // only add if not alr in
-          box.classList.add("selected");
-          selectedBoxes.push(event.target);
-        }
-        if (!lineStartBox) { // handle line creation
-          lineStartBox = box;
-          lineStartPoint = getCenter(box); //necessary?
-          box.classList.add("start");
+          if (!lineStartBox) { // handle line creation
+            lineStartBox = box;
+            lineStartPoint = getCenter(box); //necessary?
+            box.classList.add("start");
+          } else {
+            const endPoint = getCenter(box); //necessary?
+            const startBoxId = lineStartBox.id; // Get the ID of the start box
+            const endBoxId = box.id; // Get the ID of the end box
+            const lineId = "line" + lines.length; // Unique ID for the line
+            lineStartBox.classList.remove("start");
+            let newLineData = {
+              lineID: lineId,
+              startBox: startBoxId,
+              endBox: endBoxId,
+              lineColor: "black",
+              lineWidth: "2px",
+              lineDash: "none"
+            };
+            lines.push(newLineData); // Store line data //in object
+            createLine(newLineData);
+            lineStartBox = null;
+            lineStartPoint = null;
+          }
         } else {
-          const endPoint = getCenter(box); //necessary?
-          const startBoxId = lineStartBox.id; // Get the ID of the start box
-          const endBoxId = box.id; // Get the ID of the end box
-          const lineId = "line" + lines.length; // Unique ID for the line
-          lineStartBox.classList.remove("start");
-          let newLineData = {
-            lineID: lineId,
-            startBox: startBoxId,
-            endBox: endBoxId,
-            lineColor: "black",
-            lineWidth: "2px",
-            lineDash: "none"
-          };
-          lines.push(newLineData); // Store line data //in object
-          createLine(newLineData);
-          lineStartBox = null;
-          lineStartPoint = null;
+          updateLines();
         }
       }
 
@@ -611,64 +616,76 @@
         console.log("Deselected boxes/lines");
       }
 
-      function getContainerFromBox(boxID) { //see if this works. It does!
-        //containerID = "containerBox" + boxID.split("box").pop();
-        //return document.getElementById(containerID);
-        ID = '';
-        for (let i = boxID.length - 1; i >= 0; i--) {
-          c = boxID[i];
-          if (c >= '0' && c < '9') {
-            ID += c;
-          } else {
-            ID = ID.split("").reverse().join("");
-            return document.getElementById("containerBox" + ID);
+      function getContainerFromBox(boxID, getFromContainer = false) { //see if this works. It does!
+        if (getFromContainer) {
+          ID = '';
+          for (let i = boxID.length - 1; i >= 0; i--) {
+            c = boxID[i];
+            if (c >= '0' && c < '9') {
+              ID += c;
+            } else {
+              ID = ID.split("").reverse().join("");
+              return document.getElementById("containerBox" + ID);
+            }
           }
         }
+        containerID = "containerBox" + boxID.split("box").pop();
+        return document.getElementById(containerID);
       }
 
       function startDrag(event) {
         if (!event.shiftKey && !event.ctrlKey && !event.altKey) { //was breaking connecting w/o
           selectBox(event); //means must hold shift to drag multiple, but wont automatically drag all boxes too
         }
-        let allInitialX = [];
-        let allInitialY = [];
         const target = event.target;
         const box = getContainerFromBox(target.id);
-        const initialX = event.clientX - target.getBoundingClientRect().left;
-        const initialY = event.clientY - target.getBoundingClientRect().top;
-        box.style.zIndex = "999"; // Bring the dragged box to the front
-        selectedBoxes.forEach((b) => {
-          let bContainer = getContainerFromBox(b.id);
-          allInitialX.push(event.clientX - bContainer.getBoundingClientRect().left);
-          allInitialY.push(event.clientY - bContainer.getBoundingClientRect().top);
-        });
-
-        function moveBox(event) { //local func
-          const newX = event.clientX - initialX - box.style.borderWidth;
-          const newY = event.clientY - initialY - box.style.borderWidth;
-          box.style.left = newX + "px";
-          box.style.top = newY + "px";
-          for (let i = 0; i < selectedBoxes.length; i++) {
-            let thisBox = getContainerFromBox(selectedBoxes[i].id);
-            newBoxX = event.clientX - allInitialX[i] - thisBox.style.borderWidth;
-            newBoxY = event.clientY - allInitialY[i] - thisBox.style.borderWidth;
-            thisBox.style.left = newBoxX + "px";
-            thisBox.style.top = newBoxY + "px";
-          }
-          updateLines(); //update lines while dragging
-        }
-
-        function stopDrag() { //local func
-          document.removeEventListener("mousemove", moveBox);
-          document.removeEventListener("mouseup", stopDrag);
+        if (box) {
+          let allInitialX = [];
+          let allInitialY = [];
+          const initialX = event.clientX - target.getBoundingClientRect().left;
+          const initialY = event.clientY - target.getBoundingClientRect().top;
+          box.style.zIndex = "999"; // Bring the dragged box to the front
           selectedBoxes.forEach((b) => {
             let bContainer = getContainerFromBox(b.id);
-            bContainer.style.zIndex = ""; // Restore the original z-index. seems iffy
+            allInitialX.push(event.clientX - bContainer.getBoundingClientRect().left);
+            allInitialY.push(event.clientY - bContainer.getBoundingClientRect().top);
           });
-          updateLines(); // Update the lines after dragging stops
+
+          function moveBox(event) { //local func
+            const newX = event.clientX - initialX - box.style.borderWidth;
+            const newY = event.clientY - initialY - box.style.borderWidth;
+            box.style.left = newX + "px";
+            box.style.top = newY + "px";
+            for (let i = 0; i < selectedBoxes.length; i++) {
+              let thisBox = getContainerFromBox(selectedBoxes[i].id);
+              newBoxX = event.clientX - allInitialX[i] - thisBox.style.borderWidth;
+              newBoxY = event.clientY - allInitialY[i] - thisBox.style.borderWidth;
+              thisBox.style.left = newBoxX + "px";
+              thisBox.style.top = newBoxY + "px";
+            }
+            updateLines(); //update lines while dragging
+          }
+
+          function stopDrag() { //local func
+            document.removeEventListener("mousemove", moveBox);
+            document.removeEventListener("mouseup", stopDrag);
+            selectedBoxes.forEach((b) => {
+              let bContainer = getContainerFromBox(b.id);
+              bContainer.style.zIndex = ""; // Restore the original z-index. seems iffy
+            });
+            updateLines(); // Update the lines after dragging stops
+          }
+          document.addEventListener("mousemove", moveBox);
+          document.addEventListener("mouseup", stopDrag);
         }
-        document.addEventListener("mousemove", moveBox);
-        document.addEventListener("mouseup", stopDrag);
+      }
+
+      function deleteBox(boxId) {
+        const box = document.getElementById(boxId);
+        if (box) {
+          box.remove();
+          console.log("removed box " + boxId);
+        }
       }
 
       function deleteBox(boxId) {
@@ -765,6 +782,7 @@
       function changeColor(color, target, targetAttr) { //check if works. seems to!
         if (targetAttr == "background") { // Change the background color of each target element
           target.forEach((element) => {
+            getContainerFromBox(element.id, true).style.backgroundColor = color;
             element.style.backgroundColor = color;
           });
         } else if (targetAttr == "color") { // Change the font/line color of each target element
