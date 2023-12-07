@@ -1,7 +1,7 @@
 <html>
   <!-- Pop-Up Box! -->
   <!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough (currently underline+strikethrough can't work). Tentative box resizing & box/line styling -->
-  <!-- Bugged: Line styling erased when moving boxes. Changing box border prevents resizing. Alt+Bkspc funky. Must move box after resizing to updateLines. -->
+  <!-- Bugged: Changing box border prevents resizing. Must move box after resizing to updateLines. -->
   <!-- Todo: Render selection rectangle. Deselct selected box on shift+click. Clarify box vs container. Standardize Id/ID. Clean code. Make canvas bigger and scrollable. Print. Save.-->
 
   <head>
@@ -42,14 +42,14 @@
       }
 
       .box.start {
-        outline: 3px solid #d2796a;
+        outline: 3px solid #d2796a !important;
       }
 
       .box:focus {
         border: blue !important;
       }
 
-      /* let <input> assume the size of the wrapper. Working??? */
+      /* let <input> assume the size of the wrapper. necessary? */
       .box>input {
         border: 0;
         width: 100%;
@@ -57,7 +57,7 @@
         display: inline-block;
       }
 
-      /* add a visible handle. Working??? */
+      /* add a visible handle. necessary? */
       .box>span {
         display: inline-block;
         vertical-align: bottom;
@@ -201,6 +201,7 @@
         stroke: blue;
         stroke-width: 3px;
         fill: none;
+        z-index: 9999;
       }
 
       @media print {
@@ -441,6 +442,8 @@
       <div id="canvas" style="height: 100vh;"></div>
       <!--onclick="addBox(event)" -->
       <svg id="lineContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
+      <svg id="selContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
+
     </div>
 
     <script>
@@ -476,7 +479,7 @@
         });
       }
 
-      function addBox(event) {
+      function addBox(event) { //too big?
         const target = event.target;
         if (target.classList.contains("box")) {
           return;
@@ -523,7 +526,7 @@
         count++;
       }
 
-      function selectBox(event) {
+      function selectBox(event) { //too big
         const target = event.target;
         const box = getContainerFromBox(target.id);
         if (!target.classList.contains("icon-button") && !event.shiftKey) {
@@ -540,6 +543,11 @@
           if (!selectedBoxes.includes(event.target)) { // only add if not alr in
             box.classList.add("selected");
             selectedBoxes.push(event.target);
+          } else {
+            // remove it
+            selectedBoxes.splice(selectedBoxes.indexOf(event.target), 1);
+            box.classList.remove("selected");
+            //arr.indexOf(value)
           }
           //selectedLine = []; // Reset selected line when a box is selected
           let selectedBoxIDs = []; // to log selected boxes
@@ -550,6 +558,10 @@
             console.log("Selected Boxes:" + selectedBoxIDs);
           });
           return;
+        }
+        if (!selectedBoxes.includes(event.target)) { // only add if not alr in
+          box.classList.add("selected");
+          selectedBoxes.push(event.target);
         }
         if (!lineStartBox) { // handle line creation
           lineStartBox = box;
@@ -652,8 +664,8 @@
       }
 
       function deleteLines(boxId) {
-        const svg = document.getElementById("lineContainer"); //necessary?
-        const allLines = svg.getElementsByClassName("line"); //does const not break with this shared name? changed lines-> allLines
+        const svg = document.getElementById("lineContainer");
+        const allLines = svg.getElementsByClassName("line");
         for (let i = allLines.length - 1; i >= 0; i--) { // Iterate over the lines and remove the ones connected to the box
           const line = allLines[i];
           const startBoxId = line.getAttribute("data-start-box");
@@ -861,10 +873,13 @@
             deleteLines(getContainerFromBox(box.id).id);
             deleteBox(getContainerFromBox(box.id).id);
           });
-          count = 0; //reset count only if delete all to prevent too high nums?
-          //lines = []; //reset all lines too. see if works? no. erases all
-          lineStartBox = null;
-          lineStartPoint = null;
+          if (!document.querySelector(".box")) {
+            count = 0; //reset count only if delete all to prevent too high nums?
+          }
+          if (!document.getElementById(lineStartBox)) {
+            lineStartBox = null;
+            lineStartPoint = null;
+          }
         }
       }
 
@@ -884,15 +899,17 @@
         let endY = 0;
 
         function renderSelection(e) { //have to start top left? or can get it to work any direction. start off like not
-          const width = startX - e.pageX;
-          const height = startY - e.pageY;
-          let selectionRect = document.createElementNS("http://www.w3.org/2000/svg", "rect"); //rect works?
+          const svg = document.getElementById("selContainer");
+          const width = e.pageX - startX;
+          const height = e.pageY - startY;
+          let selectionRect = document.createElementNS("http://www.w3.org/2000/svg", "rect"); //rect works? moved out of renderSel
           selectionRect.classList.add("selection-box")
-          selectionRect.setAttribute("x", startX);
-          selectionRect.setAttribute("y", startY);
-          selectionRect.setAttribute("width", width);
-          selectionRect.setAttribute("height", height);
-          canvas.appendChild(selectionRect);
+          selectionRect.x = startX;
+          selectionRect.y = startY;
+          selectionRect.width = width;
+          selectionRect.height = height;
+          svg.appendChild(selectionRect);
+
           //console.log(selectionRect.getAttribute("stroke")); stroke null. doesnt see from CSS?
           // add class to style? mb ID?
           /*  const svg = document.getElementById("lineContainer");
@@ -905,12 +922,13 @@
                       "stroke-dasharray: " + lineInfo.lineDash + ";"
                     );
                     svg.appendChild(line);*/
-          return; //TBA w/ newX/Y
+          //TBA w/ newX/Y
         }
 
         function endSelection(e) { //is only happening at start on next
           canvas.removeEventListener("mousemove", renderSelection);
           canvas.removeEventListener("mouseup", endSelection);
+          //selectionRect.remove();
           endX = e.pageX;
           endY = e.pageY;
           if ((Math.abs(startX - endX) < threshhold) && (Math.abs(startY - endY) < threshhold)) {
