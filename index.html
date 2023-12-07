@@ -1,7 +1,7 @@
 <html>
   <!-- Pop-Up Box! -->
   <!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough (currently underline+strikethrough can't work). Tentative box resizing & box/line styling -->
-  <!-- Bugged: Changing box border prevents resizing. Must move box after resizing to updateLines. -->
+  <!-- Bugged: Changing box border prevents dragging. Must move box after resizing to updateLines. -->
   <!-- Todo: Render selection rectangle. Deselct selected box on shift+click. Clarify box vs container. Standardize Id/ID. Clean code. Make canvas bigger and scrollable. Print. Save.-->
 
   <head>
@@ -55,6 +55,7 @@
         width: 100%;
         height: 100%;
         display: inline-block;
+        z-index: 2;
       }
 
       /* add a visible handle. necessary? */
@@ -528,10 +529,10 @@
 
       function selectBox(event) { //too big
         const target = event.target;
-        const box = getContainerFromBox(target.id);
         if (!target.classList.contains("icon-button") && !event.shiftKey) {
           deselectBoxes();
         }
+        const box = getContainerFromBox(target.id);
         if (event.altKey) {
           const boxId = box.id;
           deleteBox(boxId);
@@ -606,8 +607,18 @@
       }
 
       function getContainerFromBox(boxID) { //see if this works. It does!
-        containerID = "containerBox" + boxID.split("box").pop();
-        return document.getElementById(containerID);
+        //containerID = "containerBox" + boxID.split("box").pop();
+        //return document.getElementById(containerID);
+        ID = '';
+        for (let i = boxID.length - 1; i >= 0; i--) {
+          c = boxID[i];
+          if (c >= '0' && c < '9') {
+            ID += c;
+          } else {
+            ID = ID.split("").reverse().join("");
+            return document.getElementById("containerBox" + ID);
+          }
+        }
       }
 
       function startDrag(event) {
@@ -781,6 +792,7 @@
           selectedBoxes.forEach((element) => {
             box = getContainerFromBox(element.id);
             box.style.borderWidth = width;
+            console.log()
           });
         } else if (target == "text") { // Change the size of each target box's text
           selectedBoxes.forEach((element) => {
@@ -973,6 +985,7 @@
           }
         }
       }
+
       canvas.addEventListener('mousedown', startSelection);
       setUpCustomInputs();
       window.addEventListener("keydown", onKeypress);
