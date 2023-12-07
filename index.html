@@ -1,7 +1,7 @@
 <html>
   <!-- Pop-Up Box! -->
   <!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough (currently underline+strikethrough can't work). Tentative box resizing & box/line styling -->
-  <!-- Bugged: Changing box border prevents dragging. Must move box after resizing to updateLines. -->
+  <!-- Bugged: Changing box border prevents dragging. -->
   <!-- Todo: Render selection rectangle. Clarify box vs container. Standardize Id/ID. Clean code. Make canvas bigger and scrollable. Print. Save.-->
 
   <head>
@@ -203,6 +203,7 @@
         stroke-width: 3px;
         fill: none;
         z-index: 9999;
+        display: inline;
       }
 
       @media print {
@@ -782,8 +783,10 @@
       function changeColor(color, target, targetAttr) { //check if works. seems to!
         if (targetAttr == "background") { // Change the background color of each target element
           target.forEach((element) => {
-            getContainerFromBox(element.id, true).style.backgroundColor = color;
             element.style.backgroundColor = color;
+            if (target == selectedBoxes) {
+              getContainerFromBox(element.id, true).style.backgroundColor = color;
+            }
           });
         } else if (targetAttr == "color") { // Change the font/line color of each target element
           target.forEach((element) => {
