@@ -2,7 +2,7 @@
   <!-- Pop-Up Box! -->
   <!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough (currently underline+strikethrough can't work). Tentative box resizing & box/line styling -->
   <!-- Bugged: Changing box border prevents dragging. -->
-  <!-- Todo: Render selection rectangle. Clarify box vs container. Standardize Id/ID. Clean code. Make canvas bigger and scrollable. Print. Save.-->
+  <!-- Todo: Render selection rectangle. Clarify box vs container. Clean code. Make canvas bigger and scrollable. Print. Save.-->
 
   <head>
     <title>Pop-Up Box</title>
@@ -559,12 +559,12 @@
               //arr.indexOf(value)
             }
             //selectedLine = []; // Reset selected line when a box is selected
-            let selectedBoxIDs = []; // to log selected boxes
+            let selectedBoxIds = []; // to log selected boxes
             selectedBoxes.forEach((b) => {
               if (b) {
-                selectedBoxIDs.push(b.id);
+                selectedBoxIds.push(b.id);
               }
-              console.log("Selected Boxes:" + selectedBoxIDs);
+              console.log("Selected Boxes:" + selectedBoxIds);
             });
             return;
           }
@@ -578,12 +578,12 @@
             box.classList.add("start");
           } else {
             const endPoint = getCenter(box); //necessary?
-            const startBoxId = lineStartBox.id; // Get the ID of the start box
-            const endBoxId = box.id; // Get the ID of the end box
-            const lineId = "line" + lines.length; // Unique ID for the line
+            const startBoxId = lineStartBox.id; // Get the Id of the start box
+            const endBoxId = box.id; // Get the Id of the end box
+            const lineId = "line" + lines.length; // Unique Id for the line
             lineStartBox.classList.remove("start");
             let newLineData = {
-              lineID: lineId,
+              lineId: lineId,
               startBox: startBoxId,
               endBox: endBoxId,
               lineColor: "black",
@@ -617,21 +617,21 @@
         console.log("Deselected boxes/lines");
       }
 
-      function getContainerFromBox(boxID, getFromContainer = false) { //see if this works. It does!
+      function getContainerFromBox(boxId, getFromContainer = false) { //see if this works. It does!
         if (getFromContainer) {
-          ID = '';
-          for (let i = boxID.length - 1; i >= 0; i--) {
-            c = boxID[i];
+          let Id = '';
+          for (let i = boxId.length - 1; i >= 0; i--) {
+            c = boxId[i];
             if (c >= '0' && c < '9') {
-              ID += c;
+              Id += c;
             } else {
-              ID = ID.split("").reverse().join("");
-              return document.getElementById("containerBox" + ID);
+              Id = Id.split("").reverse().join("");
+              return document.getElementById("containerBox" + Id);
             }
           }
         }
-        containerID = "containerBox" + boxID.split("box").pop();
-        return document.getElementById(containerID);
+        let containerId = "containerBox" + boxId.split("box").pop();
+        return document.getElementById(containerId);
       }
 
       function startDrag(event) {
@@ -719,7 +719,7 @@
           const end = getCenter(endBox);
           let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
           line.classList.add("line");
-          line.setAttribute("id", lineInfo.lineID);
+          line.setAttribute("id", lineInfo.lineId);
           line.setAttribute("x1", start.x);
           line.setAttribute("y1", start.y);
           line.setAttribute("x2", end.x);
@@ -793,8 +793,8 @@
             element.style.color = color; //stroke instead for line?
             if (target == selectedLines); { // inefficient
               element.style.stroke = color;
-              const lineID = element.id;
-              const lineInfo = lines.find(l => l.lineID === lineID); //does this work? yup
+              const lineId = element.id;
+              const lineInfo = lines.find(l => l.linedD === lineId); //does this work? yup
               lineInfo['lineColor'] = color;
             }
           });
@@ -810,8 +810,8 @@
         if (target == "line") { // Change the width of each target line
           selectedLines.forEach((element) => {
             element.style.strokeWidth = width;
-            const lineID = element.id;
-            const lineInfo = lines.find(l => l.lineID === lineID); //does this work? yup
+            const lineId = element.id;
+            const lineInfo = lines.find(l => l.lineId === lineId); //does this work? yup
             lineInfo['lineWidth'] = width;
           });
         } else if (target == "border") { // Change the border width of each target box
@@ -831,8 +831,8 @@
         if (target == "line") { // Change the style of each target line
           selectedLines.forEach((element) => {
             element.style.strokeDasharray = style;
-            const lineID = element.id;
-            const lineInfo = lines.find(l => l.lineID === lineID); //does this work? yup
+            const lineId = element.id;
+            const lineInfo = lines.find(l => l.lineId === lineId); //does this work? yup
             lineInfo['lineDash'] = style;
           });
         } else if (target == "border") { // Change the border style of each target box
@@ -949,10 +949,10 @@
           svg.appendChild(selectionRect);
 
           //console.log(selectionRect.getAttribute("stroke")); stroke null. doesnt see from CSS?
-          // add class to style? mb ID?
+          // add class to style? mb Id?
           /*  const svg = document.getElementById("lineContainer");
                     line.classList.add("line");
-                    line.setAttribute("id", lineInfo.lineID);
+                    line.setAttribute("id", lineInfo.lineId);
                     line.setAttribute("x1", start.x);
                     line.setAttribute("y1", start.y);
                     line.setAttribute("style", "stroke: " + lineInfo.lineColor + ";" +
@@ -976,18 +976,18 @@
           } else {
             deselectBoxes();
             lines.forEach((line) => {
-              console.log(line.lineID);
+              console.log(line.lineId);
               const lineStart = getCenter(document.getElementById(line.startBox));
               const lineEnd = getCenter(document.getElementById(line.endBox));
               const xStartBetween = ((lineStart.x > startX && lineStart.x < endX) || (lineStart.x < startX && lineStart.x > endX));
               const xEndBetween = ((lineEnd.x > startX && lineEnd.x < endX) || (lineEnd.x < startX && lineEnd.x > endX));
               const yStartBetween = ((lineStart.y > startY && lineStart.y < endY) || (lineStart.y < startY && lineStart.y > endY));
               const yEndBetween = ((lineEnd.y > startY && lineEnd.y < endY) || (lineEnd.y < startY && lineEnd.y > endY));
-              console.log(line.lineID + ": " + xStartBetween + '' + xEndBetween + '' + yStartBetween + '' + yEndBetween);
-              if (xStartBetween && xEndBetween && yStartBetween && yEndBetween && document.getElementById(line.lineID)) {
-                selectedLines.push(document.getElementById(line.lineID));
-                document.getElementById(line.lineID).classList.add("selected");
-                console.log("added: " + line.lineID);
+              console.log(line.lineId + ": " + xStartBetween + '' + xEndBetween + '' + yStartBetween + '' + yEndBetween);
+              if (xStartBetween && xEndBetween && yStartBetween && yEndBetween && document.getElementById(line.lineId)) {
+                selectedLines.push(document.getElementById(line.lineId));
+                document.getElementById(line.lineId).classList.add("selected");
+                console.log("added: " + line.lineId);
               }
             });
             return;
