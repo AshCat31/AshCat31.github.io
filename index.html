@@ -437,6 +437,7 @@
           <a href="#">Deselect All Boxes with Ctrl+D</a>
           <a href="#">Move All Selected Boxes by Shift-Clicking and Dragging</a>
           <a href="#">Delete All Selected Boxes with Alt+Backspace</a>
+          <a href="#">Select Lines By Clicking and Dragging</a>
           <a href="#">Change Canvas, Box, and Line Styles with Top Bar Buttons</a>
           <a href="#">Ctrl+B for Bold, Ctrl+I for Italics, Ctrl+U for Underline, and Ctrl+5 for Strikethrough</a>
 
@@ -618,7 +619,7 @@
         if (getFromContainer) {
           let Id = '';
           for (let i = boxId.length - 1; i >= 0; i--) {
-            c = boxId[i];
+            let c = boxId[i];
             if (c >= '0' && c < '9') {
               Id += c;
             } else {
@@ -675,14 +676,6 @@
           }
           document.addEventListener("mousemove", moveBox);
           document.addEventListener("mouseup", stopDrag);
-        }
-      }
-
-      function deleteBox(boxId) {
-        const box = document.getElementById(boxId);
-        if (box) {
-          box.remove();
-          console.log("removed box " + boxId);
         }
       }
 
@@ -850,7 +843,7 @@
 
       function closeDropdowns() {
         let dropdowns = document.getElementsByClassName("dropdown-content");
-        for (i = 0; i < dropdowns.length; i++) {
+        for (let i = 0; i < dropdowns.length; i++) {
           let openDropdown = dropdowns[i];
           if (openDropdown.classList.contains('show')) {
             openDropdown.classList.remove('show');
@@ -999,7 +992,7 @@
       window.onclick = function(event) {
         if (!event.target.matches('.dropbtn')) {
           let dropdowns = document.getElementsByClassName("dropdown-content");
-          for (i = 0; i < dropdowns.length; i++) {
+          for (let i = 0; i < dropdowns.length; i++) {
             let openDropdown = dropdowns[i];
             if (openDropdown.classList.contains('show')) {
               openDropdown.classList.remove('show');
