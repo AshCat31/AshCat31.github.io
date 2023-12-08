@@ -459,7 +459,6 @@
       let selectedBoxes = [];
       let selectedLines = [];
       let lineStartBox = null;
-      let lineStartPoint = null;
       let lines = []; // unlike selBoxes, store info not element cuz must create new ele w/ that info
       const canvas = document.getElementById('canvas');
 
@@ -574,7 +573,6 @@
           }
           if (!lineStartBox) { // handle line creation
             lineStartBox = box;
-            lineStartPoint = getCenter(box); //necessary?
             box.classList.add("start");
           } else {
             const endPoint = getCenter(box); //necessary?
@@ -593,7 +591,6 @@
             lines.push(newLineData); // Store line data //in object
             createLine(newLineData);
             lineStartBox = null;
-            lineStartPoint = null;
           }
         } else {
           updateLines();
@@ -659,8 +656,8 @@
             box.style.top = newY + "px";
             for (let i = 0; i < selectedBoxes.length; i++) {
               let thisBox = getContainerFromBox(selectedBoxes[i].id);
-              newBoxX = event.clientX - allInitialX[i] - thisBox.style.borderWidth;
-              newBoxY = event.clientY - allInitialY[i] - thisBox.style.borderWidth;
+              let newBoxX = event.clientX - allInitialX[i] - thisBox.style.borderWidth;
+              let newBoxY = event.clientY - allInitialY[i] - thisBox.style.borderWidth;
               thisBox.style.left = newBoxX + "px";
               thisBox.style.top = newBoxY + "px";
             }
@@ -794,13 +791,13 @@
             if (target == selectedLines); { // inefficient
               element.style.stroke = color;
               const lineId = element.id;
-              const lineInfo = lines.find(l => l.linedD === lineId); //does this work? yup
+              const lineInfo = lines.find(l => l.lineId === lineId); //does this work? yup
               lineInfo['lineColor'] = color;
             }
           });
         } else if (targetAttr == "border") { // Change the border color of each target element
           target.forEach((element) => {
-            box = getContainerFromBox(element.id);
+            let box = getContainerFromBox(element.id);
             box.style.borderColor = color;
           });
         }
@@ -816,7 +813,7 @@
           });
         } else if (target == "border") { // Change the border width of each target box
           selectedBoxes.forEach((element) => {
-            box = getContainerFromBox(element.id);
+            let box = getContainerFromBox(element.id);
             box.style.borderWidth = width;
             console.log()
           });
@@ -837,14 +834,14 @@
           });
         } else if (target == "border") { // Change the border style of each target box
           selectedBoxes.forEach((element) => {
-            box = getContainerFromBox(element.id);
+            let box = getContainerFromBox(element.id);
             box.style.borderStyle = style;
           });
         }
       }
 
       function toggleDropdown(e) {
-        isShown = e.parentNode.getElementsByClassName("dropdown-content")[0].classList.contains("show");
+        let isShown = e.parentNode.getElementsByClassName("dropdown-content")[0].classList.contains("show");
         closeDropdowns();
         if (!isShown) {
           e.parentNode.getElementsByClassName("dropdown-content")[0].classList.toggle("show");
@@ -916,7 +913,6 @@
           }
           if (!document.getElementById(lineStartBox)) {
             lineStartBox = null;
-            lineStartPoint = null;
           }
         }
       }
