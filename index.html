@@ -422,6 +422,10 @@
         <img src="images/strikethrough.svg" alt="Strikethrough">
       </button>
 
+      <button class="icon-button" onclick="saveData()" title="Test">
+        <img src="images/test.svg" alt="Test">
+      </button>
+
       <div class="dropdown">
         <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Usage">
           <img src="images/info.svg" alt="Usage">
@@ -497,8 +501,8 @@
         }
         const xPos = event.clientX;
         const yPos = event.clientY;
-        const boxWidth = 150; // Adjust the width of the box as needed
-        const boxHeight = 40; // Adjust the height of the box as needed
+        const boxWidth = 150;
+        const boxHeight = 40;
         const box = document.createElement("input");
         const boxContainer = document.createElement("span");
         const boxLeft = xPos - boxWidth / 2 + "px";
@@ -1004,6 +1008,27 @@
       canvas.addEventListener('mousedown', startSelection);
       setUpCustomInputs();
       window.addEventListener("keydown", onKeypress);
+
+      function saveData() {
+        let boxList = document.getElementById('canvas').childNodes;
+        boxList.forEach((box) => {
+          console.log(box.id);
+          // get box attributes and store in dict
+          //attrs to get: id, x/y pos, size, color, border color/width/style, text color/size/style, text(value?)
+          /* ref:
+          let newLineData = {
+              lineId: lineId,
+              startBox: startBoxId,
+              endBox: endBoxId,
+              lineColor: "black",
+              lineWidth: "2px",
+              lineDash: "none"
+            };
+            lines.push(newLineData); // Store line data 
+            */
+        })
+        return;
+      }
 
     </script>
   </body>
