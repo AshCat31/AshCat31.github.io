@@ -774,7 +774,7 @@
         }
       }
 
-      function changeColor(color, target, targetAttr) { //check if works. seems to!
+      function changeColor(color, target, targetAttr) {
         if (targetAttr == "background") { // Change the background color of each target element
           target.forEach((element) => {
             element.style.backgroundColor = color;
@@ -785,12 +785,14 @@
         } else if (targetAttr == "color") { // Change the font/line color of each target element
           target.forEach((element) => {
             element.style.color = color; //stroke instead for line?
-            if (target == selectedLines); { // inefficient
-              element.style.stroke = color;
-              const lineId = element.id;
+            if (target === 'selectedLines'); { // inefficient
+              selectedLines.forEach((line) => {
+              console.log(target + selectedLines)
+              line.style.stroke = color;
+              const lineId = line.id;
               const lineInfo = lines.find(l => l.lineId === lineId); //does this work? yup
               lineInfo['lineColor'] = color;
-            }
+            })}
           });
         } else if (targetAttr == "border") { // Change the border color of each target element
           target.forEach((element) => {
