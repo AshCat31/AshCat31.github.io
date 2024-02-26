@@ -509,7 +509,7 @@
         const boxTop = yPos - boxHeight / 2 + "px";
         // Set up boxContainer properties
         boxContainer.id = "containerBox" + count;
-        boxContainer.value = "Type here";
+        box.placeholder = "Type here";
         boxContainer.style.left = boxLeft;
         boxContainer.style.top = boxTop;
         boxContainer.style.width = boxWidth + "px";
@@ -619,7 +619,7 @@
         console.log("Deselected boxes/lines");
       }
 
-      function getContainerFromBox(boxId, getFromContainer = false) { //see if this works. It does!
+      function getContainerFromBox(boxId, getFromContainer = false) {
         if (getFromContainer) {
           let Id = '';
           for (let i = boxId.length - 1; i >= 0; i--) {
@@ -1010,12 +1010,24 @@
       window.addEventListener("keydown", onKeypress);
 
       function saveData() {
-        let boxList = document.getElementById('canvas').childNodes;
-        boxList.forEach((box) => {
-          console.log(box.id);
+        let boxCList = document.getElementById('canvas').childNodes;
+        boxCList.forEach((boxC) => {
+          console.log("-" + boxC.id);
+          let ID = boxC.id.split('containerBox').pop();
+          let box = document.getElementById('box' + ID)
+          //box = getBoxFromContainer(boxC) //how?
+          let boxData = {
+            boxID: ID, //boxID is just the number
+            boxText: box.value,
+            boxLeft: boxC.style.left,
+            boxTop: boxC.style.top,
+            boxWidth: boxC.style.width,
+            boxHeight: boxC.style.height,
+          }
+          console.log(boxData)
           // get box attributes and store in dict
           //attrs to get: id, x/y pos, size, color, border color/width/style, text color/size/style, text(value?)
-          /* ref:
+          /* reference:
           let newLineData = {
               lineId: lineId,
               startBox: startBoxId,
@@ -1027,6 +1039,7 @@
             lines.push(newLineData); // Store line data 
             */
         })
+        // lineList too
         return;
       }
 
