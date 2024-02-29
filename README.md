@@ -1,9 +1,9 @@
-# Pop-Up Box Website
-# AshCat31.github.io
+# **Pop-Up Box**
+# *AshCat31.github.io*
 
 ## Overview
 
-The Pop-Up Box diagramming tool provides a simple and interactive platform for creating, moving, connecting, and styling boxes. Users can perform various actions such as changing the background color of the canvas, modifying box properties (color, border, text), adjusting line attributes, and applying text styling.
+The Pop-Up Box diagramming tool provides a simple and interactive platform for creating, moving, connecting, and styling boxes. Users can create diagrams by adding, removing, and connecting boxes,changing the background color of the canvas, modifying box properties (color, border, text), adjusting line attributes, and applying text styling.
 
 ## Features
 
@@ -16,11 +16,14 @@ The Pop-Up Box diagramming tool provides a simple and interactive platform for c
 
 ## Usage
 
-1. **Add Box:** Click anywhere on the canvas.
+1. **Add Box:** Click anywhere on the canvas and start typing.
 2. **Move Box:** Click and drag the box to the desired location.
-3. **Connect Boxes:** Ctrl + Click on one box, then Ctrl + Click on another to create a line between them.
-4. **Delete Box:** Alt + Click on a box to remove it.
-5. **Change Styles:** Use the top bar buttons to change various box and line styles, including color, width, & style.
+3. **Select Boxes:** Click a box to select it; Shift + Click to select multiple.
+4. **Select Lines:** Click and drag on the canvas to select lines inside. *(Note: Selection box currently doesn't show.)*
+5. **Connect Boxes:** Ctrl + Click on one box, then Ctrl + Click on another to create a line between them.
+6. **Delete Box:** Alt + Click on a box to remove it.
+7. **Change Styles:** Use the top bar buttons to change various box and line styles, including color, width, & style.
+8. **Save and Load Diagrams:** Use the top bar buttons to save and load a diagram from a cookie.
 
 ## Styling Options
 
@@ -29,11 +32,22 @@ The Pop-Up Box diagramming tool provides a simple and interactive platform for c
 - **Box Border Color:** Modify the border color of a box.
 - **Box Border Width:** Adjust the border width of a box.
 - **Box Border Style:** Change the border style of a box.
-- **Line Color:** Change the color of connecting lines. TBA
-- **Line Width:** Adjust the width of connecting lines. TBA
-- **Line Style:** Change the style of connecting lines. TBA
+- **Line Color:** Change the color of connecting lines.
+- **Line Width:** Adjust the width of connecting lines.
+- **Line Style:** Change the style of connecting lines.
 - **Text Color:** Modify the color of box text.
 - **Text Styles:** Apply bold, italic, underline, or strikethrough to box text.
+
+## Shortcuts    
+
+- **Ctrl-A:** Select all boxes.
+- **Ctrl-D:** Deselect all boxes.
+- **Alt-Backspace:** Delete all selected boxes.
+- **Ctrl-Delete:** Delete everything.
+- **Ctrl-U:** Underline selected text.
+- **Ctrl-B:** Make selected text bold.
+- **Ctrl-I:** Make selected text italic.
+- **Ctrl-5 (or Alt-Shift-5):** Apply strikethrough to selected text.
 
 ## To-Do List
 
@@ -45,7 +59,9 @@ The Pop-Up Box diagramming tool provides a simple and interactive platform for c
 
 ## Known Issues
 
+- Line selection box doesn't show.
 - Changing border width of a box prevents it from being dragged.
+- Can't underline and strikethrough the same box. *(Low priority.)*
 
 ## Credits
 This web application was created with the assistance of ChatGPT, an AI language model developed by OpenAI. ChatGPT provides intelligent responses and guidance throughout the development process.
