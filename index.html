@@ -493,12 +493,10 @@
 <div class="container">
     <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
     <div id="canvas" style="height: 100vh;"></div>
-    <!--onclick="addBox(event)" -->
     <svg id="lineContainer"
          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
     <svg id="selContainer"
          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
-
 </div>
 
 <script>
@@ -659,25 +657,25 @@
     }
 
     function getID(boxId) {
-            // starting from end, get all numbers, reverse them, and return them
-            let Id = '';
-            for (let i = boxId.length - 1; i >= 0; i--) {
-                let c = boxId[i];
-                if (c >= '0' && c < '9') {
-                    Id += c;
-                } else {
-                    Id = Id.split("").reverse().join("");
-                    return Id;
-                }
+        // starting from end, get all numbers, reverse them, and return them
+        let Id = '';
+        for (let i = boxId.length - 1; i >= 0; i--) {
+            let c = boxId[i];
+            if (c >= '0' && c < '9') {
+                Id += c;
+            } else {
+                Id = Id.split("").reverse().join("");
+                return Id;
             }
         }
+    }
 
     function getContainerFromID(boxId) {
-        return document.getElementById("containerBox"+getID(boxId));
+        return document.getElementById("containerBox" + getID(boxId));
     }
 
     function getBoxFromID(boxId) {  // works? needed?
-        return document.getElementById("box"+getID(boxId));
+        return document.getElementById("box" + getID(boxId));
     }
 
     function startDrag(event) {
@@ -1070,10 +1068,6 @@
         }
     }
 
-    canvas.addEventListener('mousedown', startSelection);
-    setUpCustomInputs();
-    window.addEventListener("keydown", onKeypress);
-
     function saveData() {
         let boxDataList = [];
         let lineDataList = [];
@@ -1104,8 +1098,7 @@
         // lineList too
         i = 0;
         lines.forEach((line) => {
-            let lineDataString = JSON.stringify(line);
-            lineDataList[i] = lineDataString;
+            lineDataList[i] = JSON.stringify(line);
             i++;
         });
         return {
@@ -1117,6 +1110,7 @@
 
     function loadData(boxDataList, lineDataList) {
         deleteAll();
+        console.log(boxDataList);
         boxDataList.forEach((boxDataString) => {
             let boxData = JSON.parse(boxDataString);
             recreateBox(boxData);
@@ -1133,17 +1127,13 @@
 
     function saveDataLocally() {
         let data = saveData();
-        let boxData = data.boxDict;
-        let lineData = data.lineDict;
-        localStorage.setItem("boxes", boxData.toString());
-        localStorage.setItem("lines", lineData.toString());
+        localStorage.setItem("boxes", data.boxDict.toString());
+        localStorage.setItem("lines", data.lineDict.toString());
     }
 
     function loadDataLocally() {
-        let boxDataListString = localStorage.getItem("boxes");
-        let boxDataList = boxDataListString.split('}},');
-        let lineDataListString = localStorage.getItem("lines");
-        let lineDataList = lineDataListString.split('},');
+        let boxDataList = localStorage.getItem("boxes").split('}},');
+        let lineDataList = localStorage.getItem("lines").split('},');
         for (let i = 0; i < boxDataList.length - 1; i++) {
             boxDataList[i] = boxDataList[i] + '}}'
         }
@@ -1177,12 +1167,10 @@
 
     function handleFileSelect(event) {
         const file = event.target.files[0];
-        // Check if the file is a JSON file
         if (file && file.type === 'application/json') {
             // Read the content of the file
             const reader = new FileReader();
             reader.onload = function (e) {
-                // Process the JSON data (you can replace this with your own logic)
                 const jsonData = JSON.parse(e.target.result);
                 loadData(jsonData.boxDict, jsonData.lineDict);
             };
@@ -1206,7 +1194,7 @@
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     const jsonData = JSON.parse(e.target.result);
-                    console.log('JSON Data:', jsonData);
+                    loadData(jsonData.boxDict, jsonData.lineDict);
                 };
                 reader.readAsText(file);
             } else {
@@ -1233,7 +1221,6 @@
         boxContainer.style.borderStyle = boxData.boxBorderStyle;
         box.style.color = boxData.boxTextColor;
         box.style.fontSize = boxData.boxTextSize;
-        //box.classList = boxData.boxClassList; // don't seem to work
         for (let i = 0; i < Object.keys(boxData.boxClassList).length; i++) {
             let style = boxData.boxClassList[i];
             if (style != 'box' && style != 'box-input') {
@@ -1251,6 +1238,12 @@
         document.getElementById("canvas").appendChild(boxContainer);
         document.getElementById(boxContainer.id).appendChild(box);
     }
+
+    canvas.addEventListener('mousedown', startSelection);
+    setUpCustomInputs();
+    window.addEventListener("keydown", onKeypress);
+    canvas.ondragover = handleDragOver;
+    canvas.ondrop = handleDrop;
 
 </script>
 </body>
