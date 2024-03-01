@@ -575,7 +575,7 @@
             deselectBoxes();
         }
         selectBox(box);
-        console.log("made/selected " + box.id);
+        console.log("made " + box.id);
         boxCount++;
     }
 
@@ -658,8 +658,7 @@
         console.log("Deselected boxes/lines");
     }
 
-    function getContainerFromID(boxId, getFromContainer = false) {
-        if (getFromContainer) {
+    function getID(boxId) {
             // starting from end, get all numbers, reverse them, and return them
             let Id = '';
             for (let i = boxId.length - 1; i >= 0; i--) {
@@ -668,12 +667,17 @@
                     Id += c;
                 } else {
                     Id = Id.split("").reverse().join("");
-                    return document.getElementById("containerBox" + Id);
+                    return Id;
                 }
             }
         }
-        let containerId = "containerBox" + boxId.split("box").pop();
-        return document.getElementById(containerId);
+
+    function getContainerFromID(boxId) {
+        return document.getElementById("containerBox"+getID(boxId));
+    }
+
+    function getBoxFromID(boxId) {  // works? needed?
+        return document.getElementById("box"+getID(boxId));
     }
 
     function startDrag(event) {
@@ -829,7 +833,6 @@
                 if (target === 'selectedLines') ;
                 { //stroke instead for line
                     selectedLines.forEach((line) => {
-                        console.log(target + selectedLines)
                         line.style.stroke = color;
                         const lineId = line.id;
                         const lineInfo = lines.find(l => l.lineId === lineId); //does this work? yup
@@ -857,7 +860,6 @@
             selectedBoxes.forEach((element) => {
                 let box = getContainerFromID(element.id);
                 box.style.borderWidth = width;
-                console.log()
             });
         } else if (target == "text") { // Change the size of each target box's text
             selectedBoxes.forEach((element) => {
@@ -977,7 +979,7 @@
     }
 
     function startSelection(event) {
-        // TODO: dont' deselect lines if shift key pressed. alter deselectBoxes func?
+        // TODO: don't deselect lines if shift key pressed. alter deselectBoxes func?
         if (event.altKey) {
             console.log("desel");
             return;
@@ -1007,6 +1009,12 @@
             selectionRectangle.style.top = `${top}px`;
         }
 
+        function pointIsBetween(pointX, pointY, startX, startY, endX, endY) {
+            let xBetween = ((pointX > startX && pointX < endX) || (pointX < startX && pointX > endX));
+            let yBetween = ((pointY > startY && pointY < endY) || (pointY < startY && pointY > endY));
+            return xBetween && yBetween;
+        }
+
 
         function endSelection(e) {
             isMouseDown = false; // Mouse up, set flag to false
@@ -1015,26 +1023,30 @@
             endXRect = e.pageX;
             endYRect = e.pageY;
             selectionRectangle.style.display = 'none'; // Hide rectangle
-
             if ((Math.abs(startXRect - endXRect) < threshold) && (Math.abs(startYRect - endYRect) < threshold)) {
                 addBox(event);
             } else {
                 if (!event.shiftKey) {
                     deselectBoxes();
                 }
+                // select boxes between start and end
+                let boxCList = Array.from(document.getElementById('canvas').children);
+                boxCList.forEach((boxC) => {
+                    let boxRect = boxC.getBoundingClientRect();
+                    let topLeftBetween = pointIsBetween(boxRect.left, boxRect.top, startXRect, startYRect, endXRect, endYRect);
+                    let bottomRightBetween = pointIsBetween(boxRect.right, boxRect.bottom, startXRect, startYRect, endXRect, endYRect);
+                    if (topLeftBetween && bottomRightBetween) {
+                        selectBox(boxC);
+                    }
+                })
                 lines.forEach((line) => {
-                    console.log(line.lineId);
                     const lineStart = getCenter(document.getElementById(line.startBox));
                     const lineEnd = getCenter(document.getElementById(line.endBox));
-                    const xStartBetween = ((lineStart.x > startXRect && lineStart.x < endXRect) || (lineStart.x < startXRect && lineStart.x > endXRect));
-                    const xEndBetween = ((lineEnd.x > startXRect && lineEnd.x < endXRect) || (lineEnd.x < startXRect && lineEnd.x > endXRect));
-                    const yStartBetween = ((lineStart.y > startYRect && lineStart.y < endYRect) || (lineStart.y < startYRect && lineStart.y > endYRect));
-                    const yEndBetween = ((lineEnd.y > startYRect && lineEnd.y < endYRect) || (lineEnd.y < startYRect && lineEnd.y > endYRect));
-                    console.log(line.lineId + ": " + xStartBetween + '' + xEndBetween + '' + yStartBetween + '' + yEndBetween);
-                    if (xStartBetween && xEndBetween && yStartBetween && yEndBetween && document.getElementById(line.lineId)) {
+                    const startBetween = pointIsBetween(lineStart.x, lineStart.y, startXRect, startYRect, endXRect, endYRect);
+                    const endBetween = pointIsBetween(lineEnd.x, lineEnd.y, startXRect, startYRect, endXRect, endYRect);
+                    if (startBetween && endBetween && document.getElementById(line.lineId)) {
                         selectedLines.push(document.getElementById(line.lineId));
                         document.getElementById(line.lineId).classList.add("selected");
-                        console.log("added: " + line.lineId);
                     }
                 });
             }
@@ -1069,7 +1081,6 @@
         let boxData;
         let boxCList = document.getElementById('canvas').childNodes;  // use .children instead?
         boxCList.forEach((boxC) => {  // get box attributes and store in dict
-            console.log("-" + boxC.id);
             let ID = boxC.id.split('containerBox').pop();
             let box = document.getElementById('box' + ID)
             boxData = {
@@ -1087,7 +1098,6 @@
                 boxTextSize: box.style.fontSize,
                 boxClassList: box.classList,
             }
-            console.log(boxData)
             boxDataList[i] = JSON.stringify(boxData);
             i++;
         })
@@ -1097,7 +1107,6 @@
             let lineDataString = JSON.stringify(line);
             lineDataList[i] = lineDataString;
             i++;
-            console.log(lineDataString);
         });
         return {
             boxDict: boxDataList,
@@ -1110,7 +1119,6 @@
         deleteAll();
         boxDataList.forEach((boxDataString) => {
             let boxData = JSON.parse(boxDataString);
-            console.log(boxData)
             recreateBox(boxData);
             boxCount++;
         });
@@ -1129,7 +1137,6 @@
         let lineData = data.lineDict;
         localStorage.setItem("boxes", boxData.toString());
         localStorage.setItem("lines", lineData.toString());
-        console.log(localStorage.getItem('lines'));
     }
 
     function loadDataLocally() {
@@ -1143,7 +1150,6 @@
         for (let i = 0; i < lineDataList.length - 1; i++) {
             lineDataList[i] = lineDataList[i] + '}'
         }
-        console.log(boxDataList, lineDataList);
         loadData(boxDataList, lineDataList);
     }
 
@@ -1178,7 +1184,6 @@
             reader.onload = function (e) {
                 // Process the JSON data (you can replace this with your own logic)
                 const jsonData = JSON.parse(e.target.result);
-                console.log(jsonData.boxDict, jsonData.lineDict);
                 loadData(jsonData.boxDict, jsonData.lineDict);
             };
             reader.readAsText(file);
@@ -1231,10 +1236,8 @@
         //box.classList = boxData.boxClassList; // don't seem to work
         for (let i = 0; i < Object.keys(boxData.boxClassList).length; i++) {
             let style = boxData.boxClassList[i];
-            console.log(style + " " + i);
             if (style != 'box' && style != 'box-input') {
                 box.classList.add(style);
-                console.log(style + " " + i);
             }
         }
         boxContainer.addEventListener("mousedown", startDrag);
