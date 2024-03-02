@@ -198,6 +198,10 @@
             text-decoration: line-through;
         }
 
+        .underline-strikethrough {
+            text-decoration: underline line-through;
+        }
+
         #selection-rectangle {
             position: absolute;
             border: 2px dashed #000;
@@ -805,15 +809,40 @@
     function isStyleApplied(elementId, style) {
         //Check if style is applied. Used by styleText() through applyTextStyle()
         const element = document.getElementById(elementId);
+        if (style == "underline" || style == "strikethrough") {
+            return element.classList.contains("underline-strikethrough") || element.classList.contains(style);
+        }
         return element.classList.contains(style);
     }
 
     function applyTextStyle(elementId, style) { //Toggle style. Used by styleText()
+        // potentially fix underline/strikethrough by checking if other is applied, if so, applying both
         const element = document.getElementById(elementId);
+        console.log(isStyleApplied(elementId, "underline-strikethrough"));
         if (!isStyleApplied(elementId, style)) {
-            element.classList.add(style);
+            if (style == "underline" && isStyleApplied(elementId, "strikethrough")) {
+                element.classList.remove("strikethrough");
+                element.classList.add("underline-strikethrough");
+                console.log("add underline, keeping strikethrough");
+            } else if (style == "strikethrough" && isStyleApplied(elementId, "underline")) {
+                element.classList.remove("underline");
+                element.classList.add("underline-strikethrough");
+                console.log("add strikethrough, keeping underline");
+            } else {
+                element.classList.add(style);
+            }
         } else {
-            element.classList.remove(style);
+            if (style == "underline" && isStyleApplied(elementId, "underline-strikethrough")) {
+                element.classList.remove("underline-strikethrough");
+                element.classList.add("strikethrough");
+                console.log("removed underline, keeping strikethrough");
+            } else if (style == "strikethrough" && isStyleApplied(elementId, "underline-strikethrough")) {
+                element.classList.remove("underline-strikethrough");
+                element.classList.add("underline");
+                console.log("removed strikethrough, keeping underline");
+            } else {
+                element.classList.remove(style);
+            }
         }
     }
 
