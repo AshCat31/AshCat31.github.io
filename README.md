@@ -61,7 +61,6 @@ The Pop-Up Box diagramming tool provides a simple and interactive platform for c
 
 - Line selection box doesn't show.
 - Changing border width of a box prevents it from being dragged.
-- Can't underline and strikethrough the same box. *(Low priority.)*
 
 ## Credits
 This web application was created with the assistance of ChatGPT, an AI language model developed by OpenAI. ChatGPT provides intelligent responses and guidance throughout the development process.
