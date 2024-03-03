@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <!-- Pop-Up Box! -->
-<!-- Bugged: Changing box border prevents dragging. Ctrl-clicking moves box down/right. -->
-<!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struckthorough (currently underline+strikethrough can't work). Box resizing & box/line styling. Tentative saving/loading from cookie. -->
-<!-- Todo: Render selection rectangle. Try svg lines instead of rect. Clarify box vs container. Clean code. Make canvas bigger and scrollable. Print. -->
+<!-- Bugged: Changing text size breaks resizing. Ctrl-clicking moves box down/right. -->
+<!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struck thorough. Box resizing & box/line styling. Saving/loading from cookie (currently canvas color doesn't save). -->
+<!-- Todo: Clarify box vs container. Clean code. Make canvas bigger and scrollable. Print. -->
 
 <head>
     <title>Pop-Up Box</title>
@@ -58,6 +58,7 @@
             height: 100%;
             display: inline-block;
             z-index: 2;
+            font-size: 14px;
         }
 
         /* add a visible handle. necessary? */
