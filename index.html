@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <!-- Pop-Up Box! -->
-<!-- Bugged: Changing text size breaks resizing. Ctrl-clicking moves box down/right. -->
+<!-- Bugged: Resizing broken, at least on laptop. Ctrl-clicking moves box down/right. -->
 <!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struck thorough. Box resizing & box/line styling. Saving/loading from cookie (currently canvas color doesn't save). -->
 <!-- Todo: Clarify box vs container. Clean code. Make canvas bigger and scrollable. Print. -->
 
@@ -432,7 +432,6 @@
 <div id="colorDropdownContainer"></div>
 
 <div class="container">
-    <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
     <div id="canvas" style="height: 100vh;"></div>
     <svg id="lineContainer"
          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
@@ -508,6 +507,7 @@
         box.classList.add("box");
         box.classList.add("box-input");
         boxContainer.classList.add("box");
+        // why get by ID here?
         document.getElementById("canvas").appendChild(boxContainer);
         document.getElementById("containerBox" + boxCount).appendChild(box);
         box.focus();
