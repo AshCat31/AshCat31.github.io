@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <!-- Pop-Up Box! -->
 <!-- Bugged: Changing box border prevents dragging. Ctrl-clicking moves box down/right. -->
@@ -93,7 +94,7 @@
             top: 0;
             left: 0;
             right: 0;
-            z-index: 9999;
+            z-index: 999;
             border-bottom: 3px solid black;
             box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2);
             display: flex;
@@ -172,6 +173,36 @@
             outline: 1px solid black;
         }
 
+        #colorDropdownContainer {
+            width: 0;
+        }
+
+        table {
+            background-color: lightgray;
+            border: black solid 2px;
+            border-collapse: collapse;
+            z-index: 9999;
+            position: absolute;
+            box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        td {
+            border: 1px solid gray;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            box-sizing: border-box; /* Include padding and border in the total width and height */
+            z-index: 9999;
+            position: relative;
+        }
+
+        .colorButton button {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box; /* Include padding and border in the total width and height */
+            z-index: 9999;
+        }
+
         a > input {
             /* All input children of a (dropdowns) */
             size: 20px;
@@ -237,7 +268,7 @@
 </head>
 
 <body>
-<div class="top-bar no-print">
+<div class="top-bar no-print" id='top-bar'>
     <div class="dropdown" data-dropdown="colorDropdown">
         <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Background Color">
             <img src="images/background-fill.svg" alt="Background Color">
@@ -429,7 +460,7 @@
             <a href="#" onclick="changeWidth('60px', 'text')" data-style="60px">60 px</a>
             <a href="#" onclick="event.stopPropagation()" data-style="custom" width="10">Custom
                 <label>
-                    <input class="custom-width" type="number" data-target="text"/>
+                    <input class="custom-width" type="number" data-target="text" id="custom-text-width"/>
                 </label>
             </a>
         </div>
@@ -467,6 +498,10 @@
         <img src="images/upload.svg" alt="Upload">
     </button>
 
+    <button class="icon-button" onclick="showColorDropdown(event, [canvas], 'background')" title="Test">
+        <img src="images/test.svg" alt="Test">
+    </button>
+
     <div class="dropdown">
         <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Usage">
             <img src="images/info.svg" alt="Usage">
@@ -493,6 +528,7 @@
 </div>
 
 <div id="selection-rectangle"></div>
+<div id="colorDropdownContainer"></div>
 
 <div class="container">
     <h1 class="text-center mb-5">Click Anywhere to Add Box</h1>
@@ -510,6 +546,7 @@
     let lineStartBox = null;
     let lines = []; // unlike selBoxes, store info not element cuz must create new ele w/ that info
     const canvas = document.getElementById('canvas');
+    let customColors = [null, null, null, null, null, null, null, null, null, null];
 
     function setUpCustomInputs() {
         const colorInputs = document.querySelectorAll(".custom-color");
@@ -818,16 +855,13 @@
     function applyTextStyle(elementId, style) { //Toggle style. Used by styleText()
         // potentially fix underline/strikethrough by checking if other is applied, if so, applying both
         const element = document.getElementById(elementId);
-        console.log(isStyleApplied(elementId, "underline-strikethrough"));
         if (!isStyleApplied(elementId, style)) {
             if (style == "underline" && isStyleApplied(elementId, "strikethrough")) {
                 element.classList.remove("strikethrough");
                 element.classList.add("underline-strikethrough");
-                console.log("add underline, keeping strikethrough");
             } else if (style == "strikethrough" && isStyleApplied(elementId, "underline")) {
                 element.classList.remove("underline");
                 element.classList.add("underline-strikethrough");
-                console.log("add strikethrough, keeping underline");
             } else {
                 element.classList.add(style);
             }
@@ -835,11 +869,9 @@
             if (style == "underline" && isStyleApplied(elementId, "underline-strikethrough")) {
                 element.classList.remove("underline-strikethrough");
                 element.classList.add("strikethrough");
-                console.log("removed underline, keeping strikethrough");
             } else if (style == "strikethrough" && isStyleApplied(elementId, "underline-strikethrough")) {
                 element.classList.remove("underline-strikethrough");
                 element.classList.add("underline");
-                console.log("removed strikethrough, keeping underline");
             } else {
                 element.classList.remove(style);
             }
@@ -1266,6 +1298,116 @@
         boxContainer.classList.add("box");
         document.getElementById("canvas").appendChild(boxContainer);
         document.getElementById(boxContainer.id).appendChild(box);
+    }
+
+    function showColorDropdown(event, target, targetAttr) {
+        console.log(event);
+        // Get the clicked button
+        let x = event.x;
+        createColorDropdown(x, target, targetAttr);
+    }
+
+    function createColorDropdown(x, target, targetAttr) {
+        // create a color dropdown menu
+        let dropdownContainer = document.getElementById("colorDropdownContainer");
+        let colorRanges = [  // Color ranges by column
+            ["#FFFFFF", "#CCCCCC", "#AAAAAA", "#888888", "#555555", "#333333", "#000000"], // Black
+            ["#FF9999", "#FF6666", "#FF3333", "#FF0000", "#CC0000", "#990000", "#660000"], // Red
+            ["#FFD699", "#FFB366", "#FF9933", "#FF7700", "#CC7700", "#995500", "#664400"], // Orange
+            ["#FFFF99", "#FFFF66", "#FFFF33", "#FFFF00", "#CCCC00", "#999900", "#666600"], // Yellow
+            ["#78fd78", "#45ff45", "#00ff00", "#00cc00", "#00a200", "#007200", "#003600"], // Green
+            ["#9999FF", "#6666FF", "#3333FF", "#0000FF", "#0000CC", "#000099", "#000066"], // Blue
+            ["#B488FF", "#8C66FF", "#6633FF", "#4900b8", "#330066", "#190033", "#000022"], // Indigo
+            ["#D58AD5", "#B267B2", "#904390", "#661066", "#550055", "#440044", "#330033"], // Purple
+            ["#ffd1d1", "#FFB4C1", "#ff7685", "#ff4a5c", "#FF3344", "#CC2233", "#992233"], // Pink
+            ["#D2B48C", "#AE8E6E", "#8B7355", "#705239", "#4B331F", "#33231A", "#1A120C"], // Brown
+        ];
+        // Create a table element
+        let table = document.createElement("table");
+        // Create rows and cells
+        for (let i = 0; i < 7; i++) {
+            let row = document.createElement("tr");
+            for (let j = 0; j < 10; j++) {
+                let cell = document.createElement("td");
+                let button = document.createElement("button");
+                // Set button attributes
+                let colorIndex = j % colorRanges.length;
+                let color = colorRanges[colorIndex][i];
+                button.style.backgroundColor = color;
+                button.classList.add('colorButton');
+                button.style.width = '30px';
+                button.style.height = '30px';
+                button.onclick = function () {
+                    changeColor(this.style.backgroundColor, target, targetAttr);
+                };
+                // Append button to the cell, and cell to the row
+                cell.appendChild(button);
+                row.appendChild(cell);
+            }
+            table.appendChild(row);   // Append the row to the table
+        }
+        // Clear previous content and append the new table to the grid container
+        dropdownContainer.innerHTML = "";
+        dropdownContainer.appendChild(table);
+        let labelRow = document.createElement("tr");
+        let labelCell = document.createElement("td");
+        labelCell.setAttribute("colspan", "10");
+        let customLabel = document.createElement("div");
+        customLabel.innerHTML = "Custom";
+        customLabel.style.fontSize = "20px";
+        labelCell.appendChild(customLabel);
+        labelRow.appendChild(labelCell);
+        table.appendChild(labelRow);
+        let customColorsRow = document.createElement("tr");
+        for (let i = 0; i < 10; i++) {
+            let cell = document.createElement("td");
+            let button = document.createElement("button");
+            // Set button attributes
+            button.style.width = '30px';
+            button.style.height = '30px';
+            // If there's a custom color, use it; otherwise, set the button to white
+            if (customColors[i] !== null) {
+                button.style.backgroundColor = customColors[i];
+                button.onclick = function (e) {
+                    // Handle button click based on shift key
+                    if (e.shiftKey) {
+                        pickColor(i, target, targetAttr, x); // Call pickColor if shift key is pressed
+                    } else {
+                        changeColor(this.style.backgroundColor, target, targetAttr);
+                    }
+                };
+            } else {
+                button.style.backgroundColor = "#FFFFFF";
+                button.onclick = function () {
+                    // If color is null, call pickColor function
+                    pickColor(i, target, targetAttr); // Pass the index of the clicked button to pickColor
+                };
+            }
+            // Append button to the cell, and cell to the row
+            cell.appendChild(button);
+            customColorsRow.appendChild(cell);
+        }
+        // Append the custom colors row to the table
+        table.appendChild(customColorsRow);
+        // Position the dropdown underneath the clicked button
+        dropdownContainer.style.position = 'absolute';
+        dropdownContainer.style.top = document.getElementById('top-bar').getBoundingClientRect().bottom - 10 + 'px';
+        dropdownContainer.style.left = x - 333 + 'px'; // 333 is the width of the table
+        console.log(table.style.width);
+    }
+
+    // Function to open color picker and update customColors array
+    function pickColor(index, target, targetAttr, x) {
+        let colorInput = document.createElement("input");
+        colorInput.type = "color";
+        // Add an input event listener to handle color selection
+        colorInput.addEventListener("input", function () {
+            // Update the customColors array with the chosen color
+            customColors[index] = colorInput.value;
+            createColorDropdown(x, target, targetAttr);
+        });
+        //  Open the color picker
+        colorInput.click();
     }
 
     canvas.addEventListener('mousedown', startSelection);
