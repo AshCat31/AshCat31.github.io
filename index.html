@@ -270,78 +270,17 @@
 
 <body>
 <div class="top-bar no-print" id='top-bar'>
-    <div class="dropdown" data-dropdown="colorDropdown">
-        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Background Color">
-            <img src="images/background-fill.svg" alt="Background Color">
-        </button>
-        <div class="dropdown-content">
-            <a href="#" onclick="changeColor('red', [canvas], 'background')" data-style="red">Red</a>
-            <a href="#" onclick="changeColor('orange', [canvas], 'background')" data-style="orange">Orange</a>
-            <a href="#" onclick="changeColor('yellow', [canvas], 'background')" data-style="yellow">Yellow</a>
-            <a href="#" onclick="changeColor('green', [canvas], 'background')" data-style="green">Green</a>
-            <a href="#" onclick="changeColor('blue', [canvas], 'background')" data-style="blue">Blue</a>
-            <a href="#" onclick="changeColor('purple', [canvas], 'background')" data-style="purple">Purple</a>
-            <a href="#" onclick="changeColor('black', [canvas], 'background')" data-style="black">Black</a>
-            <a href="#" onclick="changeColor('white', [canvas], 'background')" data-style="white">White</a>
-            <a href="#" onclick="changeColor('gray', [canvas], 'background')" data-style="gray">Gray</a>
-            <a href="#" onclick="changeColor('brown', [canvas], 'background')" data-style="brown">Brown</a>
-            <a href="#" data-style="custom">Custom
-                <label>
-                    <input class="custom-color" type="color" value="#000000" data-target="canvas"
-                           data-attribute="background"/>
-                </label>
-            </a>
-        </div>
-    </div>
+    <button class="icon-button" onclick="showColorDropdown(event, [canvas], 'background')" title="Canvas Color">
+        <img src="images/background-fill.svg" alt="Canvas Color">
+    </button>
 
-    <div class="dropdown" data-dropdown="colorDropdown">
-        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Box Color">
-            <img src="images/box-fill.svg" alt="Box Color">
-        </button>
-        <div class="dropdown-content">
-            <a href="#" onclick="changeColor('red', selectedBoxes, 'background')" data-style="red">Red</a>
-            <a href="#" onclick="changeColor('orange', selectedBoxes, 'background')" data-style="orange">Orange</a>
-            <a href="#" onclick="changeColor('yellow', selectedBoxes, 'background')" data-style="yellow">Yellow</a>
-            <a href="#" onclick="changeColor('green', selectedBoxes, 'background')" data-style="green">Green</a>
-            <a href="#" onclick="changeColor('blue', selectedBoxes, 'background')" data-style="blue">Blue</a>
-            <a href="#" onclick="changeColor('purple', selectedBoxes, 'background')" data-style="purple">Purple</a>
-            <a href="#" onclick="changeColor('black', selectedBoxes, 'background')" data-style="black">Black</a>
-            <a href="#" onclick="changeColor('white', selectedBoxes, 'background')" data-style="white">White</a>
-            <a href="#" onclick="changeColor('gray', selectedBoxes, 'background')" data-style="gray">Gray</a>
-            <a href="#" onclick="changeColor('brown', selectedBoxes, 'background')" data-style="brown">Brown</a>
-            <a href="#" onclick="changeColor('transparent', selectedBoxes, 'background')" data-style="none">None</a>
-            <a href="#" data-style="custom">Custom
-                <label>
-                    <input class="custom-color" type="color" value="#000000" data-target="boxes"
-                           data-attribute="background"/>
-                </label>
-            </a>
-        </div>
-    </div>
+    <button class="icon-button" onclick="showColorDropdown(event, selectedBoxes, 'background')" title="Box Color">
+        <img src="images/box-fill.svg" alt="Box Color">
+    </button>
 
-    <div class="dropdown" data-dropdown="colorDropdown">
-        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Border Color">
-            <img src="images/border-color.svg" alt="Border Color">
-        </button>
-        <div class="dropdown-content">
-            <a href="#" onclick="changeColor('red', selectedBoxes, 'border')" data-style="red">Red</a>
-            <a href="#" onclick="changeColor('orange', selectedBoxes, 'border')" data-style="orange">Orange</a>
-            <a href="#" onclick="changeColor('yellow', selectedBoxes, 'border')" data-style="yellow">Yellow</a>
-            <a href="#" onclick="changeColor('green', selectedBoxes, 'border')" data-style="green">Green</a>
-            <a href="#" onclick="changeColor('blue', selectedBoxes, 'border')" data-style="blue">Blue</a>
-            <a href="#" onclick="changeColor('purple', selectedBoxes, 'border')" data-style="purple">Purple</a>
-            <a href="#" onclick="changeColor('black', selectedBoxes, 'border')" data-style="black">Black</a>
-            <a href="#" onclick="changeColor('white', selectedBoxes, 'border')" data-style="white">White</a>
-            <a href="#" onclick="changeColor('gray', selectedBoxes, 'border')" data-style="gray">Gray</a>
-            <a href="#" onclick="changeColor('brown', selectedBoxes, 'border')" data-style="brown">Brown</a>
-            <a href="#" data-style="custom">Custom
-                <label>
-                    <input class="custom-color" type="color" value="#000000" data-target="boxes"
-                           data-attribute="border"/>
-                </label>
-            </a>
-        </div>
-    </div>
+    <button class="icon-button" onclick="showColorDropdown(event, selectedBoxes, 'border')" title="Border Color">
+        <img src="images/border-color.svg" alt="Border Color">
+    </button>
 
     <div class="dropdown" data-dropdown="widthDropdown">
         <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Border Width">
@@ -371,29 +310,9 @@
         </div>
     </div>
 
-    <div class="dropdown" data-dropdown="colorDropdown">
-        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Line Color">
-            <img src="images/line-color.svg" alt="Line Color">
-        </button>
-        <div class="dropdown-content">
-            <a href="#" onclick="changeColor('red', selectedLines, 'color')" data-style="red">Red</a>
-            <a href="#" onclick="changeColor('orange', selectedLines, 'color')" data-style="orange">Orange</a>
-            <a href="#" onclick="changeColor('yellow', selectedLines, 'color')" data-style="yellow">Yellow</a>
-            <a href="#" onclick="changeColor('green', selectedLines, 'color')" data-style="green">Green</a>
-            <a href="#" onclick="changeColor('blue', selectedLines, 'color')" data-style="blue">Blue</a>
-            <a href="#" onclick="changeColor('purple', selectedLines, 'color')" data-style="purple">Purple</a>
-            <a href="#" onclick="changeColor('black', selectedLines, 'color')" data-style="black">Black</a>
-            <a href="#" onclick="changeColor('white', selectedLines, 'color')" data-style="white">White</a>
-            <a href="#" onclick="changeColor('gray', selectedLines, 'color')" data-style="gray">Gray</a>
-            <a href="#" onclick="changeColor('brown', selectedLines, 'color')" data-style="brown">Brown</a>
-            <a href="#" data-style="custom">Custom
-                <label>
-                    <input class="custom-color" type="color" value="#000000" data-target="lines"
-                           data-attribute="color"/>
-                </label>
-            </a>
-        </div>
-    </div>
+    <button class="icon-button" onclick="showColorDropdown(event, selectedLines, 'color')" title="Line Color">
+        <img src="images/line-color.svg" alt="Line Color">
+    </button>
 
     <div class="dropdown" data-dropdown="widthDropdown">
         <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Line Width">
@@ -422,29 +341,9 @@
         </div>
     </div>
 
-    <div class="dropdown" data-dropdown="colorDropdown">
-        <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Text Color">
-            <img src="images/text-color.svg" alt="Text Color">
-        </button>
-        <div class="dropdown-content">
-            <a href="#" onclick="changeColor('red', selectedBoxes, 'color')" data-style="red">Red</a>
-            <a href="#" onclick="changeColor('orange', selectedBoxes, 'color')" data-style="orange">Orange</a>
-            <a href="#" onclick="changeColor('yellow', selectedBoxes, 'color')" data-style="yellow">Yellow</a>
-            <a href="#" onclick="changeColor('green', selectedBoxes, 'color')" data-style="green">Green</a>
-            <a href="#" onclick="changeColor('blue', selectedBoxes, 'color')" data-style="blue">Blue</a>
-            <a href="#" onclick="changeColor('purple', selectedBoxes, 'color')" data-style="purple">Purple</a>
-            <a href="#" onclick="changeColor('black', selectedBoxes, 'color')" data-style="black">Black</a>
-            <a href="#" onclick="changeColor('white', selectedBoxes, 'color')" data-style="white">White</a>
-            <a href="#" onclick="changeColor('gray', selectedBoxes, 'color')" data-style="gray">Gray</a>
-            <a href="#" onclick="changeColor('brown', selectedBoxes, 'color')" data-style="brown">Brown</a>
-            <a href="#" data-style="custom">Custom
-                <label>
-                    <input class="custom-color" type="color" value="#000000" data-target="boxes"
-                           data-attribute="color"/>
-                </label>
-            </a>
-        </div>
-    </div>
+    <button class="icon-button" onclick="showColorDropdown(event, selectedBoxes, 'color')" title="Text Color">
+        <img src="images/text-color.svg" alt="Text Color">
+    </button>
 
     <div class="dropdown" data-dropdown="widthDropdown">
         <button class="icon-button dropbtn" onclick="toggleDropdown(this)" title="Text Size">
@@ -453,6 +352,7 @@
         <div class="dropdown-content">
             <a href="#" onclick="changeWidth('8px', 'text')" data-style="8px">8 px</a>
             <a href="#" onclick="changeWidth('12px', 'text')" data-style="12px">12 px</a>
+            <a href="#" onclick="changeWidth('14px', 'text')" data-style="14px">14 px</a>
             <a href="#" onclick="changeWidth('16px', 'text')" data-style="16px">16 px</a>
             <a href="#" onclick="changeWidth('18px', 'text')" data-style="18px">18 px</a>
             <a href="#" onclick="changeWidth('20px', 'text')" data-style="20px">20 px</a>
@@ -499,7 +399,7 @@
         <img src="images/upload.svg" alt="Upload">
     </button>
 
-    <button class="icon-button" onclick="showColorDropdown(event, [canvas], 'background')" title="Test">
+    <button class="icon-button" onclick="test()" title="Test">
         <img src="images/test.svg" alt="Test">
     </button>
 
@@ -769,6 +669,7 @@
     }
 
     function deleteBox(boxId) {
+        // remove box with given ID
         const box = document.getElementById(boxId);
         if (box) {
             box.remove();
@@ -777,6 +678,7 @@
     }
 
     function deleteLines(boxId) {
+        // remove all lines connected to the box with given ID
         const svg = document.getElementById("lineContainer");
         const allLines = svg.getElementsByClassName("line");
         for (let i = allLines.length - 1; i >= 0; i--) { // Iterate over the lines and remove the ones connected to the box
@@ -847,14 +749,13 @@
     function isStyleApplied(elementId, style) {
         //Check if style is applied. Used by styleText() through applyTextStyle()
         const element = document.getElementById(elementId);
-        if (style == "underline" || style == "strikethrough") {
+        if (style == "underline" || style == "strikethrough") { // underline-strikethrough counts for both
             return element.classList.contains("underline-strikethrough") || element.classList.contains(style);
         }
         return element.classList.contains(style);
     }
 
     function applyTextStyle(elementId, style) { //Toggle style. Used by styleText()
-        // potentially fix underline/strikethrough by checking if other is applied, if so, applying both
         const element = document.getElementById(elementId);
         if (!isStyleApplied(elementId, style)) {
             if (style == "underline" && isStyleApplied(elementId, "strikethrough")) {
@@ -880,6 +781,7 @@
     }
 
     function changeColor(color, target, targetAttr) {
+        // change color using color string, target list, and the target attribute
         if (targetAttr == "background") { // Change the background color of each target element
             target.forEach((element) => {
                 element.style.backgroundColor = color;
@@ -1019,7 +921,7 @@
             e.preventDefault();
             selectAll();
             console.log("selected all");
-        } else if (e.ctrlKey && e.key === 'd') {
+        } else if ((e.ctrlKey && e.key === 'd') || e.key === 'Escape') {
             e.preventDefault();
             deselectBoxes();
             console.log("deselected all");
@@ -1127,6 +1029,13 @@
                     openDropdown.classList.remove('show');
                 }
             }
+        }
+        if (  // close colorDropdown, currently doesn't close on clicking same button
+            (!event.target.matches('.top-bar *'))
+            && (!event.target.matches('.customColorButton'))
+        ) {
+            let dropdownContainer = document.getElementById("colorDropdownContainer");
+            dropdownContainer.innerHTML = '';
         }
     }
 
@@ -1360,6 +1269,7 @@
         labelRow.appendChild(labelCell);
         table.appendChild(labelRow);
         let customColorsRow = document.createElement("tr");
+        customColorsRow.classList.add("dropdown-color");
         for (let i = 0; i < 10; i++) {
             let cell = document.createElement("td");
             let button = document.createElement("button");
@@ -1379,6 +1289,7 @@
                 };
             } else {
                 button.style.backgroundColor = "#FFFFFF";
+                button.classList.add('customColorButton');
                 button.onclick = function () {
                     // If color is null, call pickColor function
                     pickColor(i, target, targetAttr); // Pass the index of the clicked button to pickColor
@@ -1395,6 +1306,10 @@
         dropdownContainer.style.top = document.getElementById('top-bar').getBoundingClientRect().bottom - 10 + 'px';
         dropdownContainer.style.left = x - 333 + 'px'; // 333 is the width of the table
         console.log(table.style.width);
+        dropdownContainer.classList.add("dropdown-color");
+        table.classList.add("dropdown-color");
+        // dropdownContainer.classList.add("dropdown-color");
+
     }
 
     // Function to open color picker and update customColors array
