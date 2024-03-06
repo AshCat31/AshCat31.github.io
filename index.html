@@ -2,7 +2,7 @@
 <html lang="en">
 <!-- Pop-Up Box! -->
 <!-- Bugged: Resizing broken, at least on laptop. Ctrl-clicking moves box down/right. -->
-<!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struck thorough. Box resizing & box/line styling. Saving/loading from cookie (currently canvas color doesn't save). -->
+<!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struck thorough. Box resizing & box/line styling. Saving/loading from cookie. -->
 <!-- Todo: Clarify box vs container. Clean code. Make canvas bigger and scrollable. Print. -->
 
 <head>
@@ -1079,13 +1079,13 @@
         return {
             boxDict: boxDataList,
             lineDict: lineDataList,
-            colorDict: customColors
-
+            colorDict: customColors,
+            canvasColor: canvas.style.backgroundColor
         }
     }
 
 
-    function loadData(boxDataList, lineDataList, colorDataList) {
+    function loadData(boxDataList, lineDataList, colorDataList, canvasColor) {
         deleteAll();
         boxDataList.forEach((boxDataString) => {
             if (boxDataString !== '') {
@@ -1112,6 +1112,7 @@
             }
             i++;
         });
+        canvas.style.backgroundColor = canvasColor;
     }
 
     function saveDataLocally() {
@@ -1119,19 +1120,21 @@
         localStorage.setItem("boxes", data.boxDict.toString());
         localStorage.setItem("lines", data.lineDict.toString());
         localStorage.setItem("colors", data.colorDict.toString());
+        localStorage.setItem("canvasColor", data.canvasColor.toString());
     }
 
     function loadDataLocally() {
         let boxDataList = localStorage.getItem("boxes").split('}},');
         let lineDataList = localStorage.getItem("lines").split('},');
         let colorDataList = localStorage.getItem("colors").split(",");
+        let canvasColor = localStorage.getItem("canvasColor");
         for (let i = 0; i < boxDataList.length - 1; i++) {
             boxDataList[i] = boxDataList[i] + '}}'
         }
         for (let i = 0; i < lineDataList.length - 1; i++) {
             lineDataList[i] = lineDataList[i] + '}'
         }
-        loadData(boxDataList, lineDataList, colorDataList);
+        loadData(boxDataList, lineDataList, colorDataList, canvasColor);
     }
 
 
@@ -1163,7 +1166,7 @@
             const reader = new FileReader();
             reader.onload = function (e) {
                 const jsonData = JSON.parse(e.target.result);
-                loadData(jsonData.boxDict, jsonData.lineDict, jsonData.colorDict);
+                loadData(jsonData.boxDict, jsonData.lineDict, jsonData.colorDict, jsonData.canvasColor);
             };
             reader.readAsText(file);
         } else {
@@ -1185,7 +1188,7 @@
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     const jsonData = JSON.parse(e.target.result);
-                    loadData(jsonData.boxDict, jsonData.lineDict, jsonData.colorDict);
+                    loadData(jsonData.boxDict, jsonData.lineDict, jsonData.colorDict, jsonData.canvasColor);
                 };
                 reader.readAsText(file);
             } else {
