@@ -262,7 +262,11 @@
 
             body,
             html {
-                width: 100%;
+                width: 100vw;
+            }
+
+            @page {
+                size: landscape
             }
         }
     </style>
@@ -1074,44 +1078,60 @@
         });
         return {
             boxDict: boxDataList,
-            lineDict: lineDataList
+            lineDict: lineDataList,
+            colorDict: customColors
+
         }
     }
 
 
-    function loadData(boxDataList, lineDataList) {
+    function loadData(boxDataList, lineDataList, colorDataList) {
         deleteAll();
-        console.log(boxDataList);
         boxDataList.forEach((boxDataString) => {
-            let boxData = JSON.parse(boxDataString);
-            recreateBox(boxData);
-            boxCount++;
+            if (boxDataString !== '') {
+                let boxData = JSON.parse(boxDataString);
+                recreateBox(boxData);
+                boxCount++;
+            }
         });
         let i = 0;
         lineDataList.forEach((line) => {
-            line = JSON.parse(line);
-            lines[i] = line;
-            i++;
+            if (line !== '') {
+                line = JSON.parse(line);
+                lines[i] = line;
+                i++;
+            }
         });
         updateLines();
+        i = 0;
+        colorDataList.forEach((color) => {
+            if (color === '') {
+                customColors[i] = null;
+            } else {
+                customColors[i] = color;
+            }
+            i++;
+        });
     }
 
     function saveDataLocally() {
         let data = saveData();
         localStorage.setItem("boxes", data.boxDict.toString());
         localStorage.setItem("lines", data.lineDict.toString());
+        localStorage.setItem("colors", data.colorDict.toString());
     }
 
     function loadDataLocally() {
         let boxDataList = localStorage.getItem("boxes").split('}},');
         let lineDataList = localStorage.getItem("lines").split('},');
+        let colorDataList = localStorage.getItem("colors").split(",");
         for (let i = 0; i < boxDataList.length - 1; i++) {
             boxDataList[i] = boxDataList[i] + '}}'
         }
         for (let i = 0; i < lineDataList.length - 1; i++) {
             lineDataList[i] = lineDataList[i] + '}'
         }
-        loadData(boxDataList, lineDataList);
+        loadData(boxDataList, lineDataList, colorDataList);
     }
 
 
@@ -1143,7 +1163,7 @@
             const reader = new FileReader();
             reader.onload = function (e) {
                 const jsonData = JSON.parse(e.target.result);
-                loadData(jsonData.boxDict, jsonData.lineDict);
+                loadData(jsonData.boxDict, jsonData.lineDict, jsonData.colorDict);
             };
             reader.readAsText(file);
         } else {
@@ -1165,7 +1185,7 @@
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     const jsonData = JSON.parse(e.target.result);
-                    loadData(jsonData.boxDict, jsonData.lineDict);
+                    loadData(jsonData.boxDict, jsonData.lineDict, jsonData.colorDict);
                 };
                 reader.readAsText(file);
             } else {
