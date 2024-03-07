@@ -511,7 +511,7 @@
         box.classList.add("box");
         box.classList.add("box-input");
         boxContainer.classList.add("box");
-        // why get by ID here?
+        // why get by Id here?
         document.getElementById("canvas").appendChild(boxContainer);
         document.getElementById("containerBox" + boxCount).appendChild(box);
         box.focus();
@@ -524,7 +524,7 @@
     }
 
     function selectBox(target, removeExisting = false) {
-        let box = getContainerFromID(target.id);
+        let box = getContainerFromId(target.id);
         if (!selectedBoxes.includes(target)) { // only add if not alr in
             box.classList.add("selected");
             selectedBoxes.push(target);
@@ -539,7 +539,7 @@
         if (!target.classList.contains("icon-button") && !event.shiftKey) {
             deselectBoxes();
         }
-        const box = getContainerFromID(target.id);
+        const box = getContainerFromId(target.id);
         if (box) {
             if (event.altKey) {  // Delete box
                 const boxId = box.id;
@@ -587,7 +587,7 @@
 
     function deselectBoxes() {
         selectedBoxes.forEach((b) => {
-            let box = getContainerFromID(b.id);
+            let box = getContainerFromId(b.id);
             if (box) {
                 box.classList.remove("selected");
             }
@@ -602,7 +602,7 @@
         console.log("Deselected boxes/lines");
     }
 
-    function getID(boxId) {
+    function getId(boxId) {
         // starting from end, get all numbers, reverse them, and return them
         let Id = '';
         for (let i = boxId.length - 1; i >= 0; i--) {
@@ -616,12 +616,12 @@
         }
     }
 
-    function getContainerFromID(boxId) {
-        return document.getElementById("containerBox" + getID(boxId));
+    function getContainerFromId(boxId) {
+        return document.getElementById("containerBox" + getId(boxId));
     }
 
-    function getBoxFromID(boxId) {  // works? needed?
-        return document.getElementById("box" + getID(boxId));
+    function getBoxFromId(boxId) {  // works? needed?
+        return document.getElementById("box" + getId(boxId));
     }
 
     function startDrag(event) {
@@ -629,7 +629,7 @@
             handleBoxSelection(event); //means must hold shift to drag multiple, but wont automatically drag all boxes too
         }
         const target = event.target;
-        const box = getContainerFromID(target.id);
+        const box = getContainerFromId(target.id);
         if (box) {
             let allInitialX = [];
             let allInitialY = [];
@@ -637,7 +637,7 @@
             const initialY = event.clientY - target.getBoundingClientRect().top+2;
             box.style.zIndex = "999"; // Bring the dragged box to the front
             selectedBoxes.forEach((b) => {
-                let bContainer = getContainerFromID(b.id);
+                let bContainer = getContainerFromId(b.id);
                 allInitialX.push(event.clientX - bContainer.getBoundingClientRect().left);
                 allInitialY.push(event.clientY - bContainer.getBoundingClientRect().top);
             });
@@ -649,7 +649,7 @@
                 box.style.top = newY + "px";
                 console.log("newX: " + newX + " newY: " + newY);
                 for (let i = 0; i < selectedBoxes.length; i++) {
-                    let thisBox = getContainerFromID(selectedBoxes[i].id);
+                    let thisBox = getContainerFromId(selectedBoxes[i].id);
                     let newBoxX = event.clientX - allInitialX[i] - thisBox.style.borderWidth;
                     let newBoxY = event.clientY - allInitialY[i] - thisBox.style.borderWidth;
                     thisBox.style.left = newBoxX + "px";
@@ -662,7 +662,7 @@
                 document.removeEventListener("mousemove", moveBox);
                 document.removeEventListener("mouseup", stopDrag);
                 selectedBoxes.forEach((b) => {
-                    let bContainer = getContainerFromID(b.id);
+                    let bContainer = getContainerFromId(b.id);
                     bContainer.style.zIndex = ""; // Restore the original z-index. seems iffy
                 });
                 updateLines(); // Update the lines after dragging stops
@@ -674,7 +674,7 @@
     }
 
     function deleteBox(boxId) {
-        // remove box with given ID
+        // remove box with given Id
         const box = document.getElementById(boxId);
         if (box) {
             box.remove();
@@ -683,7 +683,7 @@
     }
 
     function deleteLines(boxId) {
-        // remove all lines connected to the box with given ID
+        // remove all lines connected to the box with given Id
         const svg = document.getElementById("lineContainer");
         const allLines = svg.getElementsByClassName("line");
         for (let i = allLines.length - 1; i >= 0; i--) { // Iterate over the lines and remove the ones connected to the box
@@ -791,14 +791,13 @@
             target.forEach((element) => {
                 element.style.backgroundColor = color;
                 if (target == selectedBoxes) {
-                    getContainerFromID(element.id, true).style.backgroundColor = color;
+                    getContainerFromId(element.id, true).style.backgroundColor = color;
                 }
             });
         } else if (targetAttr == "color") { // Change the font/line color of each target element
             target.forEach((element) => {
                 element.style.color = color;
-                if (target === 'selectedLines') ;
-                { //stroke instead for line
+                if (target === 'selectedLines') { //stroke instead for line
                     selectedLines.forEach((line) => {
                         line.style.stroke = color;
                         const lineId = line.id;
@@ -809,7 +808,7 @@
             });
         } else if (targetAttr == "border") { // Change the border color of each target element
             target.forEach((element) => {
-                let box = getContainerFromID(element.id);
+                let box = getContainerFromId(element.id);
                 box.style.borderColor = color;
             });
         }
@@ -825,7 +824,7 @@
             });
         } else if (target == "border") { // Change the border width of each target box
             selectedBoxes.forEach((element) => {
-                let box = getContainerFromID(element.id);
+                let box = getContainerFromId(element.id);
                 box.style.borderWidth = width;
             });
         } else if (target == "text") { // Change the size of each target box's text
@@ -845,7 +844,7 @@
             });
         } else if (target == "border") { // Change the border style of each target box
             selectedBoxes.forEach((element) => {
-                let box = getContainerFromID(element.id);
+                let box = getContainerFromId(element.id);
                 box.style.borderStyle = style;
             });
         }
@@ -892,14 +891,14 @@
     function selectAll() {
         selectedBoxes = [...document.querySelectorAll(".box-input")];
         selectedBoxes.forEach((b) => {
-            getContainerFromID(b.id).classList.add("selected");
+            getContainerFromId(b.id).classList.add("selected");
         });
     }
 
     function deleteSelection() {
         selectedBoxes.forEach((box) => {
-            deleteLines(getContainerFromID(box.id).id);
-            deleteBox(getContainerFromID(box.id).id);
+            deleteLines(getContainerFromId(box.id).id);
+            deleteBox(getContainerFromId(box.id).id);
         });
     }
 
@@ -1051,10 +1050,10 @@
         let boxData;
         let boxCList = document.getElementById('canvas').childNodes;  // use .children instead?
         boxCList.forEach((boxC) => {  // get box attributes and store in dict
-            let ID = boxC.id.split('containerBox').pop();
-            let box = document.getElementById('box' + ID)
+            let Id = boxC.id.split('containerBox').pop();
+            let box = document.getElementById('box' + Id)
             boxData = {
-                boxID: ID, //boxID is just the number
+                boxId: Id, //boxId is just the number
                 boxText: box.value,
                 boxLeft: boxC.style.left,
                 boxTop: boxC.style.top,
@@ -1202,7 +1201,7 @@
     function recreateBox(boxData) {
         let box = document.createElement("input");
         let boxContainer = document.createElement("span");
-        boxContainer.id = "containerBox" + boxData.boxID;
+        boxContainer.id = "containerBox" + boxData.boxId;
         box.placeholder = "Type here";
         boxContainer.style.left = boxData.boxLeft;
         boxContainer.style.top = boxData.boxTop;
@@ -1224,7 +1223,7 @@
         }
         boxContainer.addEventListener("mousedown", startDrag);
         boxContainer.addEventListener("click", handleBoxSelection);
-        box.id = 'box' + boxData.boxID;
+        box.id = 'box' + boxData.boxId;
         box.style.padding = "0px 5px";
         box.setAttribute("type", "text");
         box.classList.add("box");
