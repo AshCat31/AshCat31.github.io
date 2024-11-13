@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <!-- Pop-Up Box! -->
-<!-- Bugged: Resizing broken. -->
+<!-- Bugged: Shift-clicking and dragging same box multiple times deselects it. Dragging highlights boxes' text.Lines 'jump' after resizing. -->
 <!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struck thorough. Box resizing & box/line styling. Saving/loading from cookie. -->
-<!-- Todo: Clarify box vs container. Clean code. Make canvas bigger and scrollable. Print. -->
+<!-- Todo: Clarify box vs container. Clean code. Reduce use of getElementById. Undo button. Make canvas bigger and scrollable. Print. -->
 
 <head>
     <title>Pop-Up Box</title>
@@ -110,7 +110,7 @@
             border: 2px solid black;
             background-color: transparent;
             box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-            margin-left: 5px;
+            margin-left: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -126,6 +126,13 @@
             width: 24px;
             height: 24px;
             pointer-events: none;
+        }
+
+        .separator {
+            width: 1px;
+            background-color: #676767; /* Light gray line */
+            height: 40px; /* Adjust the height as needed */
+            margin: 0 2px 0 7px; /* Space on either side of the separator */
         }
 
         .no-max-width {
@@ -244,14 +251,6 @@
             z-index: 100;
         }
 
-        #drop-area {
-            /* needed? */
-            border: 2px dashed #ccc;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-        }
-
         @media print {
             .no-print {
                 display: none;
@@ -279,9 +278,13 @@
         <img src="images/background-fill.svg" alt="Canvas Color">
     </button>
 
+    <div class="separator"></div>
+
     <button class="icon-button" onclick="showColorDropdown(event, selectedBoxes, 'background')" title="Box Color">
         <img src="images/box-fill.svg" alt="Box Color">
     </button>
+
+    <div class="separator"></div>
 
     <button class="icon-button" onclick="showColorDropdown(event, selectedBoxes, 'border')" title="Border Color">
         <img src="images/border-color.svg" alt="Border Color">
@@ -315,6 +318,8 @@
         </div>
     </div>
 
+    <div class="separator"></div>
+
     <button class="icon-button" onclick="showColorDropdown(event, selectedLines, 'color')" title="Line Color">
         <img src="images/line-color.svg" alt="Line Color">
     </button>
@@ -345,6 +350,8 @@
             <a href="#" onclick="changeStyle('3', 'line')" data-style="dotted">Dotted</a>
         </div>
     </div>
+
+    <div class="separator"></div>
 
     <button class="icon-button" onclick="showColorDropdown(event, selectedBoxes, 'color')" title="Text Color">
         <img src="images/text-color.svg" alt="Text Color">
@@ -387,6 +394,8 @@
     <button class="icon-button" onclick="styleText('strikethrough')" title="Strikethrough">
         <img src="images/strikethrough.svg" alt="Strikethrough">
     </button>
+
+    <div class="separator"></div>
 
     <button class="icon-button" onclick="saveDataLocally()" title="Save">
         <img src="images/save.svg" alt="Save">
@@ -500,6 +509,7 @@
         boxContainer.style.top = boxTop;
         boxContainer.style.width = boxWidth + "px";
         boxContainer.style.height = boxHeight + "px";
+        boxContainer.style.outlineWidth = boxContainer.style.borderWidth = "2px";
         // Add event listeners to boxContainer
         boxContainer.addEventListener("mousedown", startDrag);
         boxContainer.addEventListener("click", handleBoxSelection);
@@ -621,7 +631,7 @@
         return document.getElementById("containerBox" + getId(boxId));
     }
 
-    function getBoxFromId(boxId) {  // works? needed?
+    function getBoxFromId(boxId) {
         return document.getElementById("box" + getId(boxId));
     }
 
@@ -630,49 +640,87 @@
             handleBoxSelection(event); //means must hold shift to drag multiple, but wont automatically drag all boxes too
         }
         const target = event.target;
-        const box = getContainerFromId(target.id);
-        if (box) {
-            let allInitialX = [];
-            let allInitialY = [];
-            const initialX = event.clientX - target.getBoundingClientRect().left + 2;  //where does 2 come from?
-            const initialY = event.clientY - target.getBoundingClientRect().top + 2;
-            box.style.zIndex = "999"; // Bring the dragged box to the front
+        const boxContainer = getContainerFromId(target.id);
+        if (!boxContainer) return; // Ensure we're dragging a valid box
+
+        let isResizing = false;
+        let initialX, initialY, initialWidth, initialHeight, allInitialX, allInitialY;
+
+        // Check if the mouse is near the resize handle (bottom-right corner)
+        const boxRect = boxContainer.getBoundingClientRect();
+        const resizeAreaThreshold = 18; // proximity to corner to trigger resizing
+
+        // If mouse is near the bottom-right corner, trigger resizing
+        if (event.clientX > boxRect.right - resizeAreaThreshold && event.clientY > boxRect.bottom - resizeAreaThreshold) {
+            isResizing = true;
+            initialWidth = boxContainer.offsetWidth;
+            initialHeight = boxContainer.offsetHeight;
+            initialX = event.clientX;
+            initialY = event.clientY;
+        } else {
+            // Otherwise, it's moving the box
+            target.style.cursor = 'grabbing';
+            boxContainer.style.cursor = 'grabbing'; // not rly sure both needed
+            allInitialX = [];
+            allInitialY = [];
+            initialX = event.clientX - target.getBoundingClientRect().left + 2;
+            initialY = event.clientY - target.getBoundingClientRect().top + 2;
+            boxContainer.style.zIndex = "999"; // Bring the dragged box to the front
             selectedBoxes.forEach((b) => {
                 let bContainer = getContainerFromId(b.id);
                 allInitialX.push(event.clientX - bContainer.getBoundingClientRect().left);
                 allInitialY.push(event.clientY - bContainer.getBoundingClientRect().top);
             });
+        }
 
-            function moveBox(event) { //local func
-                const newX = event.clientX - initialX - box.style.borderWidth - box.style.outlineWidth;
-                const newY = event.clientY - initialY - box.style.borderWidth - box.style.outlineWidth;
-                box.style.left = newX + "px";
-                box.style.top = newY + "px";
+        boxContainer.style.zIndex = "999"; // Bring the dragged box to the front
+
+        function moveBox(event) {
+            if (isResizing) {
+                // Resize the box based on mouse movement
+                const deltaX = event.clientX - initialX;
+                const deltaY = event.clientY - initialY;
+                boxContainer.style.width = initialWidth + deltaX + 'px';
+                boxContainer.style.height = initialHeight + deltaY + 'px';
+            } else {
+                // const newX = event.clientX - initialX + parseInt(boxContainer.style.borderWidth) + parseInt(boxContainer.style.outlineWidth);
+                // const newY = event.clientY - initialY + parseInt(boxContainer.style.borderWidth) + parseInt(boxContainer.style.outlineWidth);
+                const newX = event.clientX - initialX;
+                const newY = event.clientY - initialY;
+                boxContainer.style.left = newX + "px";
+                boxContainer.style.top = newY + "px";
                 console.log("newX: " + newX + " newY: " + newY);
                 for (let i = 0; i < selectedBoxes.length; i++) {
                     let thisBox = getContainerFromId(selectedBoxes[i].id);
-                    let newBoxX = event.clientX - allInitialX[i] - thisBox.style.borderWidth;
-                    let newBoxY = event.clientY - allInitialY[i] - thisBox.style.borderWidth;
+                    // let newBoxX = event.clientX - allInitialX[i] - parseInt(thisBox.style.borderWidth);
+                    // let newBoxY = event.clientY - allInitialY[i] - parseInt(thisBox.style.borderWidth);
+                    let newBoxX = event.clientX - allInitialX[i];
+                    let newBoxY = event.clientY - allInitialY[i];
                     thisBox.style.left = newBoxX + "px";
                     thisBox.style.top = newBoxY + "px";
                 }
-                updateLines(); //update lines while dragging
             }
-
-            function stopDrag() { //local func
-                document.removeEventListener("mousemove", moveBox);
-                document.removeEventListener("mouseup", stopDrag);
-                selectedBoxes.forEach((b) => {
-                    let bContainer = getContainerFromId(b.id);
-                    bContainer.style.zIndex = ""; // Restore the original z-index. seems iffy
-                });
-                updateLines(); // Update the lines after dragging stops
-            }
-
-            document.addEventListener("mousemove", moveBox);
-            document.addEventListener("mouseup", stopDrag);
+            updateLines(); // Update lines during dragging/resizing
         }
+
+        function stopDrag() {
+            target.style.cursor = '';
+            boxContainer.style.cursor = '';
+            document.removeEventListener("mousemove", moveBox);
+            document.removeEventListener("mouseup", stopDrag);
+            // selectedBoxes.forEach((b) => {
+            //     let bContainer = getContainerFromId(b.id);
+            boxContainer.style.zIndex = ""; // Restore the original z-index. Needed or above dropdowns
+            // });
+            updateLines(); // Update the lines after dragging stops
+            let r =boxContainer.getBoundingClientRect();
+                        console.log(r.left + r.width / 2);
+        }
+
+        document.addEventListener("mousemove", moveBox);
+        document.addEventListener("mouseup", stopDrag);
     }
+
 
     function deleteBox(boxId) {
         // remove box with given Id
@@ -738,17 +786,14 @@
         const rect = element.getBoundingClientRect();
         const x = rect.left + rect.width / 2;
         const y = rect.top + rect.height / 2;
-        return {
-            x,
-            y
-        };
+        return {x, y};
     }
 
     function styleText(style) { //Add style to box text.
         const target = selectedBoxes;
         if (target.length > 0) {
             for (let i = 0; i < target.length; i++) {
-                applyTextStyle(target[i].id, style);
+                applyTextStyle(getBoxFromId(target[i].id, true).id, style);
             }
         }
     }
@@ -792,13 +837,12 @@
         if (targetAttr == "background") { // Change the background color of each target element
             target.forEach((element) => {
                 element.style.backgroundColor = color;
-                if (target == selectedBoxes) {
-                    getContainerFromId(element.id, true).style.backgroundColor = color;
-                }
+                getBoxFromId(element.id, true).style.backgroundColor = color;
             });
         } else if (targetAttr == "color") { // Change the font/line color of each target element
             target.forEach((element) => {
                 element.style.color = color;
+                getBoxFromId(element.id, true).style.color = color;
                 if (target === 'selectedLines') { //stroke instead for line
                     selectedLines.forEach((line) => {
                         line.style.stroke = color;
@@ -828,10 +872,12 @@
             selectedBoxes.forEach((element) => {
                 let box = getContainerFromId(element.id);
                 box.style.borderWidth = width;
+                updateLines();
             });
         } else if (target == "text") { // Change the size of each target box's text
             selectedBoxes.forEach((element) => {
-                element.style.fontSize = width;
+                let box = getBoxFromId(element.id, true);
+                box.style.fontSize = width;
             });
         }
     }
@@ -909,6 +955,7 @@
         selectAll();
         deleteSelection();
         lines = [];
+        boxCount = 1;
     }
 
     function onKeypress(e) {
@@ -1234,6 +1281,7 @@
         boxContainer.style.borderColor = boxData.boxBorderColor;
         boxContainer.style.borderWidth = boxData.boxBorderWidth;
         boxContainer.style.borderStyle = boxData.boxBorderStyle;
+        boxContainer.style.outlineWidth = "2px";
         box.style.color = boxData.boxTextColor;
         box.style.fontSize = boxData.boxTextSize;
         for (let i = 0; i < Object.keys(boxData.boxClassList).length; i++) {
