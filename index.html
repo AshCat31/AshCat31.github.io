@@ -17,6 +17,7 @@
             right: 0;
             bottom: 0;
             background-color: gray;
+            cursor: crosshair;
         }
 
         .box {
@@ -69,7 +70,7 @@
             width: 16px;
             height: 16px;
             background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAJUlEQVR4AcXJRwEAIBAAIPuXxgiOW3xZYzi1Q3Nqh+bUDk1yD9sQaUG/4ehuEAAAAABJRU5ErkJggg==");
-            cursor: ew-resize;
+            /*cursor: ew-resize;*/
         }
 
         .box.selected {
@@ -691,7 +692,8 @@
             const startBoxId = line.getAttribute("data-start-box");
             const endBoxId = line.getAttribute("data-end-box");
             if (startBoxId === boxId || endBoxId === boxId) {
-                line.remove(); // remove from array too? It doesn't. prob shouldn't unless all deleted
+                lines = lines.filter(l => l.lineId !== line.id);
+                line.remove(); // remove from array too? It doesn't. prob shouldn't unless all deleted. actually should else nonexistant lines get saved
             }
         }
     }
@@ -1090,7 +1092,7 @@
         deleteAll();
 
         let boxIdMapping = {};
-        let newBoxId = 0;
+        let newBoxId = boxCount = 1;
 
         boxDataList.forEach((boxDataString) => {
             if (boxDataString !== '') {
@@ -1112,10 +1114,8 @@
 
                 let startBoxId = line.startBox.replace('containerBox', '');
                 let endBoxId = line.endBox.replace('containerBox', '');
-
                 line.startBox = 'containerBox' + boxIdMapping[startBoxId];
                 line.endBox = 'containerBox' + boxIdMapping[endBoxId];
-
                 lines[i] = line;
                 i++;
             }
@@ -1256,8 +1256,7 @@
 
     function showColorDropdown(event, target, targetAttr) {
         console.log(event);
-        // Get the clicked button
-        let x = event.x;
+        let x = event.x; // Get the clicked button
         createColorDropdown(x, target, targetAttr);
     }
 
