@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <!-- Pop-Up Box! -->
-<!-- Bugged: Line color setting. Shift-clicking and dragging same box multiple times deselects it. Dragging highlights boxes' text.Lines 'jump' after resizing. -->
+<!-- Bugged: Shift-clicking and dragging same box multiple times deselects it. Dragging highlights boxes' text. Lines 'jump' after resizing based on border. -->
 <!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struck thorough. Box resizing & box/line styling. Saving/loading from cookie. -->
 <!-- Todo: Clarify box vs container. Clean code. Reduce use of getElementById. Undo button. Make canvas bigger and scrollable. Print. -->
 
@@ -17,7 +17,7 @@
             right: 0;
             bottom: 0;
             background-color: gray;
-            cursor: crosshair;  /* crosshair barely visible on laptop*/
+            cursor: crosshair; /* crosshair barely visible on laptop*/
         }
 
         .box {
@@ -320,7 +320,7 @@
 
     <div class="separator"></div>
 
-    <button class="icon-button" onclick="showColorDropdown(event, selectedLines, 'color')" title="Line Color">
+    <button class="icon-button" onclick="showColorDropdown(event, 'selectedLines', 'color')" title="Line Color">
         <img src="images/line-color.svg" alt="Line Color">
     </button>
 
@@ -714,8 +714,8 @@
             boxContainer.style.zIndex = ""; // Restore the original z-index. Needed or above dropdowns
             // });
             updateLines(); // Update the lines after dragging stops
-            let r =boxContainer.getBoundingClientRect();
-                        console.log(r.left + r.width / 2);
+            let r = boxContainer.getBoundingClientRect();
+            console.log(r.left + r.width / 2);
         }
 
         document.addEventListener("mousemove", moveBox);
@@ -834,22 +834,24 @@
         // change color using color string, target list, and the target attribute
         if (targetAttr == "background") { // Change the background color of each target element
             target.forEach((element) => {
-                element.style.backgroundColor = color;
+                getContainerFromId(element.id, true).style.backgroundColor = color;
                 getBoxFromId(element.id, true).style.backgroundColor = color;
             });
         } else if (targetAttr == "color") { // Change the font/line color of each target element
-            target.forEach((element) => {
-                element.style.color = color;
-                getBoxFromId(element.id, true).style.color = color;
-                if (target === 'selectedLines') { //stroke instead for line
-                    selectedLines.forEach((line) => {
-                        line.style.stroke = color;
-                        const lineId = line.id;
-                        const lineInfo = lines.find(l => l.lineId === lineId); //does this work? yup
-                        lineInfo['lineColor'] = color;
-                    })
-                }
-            });
+            if (target === 'selectedLines') { //stroke instead for line
+                selectedLines.forEach((line) => {
+                    line.style.stroke = color;
+                    const lineId = line.id;
+                    const lineInfo = lines.find(l => l.lineId === lineId); //does this work? yup
+                    lineInfo['lineColor'] = color;
+                })
+            } else {
+                target.forEach((element) => {
+                    element.style.color = color;
+                    getBoxFromId(element.id, true).style.color = color;
+                    console.log(target);
+                });
+            }
         } else if (targetAttr == "border") { // Change the border color of each target element
             target.forEach((element) => {
                 let box = getContainerFromId(element.id);
