@@ -834,7 +834,8 @@
         // change color using color string, target list, and the target attribute
         if (targetAttr == "background") { // Change the background color of each target element
             target.forEach((element) => {
-                getContainerFromId(element.id, true).style.backgroundColor = color;
+                element.style.backgroundColor = color;  // canvas
+                getContainerFromId(element.id, true).style.backgroundColor = color; // boxes
                 getBoxFromId(element.id, true).style.backgroundColor = color;
             });
         } else if (targetAttr == "color") { // Change the font/line color of each target element
