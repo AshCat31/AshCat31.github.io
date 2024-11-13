@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <!-- Pop-Up Box! -->
-<!-- Bugged: Resizing broken, at least on laptop. -->
+<!-- Bugged: Resizing broken. -->
 <!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struck thorough. Box resizing & box/line styling. Saving/loading from cookie. -->
 <!-- Todo: Clarify box vs container. Clean code. Make canvas bigger and scrollable. Print. -->
 
@@ -633,8 +633,8 @@
         if (box) {
             let allInitialX = [];
             let allInitialY = [];
-            const initialX = event.clientX - target.getBoundingClientRect().left+2;  //where does 2 come from?
-            const initialY = event.clientY - target.getBoundingClientRect().top+2;
+            const initialX = event.clientX - target.getBoundingClientRect().left + 2;  //where does 2 come from?
+            const initialY = event.clientY - target.getBoundingClientRect().top + 2;
             box.style.zIndex = "999"; // Bring the dragged box to the front
             selectedBoxes.forEach((b) => {
                 let bContainer = getContainerFromId(b.id);
@@ -851,6 +851,7 @@
     }
 
     function toggleDropdown(e) {
+        // TODO: hide dropdown when clicked again
         let isShown = e.parentNode.getElementsByClassName("dropdown-content")[0].classList.contains("show");
         closeDropdowns();
         if (!isShown) {
@@ -1087,33 +1088,53 @@
 
     function loadData(boxDataList, lineDataList, colorDataList, canvasColor) {
         deleteAll();
+
+        let boxIdMapping = {};
+        let newBoxId = 0;
+
         boxDataList.forEach((boxDataString) => {
             if (boxDataString !== '') {
                 let boxData = JSON.parse(boxDataString);
+
+                boxIdMapping[boxData.boxId] = newBoxId;
+                boxData.boxId = newBoxId;
+
                 recreateBox(boxData);
                 boxCount++;
+                newBoxId++;
             }
         });
+
         let i = 0;
         lineDataList.forEach((line) => {
             if (line !== '') {
                 line = JSON.parse(line);
+
+                let startBoxId = line.startBox.replace('containerBox', '');
+                let endBoxId = line.endBox.replace('containerBox', '');
+
+                line.startBox = 'containerBox' + boxIdMapping[startBoxId];
+                line.endBox = 'containerBox' + boxIdMapping[endBoxId];
+
                 lines[i] = line;
                 i++;
             }
         });
         updateLines();
+
         i = 0;
         colorDataList.forEach((color) => {
             if (color === '') {
-                customColors[i] = null;
+                customColors[i] = null; // Handle empty colors
             } else {
-                customColors[i] = color;
+                customColors[i] = color; // Assign color
             }
             i++;
         });
+
         canvas.style.backgroundColor = canvasColor;
     }
+
 
     function saveDataLocally() {
         let data = saveData();
@@ -1322,7 +1343,6 @@
             cell.appendChild(button);
             customColorsRow.appendChild(cell);
         }
-        // Append the custom colors row to the table
         table.appendChild(customColorsRow);
         // Position the dropdown underneath the clicked button
         dropdownContainer.style.position = 'absolute';
@@ -1331,7 +1351,6 @@
         console.log(table.style.width);
         dropdownContainer.classList.add("dropdown-color");
         table.classList.add("dropdown-color");
-        // dropdownContainer.classList.add("dropdown-color");
 
     }
 
