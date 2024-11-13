@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <!-- Pop-Up Box! -->
-<!-- Bugged: Shift-clicking and dragging same box multiple times deselects it. Dragging highlights boxes' text.Lines 'jump' after resizing. -->
+<!-- Bugged: Line color setting. Shift-clicking and dragging same box multiple times deselects it. Dragging highlights boxes' text.Lines 'jump' after resizing. -->
 <!-- Working: Create boxes, move boxes, connect boxes, delete boxes. Make boxes bold, italic, underline, or struck thorough. Box resizing & box/line styling. Saving/loading from cookie. -->
 <!-- Todo: Clarify box vs container. Clean code. Reduce use of getElementById. Undo button. Make canvas bigger and scrollable. Print. -->
 
@@ -17,7 +17,7 @@
             right: 0;
             bottom: 0;
             background-color: gray;
-            cursor: crosshair;
+            cursor: crosshair;  /* crosshair barely visible on laptop*/
         }
 
         .box {
@@ -459,6 +459,7 @@
     let selectedLines = [];
     let lineStartBox = null;
     let lines = []; // unlike selBoxes, store info not element cuz must create new ele w/ that info
+    const lineSvg = document.getElementById("lineContainer");
     const canvas = document.getElementById('canvas');
     let customColors = [null, null, null, null, null, null, null, null, null, null];
 
@@ -522,9 +523,9 @@
         box.classList.add("box");
         box.classList.add("box-input");
         boxContainer.classList.add("box");
-        // why get by Id here?
-        document.getElementById("canvas").appendChild(boxContainer);
-        document.getElementById("containerBox" + boxCount).appendChild(box);
+        // why get by Id here? changed
+        canvas.appendChild(boxContainer);
+        boxContainer.appendChild(box);
         box.focus();
         if (!event.shiftKey) {
             deselectBoxes();
@@ -733,8 +734,7 @@
 
     function deleteLines(boxId) {
         // remove all lines connected to the box with given Id
-        const svg = document.getElementById("lineContainer");
-        const allLines = svg.getElementsByClassName("line");
+        const allLines = lineSvg.getElementsByClassName("line");
         for (let i = allLines.length - 1; i >= 0; i--) { // Iterate over the lines and remove the ones connected to the box
             const line = allLines[i];
             const startBoxId = line.getAttribute("data-start-box");
@@ -747,7 +747,6 @@
     }
 
     function createLine(lineInfo) { //(lineId, startBoxId, endBoxId) {
-        const svg = document.getElementById("lineContainer");
         const startBox = document.getElementById(lineInfo.startBox);
         const endBox = document.getElementById(lineInfo.endBox);
         if (startBox && endBox) {
@@ -767,13 +766,12 @@
             line.setAttribute("data-start-box", lineInfo.startBox);
             line.setAttribute("data-end-box", lineInfo.endBox);
             line.addEventListener("click", handleBoxSelection); // Add click event listener to the line
-            svg.appendChild(line);
+            lineSvg.appendChild(line);
         }
     }
 
     function updateLines() { //after moving boxes, rerender lines one by one
-        const svg = document.getElementById("lineContainer");
-        svg.innerHTML = ""; // Clear all existing lines
+        lineSvg.innerHTML = ""; // Clear all existing lines
         lines.forEach((line) => {
             createLine(line);
             //line.createLine(); if OOP
@@ -1046,7 +1044,7 @@
                     deselectBoxes();
                 }
                 // select boxes between start and end
-                let boxCList = Array.from(document.getElementById('canvas').children);
+                let boxCList = Array.from(canvas.children);
                 boxCList.forEach((boxC) => {
                     let boxRect = boxC.getBoundingClientRect();
                     let topLeftBetween = pointIsBetween(boxRect.left, boxRect.top, startXRect, startYRect, endXRect, endYRect);
@@ -1060,9 +1058,10 @@
                     const lineEnd = getCenter(document.getElementById(line.endBox));
                     const startBetween = pointIsBetween(lineStart.x, lineStart.y, startXRect, startYRect, endXRect, endYRect);
                     const endBetween = pointIsBetween(lineEnd.x, lineEnd.y, startXRect, startYRect, endXRect, endYRect);
-                    if (startBetween && endBetween && document.getElementById(line.lineId)) {
-                        selectedLines.push(document.getElementById(line.lineId));
-                        document.getElementById(line.lineId).classList.add("selected");
+                    let lineEle = document.getElementById(line.lineId);
+                    if (startBetween && endBetween && lineEle) {
+                        selectedLines.push(lineEle);
+                        lineEle.classList.add("selected");
                     }
                 });
             }
@@ -1098,10 +1097,10 @@
         let lineDataList = [];
         let i = 0;
         let boxData;
-        let boxCList = document.getElementById('canvas').childNodes;  // use .children instead?
+        let boxCList = canvas.childNodes;  // use .children instead?
         boxCList.forEach((boxC) => {  // get box attributes and store in dict
             let Id = boxC.id.split('containerBox').pop();
-            let box = document.getElementById('box' + Id)
+            let box = document.getElementById('box' + Id);
             boxData = {
                 boxId: Id, //boxId is just the number
                 boxText: box.value,
@@ -1298,8 +1297,8 @@
         box.classList.add("box");
         box.classList.add("box-input");
         boxContainer.classList.add("box");
-        document.getElementById("canvas").appendChild(boxContainer);
-        document.getElementById(boxContainer.id).appendChild(box);
+        canvas.appendChild(boxContainer);
+        boxContainer.appendChild(box);
     }
 
     function showColorDropdown(event, target, targetAttr) {
